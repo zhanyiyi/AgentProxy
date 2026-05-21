@@ -1,50 +1,33 @@
 """Passive scanner — runs cheap regex/header checks on every captured flow.
 
 Goal: surface "interesting" requests so the agent doesn't have to inspect
-hundreds of flows manually. Each rule is intentionally narrow — high precision
-beats high recall here, because false positives waste agent context.
+hundreds of flows manually. Rule definitions live in the YAML rule pack
+(see `src/agent_proxy/config/defaults.yaml`); this module is just the engine
+that applies them.
 """
 from __future__ import annotations
 
 import re
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Optional, Tuple
 from urllib.parse import urlparse, parse_qs
 
 from mitmproxy import http
 
-
-# (rule_id, severity, category, compiled_regex)
-_RESPONSE_BODY_RULES: List[Tuple[str, str, str, re.Pattern]] = [
-    ("aws_access_key", "high", "secret_leak", re.compile(r"AKIA[0-9A-Z]{16}")),
-    ("private_key_block", "high", "secret_leak",
-     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----")),
-    ("jwt_in_body", "medium", "secret_leak",
-     re.compile(r"eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}")),
-    ("sqli_db_error", "high", "sqli_signal", re.compile(
-        r"SQLSTATE\[|ORA-\d{4,5}|MySQL server version|"
-        r"You have an error in your SQL syntax|PostgreSQL.*?ERROR|"
-        r"SQLiteException|System\.Data\.SQLClient\.SqlException", re.I)),
-    ("stacktrace", "medium", "error_signal", re.compile(
-        r"Traceback \(most recent call last\)|"
-        r"^\s+at [\w\.$]+\([\w\.]+:\d+\)|"
-        r"Whitelabel Error Page", re.M)),
-]
-
-_DEBUG_PATH_PATTERNS = re.compile(
-    r"/(actuator(?:/|$)|debug(?:/|$)|swagger(?:-ui)?|api-docs|"
-    r"\.git/|\.env(?:$|\.)|phpinfo\.php|server-status|server-info|"
-    r"druid/|console/|wp-admin/|trace\.axd)", re.I)
-
-_SENSITIVE_PARAM_NAMES = {
-    "redirect", "redirect_uri", "redirect_url", "url", "next", "callback",
-    "return", "returnurl", "return_url", "goto", "dest", "destination",
-    "file", "filename", "path", "filepath", "include", "page",
-    "cmd", "exec", "command", "template", "tpl",
-}
+from ..config import RuleConfig
 
 
 class PassiveScanner:
-    """Stateless scanner — call scan(flow, db) on each completed flow."""
+    """Stateless scanner — call scan(flow, db) on each completed flow.
+
+    Rules are pulled from a `RuleConfig` (YAML-backed). Pass `rules=None` to
+    fall back to the bundled defaults.
+    """
+
+    def __init__(self, rules: Optional[RuleConfig] = None):
+        if rules is None:
+            from ..config import load_rule_config
+            rules = load_rule_config()
+        self.rules = rules
 
     def scan(self, flow: http.HTTPFlow, db) -> int:
         """Returns number of findings written for this flow."""
@@ -64,10 +47,10 @@ class PassiveScanner:
         parsed = urlparse(url)
         path = parsed.path or ""
 
-        m = _DEBUG_PATH_PATTERNS.search(path)
+        m = self.rules.debug_paths.search(path)
         if m:
             db.add_finding(flow.id, "debug_endpoint", "high",
-                           "exposure", f"path:{m.group(0)}")
+                           "exposure", f"path:{m.group(0)}", kind="finding")
             n += 1
 
         params = list(parse_qs(parsed.query).keys())
@@ -88,10 +71,11 @@ class PassiveScanner:
         except Exception:
             pass
 
+        sensitive = self.rules.sensitive_param_names
         for p in params:
-            if p.lower() in _SENSITIVE_PARAM_NAMES:
+            if p.lower() in sensitive:
                 db.add_finding(flow.id, "sensitive_param", "medium",
-                               "input_surface", f"param:{p}")
+                               "input_surface", f"param:{p}", kind="signal")
                 n += 1
         return n
 
@@ -114,7 +98,7 @@ class PassiveScanner:
                 pass
             if acao == "*" or (req_origin and acao == req_origin):
                 db.add_finding(flow.id, "cors_misconfig", "high",
-                               "header_misconfig", f"ACAO:{acao}|ACAC:true")
+                               "header_misconfig", f"ACAO:{acao}|ACAC:true", kind="finding")
                 n += 1
 
         # Set-Cookie missing flags (only for https flows)
@@ -131,7 +115,8 @@ class PassiveScanner:
                         cookie_name = raw.split("=", 1)[0].strip()[:80]
                         db.add_finding(flow.id, "cookie_insecure", "low",
                                        "header_misconfig",
-                                       f"{cookie_name} missing:{','.join(missing)}")
+                                       f"{cookie_name} missing:{','.join(missing)}",
+                                       kind="signal")
                         n += 1
         except Exception:
             pass
@@ -139,10 +124,11 @@ class PassiveScanner:
         # Missing CSP on HTML responses
         if "text/html" in ct.lower() and "content-security-policy" not in headers:
             db.add_finding(flow.id, "missing_csp", "info",
-                           "header_misconfig", "no Content-Security-Policy")
+                           "header_misconfig", "no Content-Security-Policy",
+                           kind="signal")
             n += 1
 
-        # Body-based regex rules — only for text-ish responses
+        # Body-based regex rules (loaded from YAML) — only for text-ish responses
         body = None
         text_like = any(t in ct.lower() for t in ("text", "json", "xml", "html", "javascript"))
         if text_like:
@@ -153,11 +139,12 @@ class PassiveScanner:
             except Exception:
                 body = None
         if body:
-            for rule_id, sev, cat, pat in _RESPONSE_BODY_RULES:
-                m = pat.search(body)
+            for rule in self.rules.body_rules:
+                m = rule.pattern.search(body)
                 if m:
                     snippet = m.group(0)[:120]
-                    db.add_finding(flow.id, rule_id, sev, cat, snippet)
+                    db.add_finding(flow.id, rule.id, rule.severity, rule.category,
+                                   snippet, kind=rule.kind)
                     n += 1
         return n
 

@@ -90,6 +90,7 @@ class TrafficDB:
                 ("request_body_truncated", "INTEGER DEFAULT 0"),
                 ("response_body_truncated", "INTEGER DEFAULT 0"),
                 ("response_body_omitted", "TEXT"),
+                ("profile_label", "TEXT"),
             ]:
                 try:
                     conn.execute(f"ALTER TABLE flows ADD COLUMN {col} {ddl}")
@@ -98,6 +99,7 @@ class TrafficDB:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_timestamp ON flows(timestamp)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_url ON flows(url)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_method ON flows(method)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_profile_label ON flows(profile_label)")
 
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS findings (
@@ -114,7 +116,52 @@ class TrafficDB:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_findings_flow ON findings(flow_id)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_findings_severity ON findings(severity)")
 
-    def save_flow(self, flow: http.HTTPFlow):
+            # findings.kind: "finding" (default) or "signal" (lower-confidence signals)
+            try:
+                conn.execute("ALTER TABLE findings ADD COLUMN kind TEXT NOT NULL DEFAULT 'finding'")
+            except sqlite3.OperationalError:
+                pass
+
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS flow_tags (
+                    flow_id TEXT NOT NULL,
+                    tag TEXT NOT NULL,
+                    created_at REAL NOT NULL,
+                    PRIMARY KEY (flow_id, tag)
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_tags_tag ON flow_tags(tag)")
+
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS flow_links (
+                    source_id TEXT NOT NULL,
+                    target_id TEXT NOT NULL,
+                    relation TEXT NOT NULL DEFAULT '',
+                    created_at REAL NOT NULL,
+                    PRIMARY KEY (source_id, target_id, relation)
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_links_src ON flow_links(source_id)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_links_dst ON flow_links(target_id)")
+
+            # Triage notes — one per flow_id, agent-authored after researching it.
+            # Structured into the four sections that real SRC researchers fill out.
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS flow_notes (
+                    flow_id TEXT PRIMARY KEY,
+                    verdict TEXT NOT NULL,
+                    scenario TEXT,
+                    sensitive_fields TEXT,
+                    test_steps TEXT,
+                    conclusion TEXT,
+                    created_at REAL NOT NULL,
+                    updated_at REAL NOT NULL
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_notes_verdict ON flow_notes(verdict)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_notes_updated ON flow_notes(updated_at)")
+
+    def save_flow(self, flow: http.HTTPFlow, profile_label: Optional[str] = None):
         req_body, req_truncated = self._extract_body(flow.request)
         resp_body, resp_truncated, resp_omitted = (None, 0, None)
         if flow.response:
@@ -132,8 +179,9 @@ class TrafficDB:
                     request_headers, request_body,
                     response_headers, response_body,
                     timestamp, size,
-                    request_body_truncated, response_body_truncated, response_body_omitted
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    request_body_truncated, response_body_truncated, response_body_omitted,
+                    profile_label
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                     url=excluded.url,
                     method=excluded.method,
@@ -145,7 +193,8 @@ class TrafficDB:
                     size=excluded.size,
                     request_body_truncated=excluded.request_body_truncated,
                     response_body_truncated=excluded.response_body_truncated,
-                    response_body_omitted=excluded.response_body_omitted
+                    response_body_omitted=excluded.response_body_omitted,
+                    profile_label=COALESCE(excluded.profile_label, flows.profile_label)
             """,
                 (
                     flow.id,
@@ -165,6 +214,7 @@ class TrafficDB:
                     req_truncated,
                     resp_truncated,
                     resp_omitted,
+                    profile_label,
                 ),
             )
 
@@ -293,6 +343,7 @@ class TrafficDB:
             }
             if level != "meta":
                 request_obj["body"] = req_body
+                request_obj["body_preview"] = req_body  # legacy alias
                 if req_note:
                     request_obj["body_note"] = req_note
 
@@ -304,6 +355,7 @@ class TrafficDB:
                 }
                 if level != "meta":
                     response_obj["body"] = resp_body
+                    response_obj["body_preview"] = resp_body  # legacy alias
                     if resp_note:
                         response_obj["body_note"] = resp_note
 
@@ -343,14 +395,17 @@ class TrafficDB:
         with self._get_conn() as conn:
             conn.execute("DELETE FROM flows")
             conn.execute("DELETE FROM findings")
+            conn.execute("DELETE FROM flow_tags")
+            conn.execute("DELETE FROM flow_links")
+            conn.execute("DELETE FROM flow_notes")
 
-    def add_finding(self, flow_id: str, rule_id: str, severity: str, category: str, evidence: str = "") -> bool:
+    def add_finding(self, flow_id: str, rule_id: str, severity: str, category: str, evidence: str = "", kind: str = "finding") -> bool:
         try:
             with self._get_conn() as conn:
                 conn.execute(
-                    "INSERT OR IGNORE INTO findings (flow_id, rule_id, severity, category, evidence, created_at) "
-                    "VALUES (?, ?, ?, ?, ?, ?)",
-                    (flow_id, rule_id, severity, category, evidence[:500], time.time()),
+                    "INSERT OR IGNORE INTO findings (flow_id, rule_id, severity, category, evidence, created_at, kind) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (flow_id, rule_id, severity, category, evidence[:500], time.time(), kind),
                 )
             return True
         except Exception:
@@ -362,9 +417,10 @@ class TrafficDB:
         category: Optional[str] = None,
         rule_id: Optional[str] = None,
         flow_id: Optional[str] = None,
+        kind: Optional[str] = "finding",
         limit: int = 50,
     ) -> List[Dict[str, Any]]:
-        sql = "SELECT id, flow_id, rule_id, severity, category, evidence, created_at FROM findings WHERE 1=1"
+        sql = "SELECT id, flow_id, rule_id, severity, category, evidence, kind, created_at FROM findings WHERE 1=1"
         params: list = []
         if severity:
             sql += " AND severity = ?"
@@ -378,6 +434,9 @@ class TrafficDB:
         if flow_id:
             sql += " AND flow_id = ?"
             params.append(flow_id)
+        if kind and kind != "all":
+            sql += " AND kind = ?"
+            params.append(kind)
         sql += " ORDER BY id DESC LIMIT ?"
         params.append(limit)
         with self._get_conn() as conn:
@@ -388,13 +447,232 @@ class TrafficDB:
         with self._get_conn() as conn:
             conn.row_factory = sqlite3.Row
             total = conn.execute("SELECT COUNT(*) c FROM findings").fetchone()["c"]
-            by_sev = {r["severity"]: r["c"] for r in conn.execute(
-                "SELECT severity, COUNT(*) c FROM findings GROUP BY severity"
-            ).fetchall()}
-            by_cat = {r["category"]: r["c"] for r in conn.execute(
-                "SELECT category, COUNT(*) c FROM findings GROUP BY category"
-            ).fetchall()}
-            return {"total": total, "by_severity": by_sev, "by_category": by_cat}
+            sev_kind = conn.execute(
+                "SELECT kind, severity, COUNT(*) c FROM findings GROUP BY kind, severity"
+            ).fetchall()
+            cat_kind = conn.execute(
+                "SELECT kind, category, COUNT(*) c FROM findings GROUP BY kind, category"
+            ).fetchall()
+            findings_sev = {r["severity"]: r["c"] for r in sev_kind if r["kind"] == "finding"}
+            findings_cat = {r["category"]: r["c"] for r in cat_kind if r["kind"] == "finding"}
+            signals_sev = {r["severity"]: r["c"] for r in sev_kind if r["kind"] == "signal"}
+            signals_cat = {r["category"]: r["c"] for r in cat_kind if r["kind"] == "signal"}
+            return {
+                "total": total,
+                "findings": {"by_severity": findings_sev, "by_category": findings_cat,
+                             "count": sum(findings_sev.values())},
+                "signals": {"by_severity": signals_sev, "by_category": signals_cat,
+                            "count": sum(signals_sev.values())},
+            }
+
+    # ----- Tag/Link/Chain (multi-step trace) -----
+
+    def add_tag(self, flow_id: str, tag: str) -> bool:
+        if not tag.strip():
+            return False
+        try:
+            with self._get_conn() as conn:
+                conn.execute(
+                    "INSERT OR IGNORE INTO flow_tags (flow_id, tag, created_at) VALUES (?, ?, ?)",
+                    (flow_id, tag.strip(), time.time()),
+                )
+            return True
+        except Exception:
+            return False
+
+    def remove_tag(self, flow_id: str, tag: str) -> bool:
+        with self._get_conn() as conn:
+            cur = conn.execute(
+                "DELETE FROM flow_tags WHERE flow_id = ? AND tag = ?",
+                (flow_id, tag.strip()),
+            )
+            return cur.rowcount > 0
+
+    def get_tags(self, flow_id: str) -> List[str]:
+        with self._get_conn() as conn:
+            return [r[0] for r in conn.execute(
+                "SELECT tag FROM flow_tags WHERE flow_id = ? ORDER BY created_at", (flow_id,)
+            ).fetchall()]
+
+    def find_by_tag(self, tag: str) -> List[str]:
+        with self._get_conn() as conn:
+            return [r[0] for r in conn.execute(
+                "SELECT flow_id FROM flow_tags WHERE tag = ? ORDER BY created_at DESC",
+                (tag.strip(),),
+            ).fetchall()]
+
+    def add_link(self, source_id: str, target_id: str, relation: str = "") -> bool:
+        try:
+            with self._get_conn() as conn:
+                conn.execute(
+                    "INSERT OR IGNORE INTO flow_links (source_id, target_id, relation, created_at) "
+                    "VALUES (?, ?, ?, ?)",
+                    (source_id, target_id, relation.strip(), time.time()),
+                )
+            return True
+        except Exception:
+            return False
+
+    def remove_link(self, source_id: str, target_id: str, relation: str = "") -> bool:
+        with self._get_conn() as conn:
+            cur = conn.execute(
+                "DELETE FROM flow_links WHERE source_id = ? AND target_id = ? AND relation = ?",
+                (source_id, target_id, relation.strip()),
+            )
+            return cur.rowcount > 0
+
+    def get_chain(self, flow_id: str, depth: int = 2) -> Dict[str, Any]:
+        """BFS the link graph from `flow_id` up to `depth` hops on each side.
+        Returns a flat structure (no recursion) so the agent can read it cheaply."""
+        depth = max(0, min(depth, 5))
+        seen = {flow_id}
+
+        def _walk(start_id: str, direction: str, hops: int) -> List[Dict[str, Any]]:
+            results: List[Dict[str, Any]] = []
+            frontier = [(start_id, 0)]
+            while frontier:
+                cur, lvl = frontier.pop(0)
+                if lvl >= hops:
+                    continue
+                with self._get_conn() as conn:
+                    if direction == "up":
+                        rows = conn.execute(
+                            "SELECT source_id, relation FROM flow_links WHERE target_id = ?",
+                            (cur,),
+                        ).fetchall()
+                    else:
+                        rows = conn.execute(
+                            "SELECT target_id, relation FROM flow_links WHERE source_id = ?",
+                            (cur,),
+                        ).fetchall()
+                for nid, rel in rows:
+                    if nid in seen:
+                        continue
+                    seen.add(nid)
+                    results.append({"flow_id": nid, "relation": rel, "depth": lvl + 1})
+                    frontier.append((nid, lvl + 1))
+            return results
+
+        return {
+            "flow_id": flow_id,
+            "tags": self.get_tags(flow_id),
+            "upstream": _walk(flow_id, "up", depth),
+            "downstream": _walk(flow_id, "down", depth),
+        }
+
+    # ----- Triage notes -----
+
+    NOTE_VERDICTS = ("vulnerable", "not_vulnerable", "inconclusive")
+    NOTE_FIELD_LIMIT = 1500  # per-section character cap; keep notes context-cheap
+
+    @classmethod
+    def _trim_note_field(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        s = str(value).strip()
+        if not s:
+            return None
+        if len(s) > cls.NOTE_FIELD_LIMIT:
+            return s[: cls.NOTE_FIELD_LIMIT - 3] + "..."
+        return s
+
+    def upsert_note(
+        self,
+        flow_id: str,
+        verdict: str,
+        scenario: Optional[str] = None,
+        sensitive_fields: Optional[str] = None,
+        test_steps: Optional[str] = None,
+        conclusion: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Insert or replace a triage note for a single flow. One note per flow_id —
+        repeated calls overwrite. Returns the stored note (with timestamps)."""
+        if verdict not in self.NOTE_VERDICTS:
+            raise ValueError(f"verdict must be one of {self.NOTE_VERDICTS}")
+        scenario = self._trim_note_field(scenario)
+        sensitive_fields = self._trim_note_field(sensitive_fields)
+        test_steps = self._trim_note_field(test_steps)
+        conclusion = self._trim_note_field(conclusion)
+        now = time.time()
+        with self._get_conn() as conn:
+            existing = conn.execute(
+                "SELECT created_at FROM flow_notes WHERE flow_id = ?", (flow_id,)
+            ).fetchone()
+            created_at = existing[0] if existing else now
+            conn.execute(
+                """
+                INSERT INTO flow_notes
+                    (flow_id, verdict, scenario, sensitive_fields, test_steps,
+                     conclusion, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(flow_id) DO UPDATE SET
+                    verdict=excluded.verdict,
+                    scenario=excluded.scenario,
+                    sensitive_fields=excluded.sensitive_fields,
+                    test_steps=excluded.test_steps,
+                    conclusion=excluded.conclusion,
+                    updated_at=excluded.updated_at
+                """,
+                (flow_id, verdict, scenario, sensitive_fields, test_steps,
+                 conclusion, created_at, now),
+            )
+        return self.get_note(flow_id)
+
+    def get_note(self, flow_id: str) -> Optional[Dict[str, Any]]:
+        with self._get_conn() as conn:
+            conn.row_factory = sqlite3.Row
+            row = conn.execute(
+                "SELECT * FROM flow_notes WHERE flow_id = ?", (flow_id,)
+            ).fetchone()
+            return dict(row) if row else None
+
+    def list_notes(
+        self,
+        verdict: Optional[str] = None,
+        flow_id: Optional[str] = None,
+        limit: int = 50,
+    ) -> List[Dict[str, Any]]:
+        sql = "SELECT * FROM flow_notes WHERE 1=1"
+        params: list = []
+        if verdict:
+            sql += " AND verdict = ?"
+            params.append(verdict)
+        if flow_id:
+            sql += " AND flow_id = ?"
+            params.append(flow_id)
+        sql += " ORDER BY updated_at DESC LIMIT ?"
+        params.append(limit)
+        with self._get_conn() as conn:
+            conn.row_factory = sqlite3.Row
+            return [dict(r) for r in conn.execute(sql, params).fetchall()]
+
+    def remove_note(self, flow_id: str) -> bool:
+        with self._get_conn() as conn:
+            cur = conn.execute("DELETE FROM flow_notes WHERE flow_id = ?", (flow_id,))
+            return cur.rowcount > 0
+
+    def notes_stats(self) -> Dict[str, int]:
+        with self._get_conn() as conn:
+            conn.row_factory = sqlite3.Row
+            total = conn.execute("SELECT COUNT(*) c FROM flow_notes").fetchone()["c"]
+            by_verdict = {
+                r["verdict"]: r["c"]
+                for r in conn.execute(
+                    "SELECT verdict, COUNT(*) c FROM flow_notes GROUP BY verdict"
+                ).fetchall()
+            }
+            return {"total": total, "by_verdict": by_verdict}
+
+    def find_replay_match(self, url: str, method: str, since_ts: float) -> Optional[str]:
+        """Find the most recent flow matching url+method captured after since_ts.
+        Used by replay tools to return new_flow_id for closed-loop diff/evidence."""
+        with self._get_conn() as conn:
+            row = conn.execute(
+                "SELECT id FROM flows WHERE url = ? AND method = ? AND timestamp > ? "
+                "ORDER BY timestamp DESC LIMIT 1",
+                (url, method.upper(), since_ts),
+            ).fetchone()
+            return row[0] if row else None
 
     def get_all_for_analysis(self, limit: Optional[int] = None, lightweight: bool = False) -> List[Dict[str, Any]]:
         cols = "id, url, method, status_code, request_headers, response_headers" if lightweight else "*"

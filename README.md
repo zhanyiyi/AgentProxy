@@ -16,13 +16,17 @@ AgentProxy can either launch its own Playwright Chromium browser or connect to a
 
 - Start and stop a complete browser + MITM session from MCP.
 - Capture HTTP and HTTPS traffic into a local SQLite database.
-- **Passive scanner** — every captured response is auto-checked against 8 high-precision rules (secret leaks, SQL errors, CORS misconfig, debug endpoints, etc) and findings stored in a separate table.
+- **Passive scanner with finding/signal split** — every captured response is auto-checked against 10 rules; high-confidence findings are surfaced separately from low-confidence signals so the agent's context isn't drowned by noise.
 - **Layered traffic abstraction** — `traffic_list` returns compact summaries, `traffic_inspect` exposes `meta`/`preview`/`full` levels so the agent only loads what it needs.
 - **Site map** — one call gives a host-grouped attack-surface map with endpoint params, status distribution, auth requirements, and finding counts.
-- **Browser-context replay** — `traffic_replay_via_browser` reuses live cookies/tokens so replay does not 401.
-- **Profile persistence** — login state survives across sessions via `storage_state` dump/restore.
-- **Traffic diff** — JSON field-level diff for IDOR / privilege-escalation verification.
-- Navigate, click, fill, type, run JavaScript, inspect HTML/text, manage cookies, and take screenshots.
+- **Semantic parameter map** — `traffic_params` lists every mutable parameter (path/query/json/form/headers/cookies) tagged with categories like `identity_param`, `ssrf_candidate`, `sql_candidate`, `state_token`. The agent sees attack surface without reading the body.
+- **Dual-identity testing (cold/hot fusion)** — multiple named browser contexts (default + victim + admin + …) inside one Browser process. `session_create_context`/`session_use_context` for live use; saved `<name>_state.json` profiles auto-hydrate on demand. `traffic_replay_via_browser(context="victim")` reuses victim cookies for IDOR/privilege-escalation testing.
+- **Closed-loop replay** — every replay returns `new_flow_id` so the agent chains directly into `traffic_diff` and `evidence_bundle`. Browser-context replay reuses live cookies/tokens to avoid 401/403 noise.
+- **Multi-step trace (tag + link)** — name flows with `traffic_tag`, declare data-flow with `traffic_link`, walk the DAG with `traffic_chain`. Built for stored SSRF, OAuth flows, two-stage IDOR.
+- **Triage notes** — after researching a flow, the agent records a structured 4-section note (scenario / sensitive fields / test steps / conclusion) via `note_add`. Notes are embedded into evidence bundles automatically; the `triage_note` MCP prompt gives the agent the checklist on demand.
+- **Evidence bundle** — `evidence_bundle(flow_id)` walks the link DAG and emits a Markdown report with method/url/status/profile/tags/findings/notes/curl-reproducer. Drop straight into a SRC report.
+- **Profile persistence** — login state survives across sessions via per-context `storage_state` dump/restore.
+- Navigate, click, fill, type, run JavaScript, inspect HTML/text, manage cookies, take screenshots, read console logs.
 - List, search, inspect, replay, and fuzz captured traffic (fuzz now flags reflected payloads).
 - Extract values with JSONPath or CSS selectors.
 - Detect common auth signals such as session cookies, bearer tokens, JWTs, API keys, CSRF tokens, and basic auth.
@@ -159,6 +163,71 @@ The JSON equivalent, useful for other MCP clients, is:
 }
 ```
 
+### Loading a Custom Rule Pack From an MCP Client
+
+You don't run `agent-proxy --config foo.yaml` by hand — the MCP client launches the server for you. There are three ways to point that launched process at your YAML:
+
+**1. Pass `--config` through the MCP client's `args`** (most explicit)
+
+Codex (`~/.codex/config.toml`):
+
+```toml
+[mcp_servers.agent-proxy]
+command = "/path/to/AgentProxy/.venv/bin/python"
+args    = ["-m", "agent_proxy.main", "--config", "/home/me/work/my_rules.yaml"]
+cwd     = "/path/to/AgentProxy"
+```
+
+Claude Code / Cursor / generic JSON:
+
+```json
+{
+  "mcpServers": {
+    "agent-proxy": {
+      "command": "/path/to/AgentProxy/.venv/bin/python",
+      "args": ["-m", "agent_proxy.main", "--config", "/home/me/work/my_rules.yaml"],
+      "cwd": "/path/to/AgentProxy"
+    }
+  }
+}
+```
+
+**2. Pass `AGENT_PROXY_CONFIG` as an environment variable** (cleaner when juggling multiple clients)
+
+Codex:
+
+```toml
+[mcp_servers.agent-proxy]
+command = "/path/to/AgentProxy/.venv/bin/python"
+args    = ["-m", "agent_proxy.main"]
+cwd     = "/path/to/AgentProxy"
+env     = { AGENT_PROXY_CONFIG = "/home/me/work/my_rules.yaml" }
+```
+
+JSON:
+
+```json
+{
+  "mcpServers": {
+    "agent-proxy": {
+      "command": "/path/to/AgentProxy/.venv/bin/python",
+      "args": ["-m", "agent_proxy.main"],
+      "cwd": "/path/to/AgentProxy",
+      "env": { "AGENT_PROXY_CONFIG": "/home/me/work/my_rules.yaml" }
+    }
+  }
+}
+```
+
+**3. Drop a file named `agent_proxy.yaml` next to the project** (zero-config style)
+
+If `<cwd>/agent_proxy.yaml` exists, the server picks it up automatically — no flag, no env var. Useful when you want different rule packs per project: `cd` into the target's working dir and the right pack loads. The `cwd` field in your MCP client config controls where the server looks.
+
+**Priority** when multiple are present: explicit `--config` flag &gt; `AGENT_PROXY_CONFIG` env &gt; `<cwd>/agent_proxy.yaml` &gt; bundled defaults.
+
+After restarting the MCP client, ask the agent to call `config_show(section="source_paths")` to verify which file actually loaded.
+
+
 ## Quick Smoke Test
 
 After Codex loads the MCP server, call:
@@ -178,6 +247,63 @@ Expected behavior:
 - `traffic_list` shows captured traffic from Baidu and related static/resource domains.
 - `session_stop` closes the browser and proxy.
 
+## Customising Rules with YAML
+
+All semantic parameter dictionaries, passive-scan rules, and fuzz payloads live in a single YAML file. The bundled rule pack ships at `src/agent_proxy/config/defaults.yaml` — copy it, edit the sections you care about, then point your MCP client at the new file (see "Loading a Custom Rule Pack From an MCP Client" above for the three ways to do this).
+
+```bash
+cp src/agent_proxy/config/defaults.yaml ~/work/my_rules.yaml
+# edit ~/work/my_rules.yaml
+# then either:
+#   - add `--config /home/me/work/my_rules.yaml` to your MCP client's args
+#   - or set env AGENT_PROXY_CONFIG=/home/me/work/my_rules.yaml in the client config
+#   - or save it as <cwd>/agent_proxy.yaml so it auto-loads
+# restart the MCP client (Codex / Claude Code / Cursor) so the server reloads
+```
+
+You only need to write the sections that differ. Dictionaries deep-merge with the bundled defaults; lists at the leaf level replace wholesale.
+
+Examples of common edits:
+
+```yaml
+# Add new semantic categories without touching the existing 11
+semantic_params:
+  internal_id_param:
+    - lark_account_id
+    - cas_employee_id
+
+# Add new secret regexes (you must list the full body_rules array because
+# lists replace wholesale — the easiest fix is to copy the whole list and
+# append your additions)
+passive_scan:
+  body_rules:
+    # ... copy bundled entries here ...
+    - id: github_token
+      severity: high
+      category: secret_leak
+      kind: finding
+      regex: 'gh[pousr]_[A-Za-z0-9]{36,}'
+
+# Add a brand-new fuzz category — traffic_fuzz(payload_category="ssti") will
+# pick it up immediately, no code change needed
+fuzz_payloads:
+  ssti:
+    - "{{7*7}}"
+    - "${7*7}"
+    - "<%= 7*7 %>"
+```
+
+Inspect the active rule pack at runtime through the `config_show` MCP tool:
+
+```text
+config_show()                          # full dump
+config_show(section="source_paths")    # which yaml files actually loaded?
+config_show(section="fuzz_payloads")
+config_show(section="semantic_params")
+```
+
+Invalid regex entries are skipped with a warning so a single typo never breaks the rest of the pack.
+
 ## Recommended Triage Workflow
 
 The agent-friendly path is to look at signals before bodies:
@@ -190,14 +316,87 @@ browser_navigate(url="https://target.example.com")
 traffic_findings_stats()                    # how dense is the attack surface?
 site_map()                                  # host-grouped endpoint map
 traffic_findings(severity="high")           # what should I look at first?
+traffic_params(flow_id="<id>")              # which params are mutable + semantic tags
 traffic_inspect(flow_id="<id>", level="meta")     # confirm context cheaply
 traffic_inspect(flow_id="<id>", level="full")     # only when needed
-traffic_replay_via_browser(flow_id="<id>")        # retry with live cookies
+traffic_replay_via_browser(flow_id="<id>")        # retry with live cookies (auto returns new_flow_id)
 traffic_diff(flow_a="<id1>", flow_b="<id2>")      # IDOR / privilege check
+note_add(flow_id="<id>", verdict="...", scenario="...", ...)   # ALWAYS record the verdict
 session_stop()
 ```
 
 `session_start(profile_dir=...)` saves storage state on stop and restores it next time so login state survives sessions.
+
+## Dual-Identity (BOLA / IDOR / Privilege Escalation)
+
+```text
+# 1. Start with a profile dir so identities persist across runs
+session_start(profile_dir="/tmp/agentproxy/acme")
+
+# 2. Login as the VICTIM in a dedicated context
+session_create_context(name="victim", from_profile=false)
+session_use_context(name="victim")
+browser_navigate(url="https://acme.example.com/login")
+# (login as victim user — humans can take over here, or use browser_fill/click)
+session_save_profile(name="victim")          # snapshot victim cookies/localStorage
+
+# 3. Switch back to default and login as ATTACKER
+session_use_context(name="default")
+browser_navigate(url="https://acme.example.com/login")
+# (login as attacker user)
+session_save_profile(name="default")
+
+# 4. Drive the attacker session, find a target flow
+browser_navigate(url="https://acme.example.com/api/order/12345")
+traffic_list(limit=20, with_findings=true)
+# pick the flow id of the sensitive request, e.g. flow_a
+traffic_params(flow_id=flow_a)               # confirm it has identity_param tags
+
+# 5. Replay flow_a through the VICTIM context (the IDOR test)
+result = traffic_replay_via_browser(flow_id=flow_a, context="victim")
+# result includes new_flow_id
+
+# 6. Compare — if responses match, IDOR confirmed
+traffic_diff(flow_a, new_flow_id_from_result)
+traffic_link(flow_a, new_flow_id, relation="identity_swap")
+traffic_tag(flow_a, tag="bola_alice_order")
+
+# 7. Multi-step chain & evidence
+evidence_bundle(flow_id=flow_a, depth=2)     # Markdown report ready to drop into a SRC submission
+session_stop()
+```
+
+`X-AgentProxy-Context` header is auto-injected per context and stripped before the request leaves the proxy, so the target server never sees it. Each captured flow is labeled with `profile_label` in SQLite.
+
+## Triage Notes
+
+After judging a flow, record the verdict — even when no vulnerability was found. "tested X / Y / Z, no anomaly" is the most useful note for the next session, and the report builder auto-pulls notes into `evidence_bundle`.
+
+```text
+# Researching a flow
+traffic_inspect(flow_id="<id>", level="full")
+traffic_params(flow_id="<id>")
+traffic_replay_via_browser(flow_id="<id>", context="victim")
+traffic_diff(flow_a, flow_b)
+
+# Done — record what happened (verdict ∈ vulnerable | not_vulnerable | inconclusive)
+note_add(
+  flow_id="<id>",
+  verdict="not_vulnerable",
+  scenario="POST /api/order/cancel; orderId in JSON; auth via session cookie.",
+  sensitive_fields="orderId (object_id_param), userId (cookie, identity_param)",
+  test_steps="Replayed via victim ctx -> 403; mutated orderId=1 -> identical baseline; tried negative ints -> 400.",
+  conclusion="Server enforces ownership check + numeric type. Did not test cross-tenant orderId; flag for follow-up if multi-tenant."
+)
+
+# Re-visiting later? Read your prior judgement first
+note_get(flow_id="<id>")
+note_get(verdict="inconclusive")        # what still needs followup
+```
+
+If the agent forgets the structure, calling the `triage_note` MCP prompt with the flow_id returns a 4-section template inline (auto-populated with the flow's method/url so the agent doesn't lose context).
+
+`evidence_bundle(flow_id)` automatically embeds every related flow's note into the Markdown report — so by the end of a session, the bundle reads like a full SRC submission with no extra step.
 
 ## Manual Login / Captcha Mode With External Chrome
 
@@ -288,11 +487,15 @@ Useful flags:
 Session:
 
 ```text
-session_start(proxy_port=8080, headless=true, profile_dir?)
+session_start(proxy_port=8080, headless=true, profile_dir?, unsafe_disable_web_security?)
 session_connect_cdp(endpoint_url="http://127.0.0.1:9222", proxy_port=8080)
-session_save_profile(path?)
+session_save_profile(name?, path?)
+session_create_context(name, from_profile=true)
+session_use_context(name)
+session_list_contexts()
 session_status()
 session_stop()
+config_show(section?)
 ```
 
 Browser:
@@ -323,11 +526,21 @@ traffic_search(query?, domain?, method?, limit)
 traffic_clear()
 traffic_extract(flow_id, json_path?, css_selector?)
 traffic_replay(flow_id, method?, headers_json?, body?, timeout)
-traffic_replay_via_browser(flow_id, method?, headers_json?, body?, timeout_ms)
+traffic_replay_via_browser(flow_id, method?, headers_json?, body?, timeout_ms, context="default")
 traffic_diff(flow_a, flow_b, max_lines=50)
 traffic_fuzz(flow_id, target_param, param_type, payload_category)
-traffic_findings(severity?, category?, rule_id?, flow_id?, limit=50)
+traffic_findings(severity?, category?, rule_id?, flow_id?, kind="finding", limit=50)   # kind in finding|signal|all
 traffic_findings_stats()
+traffic_params(flow_id)                      # parameter map with semantic tags
+traffic_tag(flow_id, tag)                    # name a flow
+traffic_untag(flow_id, tag)
+traffic_find_by_tag(tag)
+traffic_link(source_id, target_id, relation="")    # declare A → B
+traffic_chain(flow_id, depth=2)              # walk DAG
+note_add(flow_id, verdict, scenario, sensitive_fields, test_steps, conclusion)
+note_get(flow_id?, verdict?, limit=50)       # verdict ∈ vulnerable|not_vulnerable|inconclusive
+note_remove(flow_id)
+evidence_bundle(flow_id, depth=3)            # Markdown report (auto-includes notes)
 site_map(domain?)
 traffic_auth_detect(flow_ids?)
 traffic_api_patterns(domain?, limit?)

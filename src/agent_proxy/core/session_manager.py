@@ -1,18 +1,28 @@
 import json
 import logging
+import os
+import time
 from typing import Any, Dict, List, Optional
 
 from .mitm_controller import MitmController
 from .browser_controller import BrowserController
 from ..models import SessionConfig
+from ..config import RuleConfig, load_rule_config
 
 logger = logging.getLogger("agent_proxy.session")
 
 
 class SessionManager:
-    def __init__(self, config: Optional[SessionConfig] = None):
+    def __init__(self, config: Optional[SessionConfig] = None,
+                 rule_config: Optional[RuleConfig] = None,
+                 user_config_path: Optional[str] = None):
         self.config = config or SessionConfig()
-        self.mitm = MitmController(db_path="agent_proxy_traffic.db")
+        # Rule pack: explicit > path-loaded > bundled defaults.
+        if rule_config is not None:
+            self.rules = rule_config
+        else:
+            self.rules = load_rule_config(user_config_path)
+        self.mitm = MitmController(db_path="agent_proxy_traffic.db", rules=self.rules)
         self.browser = BrowserController(
             proxy_host=self.config.proxy_host,
             proxy_port=self.config.proxy_port,
@@ -20,10 +30,11 @@ class SessionManager:
             ignore_https_errors=self.config.ignore_https_errors,
             timeout=self.config.browser_timeout,
             profile_dir=self.config.profile_dir,
+            unsafe_disable_web_security=self.config.unsafe_disable_web_security,
         )
         self._session_active = False
 
-    async def start_session(self, proxy_port: Optional[int] = None, headless: Optional[bool] = None, profile_dir: Optional[str] = None) -> str:
+    async def start_session(self, proxy_port: Optional[int] = None, headless: Optional[bool] = None, profile_dir: Optional[str] = None, unsafe_disable_web_security: Optional[bool] = None) -> str:
         if self._session_active:
             return "Session already active. Use session_stop first."
 
@@ -35,6 +46,8 @@ class SessionManager:
         self.browser.headless = hl
         if profile_dir is not None:
             self.browser.profile_dir = profile_dir or None
+        if unsafe_disable_web_security is not None:
+            self.browser.unsafe_disable_web_security = unsafe_disable_web_security
 
         proxy_result = await self.mitm.start(port=port, host=self.config.proxy_host)
         logger.info("Proxy started: %s", proxy_result)
@@ -55,6 +68,9 @@ class SessionManager:
             "proxy_port": port,
             "headless": hl,
             "profile_dir": self.browser.profile_dir,
+            "contexts": self.browser.list_contexts(),
+            "active_context": self.browser.active,
+            "unsafe_disable_web_security": self.browser.unsafe_disable_web_security,
         })
 
     async def connect_cdp_session(self, endpoint_url: str = "http://127.0.0.1:9222", proxy_port: Optional[int] = None) -> str:
@@ -159,6 +175,8 @@ class SessionManager:
             "traffic_count": len(self.mitm.db.get_summary(limit=9999)),
             "interception_rules": len(self.mitm.interceptor.rules),
             "profile_dir": self.browser.profile_dir,
+            "contexts": self.browser.list_contexts(),
+            "active_context": self.browser.active,
         }
 
     async def replay_via_browser(
@@ -168,18 +186,17 @@ class SessionManager:
         headers_override: Optional[Dict[str, str]] = None,
         body: Optional[str] = None,
         timeout_ms: int = 30000,
+        context: str = "default",
     ) -> str:
-        """Replay using the live browser context — reuses cookies/session naturally.
-        Falls back to curl_cffi replay if the browser is not running."""
-        if not self.browser.running or not self.browser._context:
-            return await self.mitm.replay_request(
-                flow_id=flow_id, method=method,
-                headers=headers_override, body=body,
-                timeout=timeout_ms / 1000.0,
-            )
+        """Replay using a named browser context (cookies/session live).
+        Cold-hot resolution:
+          1. Live context with this name -> use it.
+          2. Cold profile_dir/<name>_state.json on disk -> hydrate a fresh context, use it.
+          3. Cold profile but no live browser -> curl_cffi + storage_state cookies fallback.
+          4. Nothing matches -> plain curl_cffi replay (default identity)."""
         flow_obj = self.mitm.db.get_flow_object(flow_id)
         if not flow_obj:
-            return "Flow not found"
+            return json.dumps({"error": "Flow not found"})
         target_method = (method or flow_obj.method).upper()
         target_headers = dict(flow_obj.headers or {})
         for k in ("Host", "Content-Length", "Content-Encoding", "Cookie"):
@@ -188,20 +205,65 @@ class SessionManager:
         if headers_override:
             target_headers.update(headers_override)
         target_body = body if body is not None else flow_obj.body
-        try:
-            result = await self.browser.request_fetch(
-                url=flow_obj.url,
-                method=target_method,
-                headers=target_headers,
-                data=target_body,
-                timeout=timeout_ms,
-            )
-            return json.dumps({
-                "via": "browser_context",
-                "status": result["status"],
-                "size": result["body_size"],
-                "headers": result["headers"],
-                "body_preview": (result["body"] or "")[:2000],
-            }, indent=2)
-        except Exception as e:
-            return f"Replay via browser failed: {str(e)}"
+
+        # Step 1: live context
+        ctx_label = context
+        if self.browser.running and self.browser._browser is not None:
+            if context not in self.browser.contexts:
+                # Step 2: try cold hydrate
+                hydrated = await self.browser.ensure_context_from_profile(context)
+                if not hydrated:
+                    return json.dumps({
+                        "error": f"context '{context}' has no live session and no saved profile. "
+                                 "Login first or use session_create_context.",
+                    })
+            try:
+                before_ts = time.time()
+                result = await self.browser.request_fetch(
+                    url=flow_obj.url,
+                    method=target_method,
+                    headers=target_headers,
+                    data=target_body,
+                    timeout=timeout_ms,
+                    context=context,
+                )
+                # Find the matching captured flow (proxy already labelled it).
+                import asyncio as _aio
+                new_flow_id = None
+                for _ in range(10):
+                    new_flow_id = self.mitm.db.find_replay_match(flow_obj.url, target_method, before_ts)
+                    if new_flow_id:
+                        break
+                    await _aio.sleep(0.1)
+                return json.dumps({
+                    "via": "browser_context",
+                    "context": ctx_label,
+                    "status_code": result["status"],
+                    "size": result["body_size"],
+                    "new_flow_id": new_flow_id,
+                    "headers": result["headers"],
+                    "body_preview": (result["body"] or "")[:2000],
+                }, indent=2)
+            except Exception as e:
+                return json.dumps({"via": "browser_context", "error": str(e)})
+
+        # Step 3: browser not running, but maybe a saved profile exists
+        if self.browser.profile_dir:
+            state_path = os.path.join(self.browser.profile_dir, f"{context}_state.json")
+            if os.path.exists(state_path):
+                return await self.mitm.replay_with_storage_state(
+                    flow_id=flow_id,
+                    storage_state_path=state_path,
+                    method=method,
+                    headers=headers_override,
+                    body=body,
+                    timeout=timeout_ms / 1000.0,
+                    context_label=context,
+                )
+
+        # Step 4: nothing — fall back to default-identity replay
+        return await self.mitm.replay_request(
+            flow_id=flow_id, method=method,
+            headers=headers_override, body=body,
+            timeout=timeout_ms / 1000.0,
+        )

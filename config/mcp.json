@@ -3,7 +3,18 @@
     "agent-proxy": {
       "command": "python",
       "args": ["-m", "agent_proxy.main"],
+      "env": {},
+      "_comment_custom_rules": "To load a custom YAML rule pack, either add `--config /abs/path/my_rules.yaml` to args, or set AGENT_PROXY_CONFIG in env, or drop a file named agent_proxy.yaml next to cwd."
+    },
+    "agent-proxy-with-custom-rules-example": {
+      "command": "python",
+      "args": ["-m", "agent_proxy.main", "--config", "/home/me/work/my_rules.yaml"],
       "env": {}
+    },
+    "agent-proxy-via-env-example": {
+      "command": "python",
+      "args": ["-m", "agent_proxy.main"],
+      "env": { "AGENT_PROXY_CONFIG": "/home/me/work/my_rules.yaml" }
     }
   }
 }

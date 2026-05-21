@@ -19,6 +19,7 @@ class BrowserController:
         ignore_https_errors: bool = True,
         timeout: int = 30000,
         profile_dir: Optional[str] = None,
+        unsafe_disable_web_security: bool = False,
     ):
         self.proxy_host = proxy_host
         self.proxy_port = proxy_port
@@ -26,18 +27,30 @@ class BrowserController:
         self.ignore_https_errors = ignore_https_errors
         self.timeout = timeout
         self.profile_dir = profile_dir
+        self.unsafe_disable_web_security = unsafe_disable_web_security
         self._playwright = None
         self._browser: Optional[Browser] = None
-        self._context: Optional[BrowserContext] = None
-        self._page: Optional[Page] = None
+        # Multi-context support: each named context is fully isolated (cookies/storage),
+        # but shares the same Browser process and proxy. Keeps memory cost low.
+        self.contexts: Dict[str, BrowserContext] = {}
+        self.pages: Dict[str, Page] = {}
+        self.active: str = "default"
         self._console_logs: List[str] = []
         self._console_max = 500
         self.running = False
 
-    def _storage_state_path(self) -> Optional[str]:
+    @property
+    def _context(self) -> Optional[BrowserContext]:
+        return self.contexts.get(self.active)
+
+    @property
+    def _page(self) -> Optional[Page]:
+        return self.pages.get(self.active)
+
+    def _storage_state_path(self, name: str = "default") -> Optional[str]:
         if not self.profile_dir:
             return None
-        return os.path.join(self.profile_dir, "state.json")
+        return os.path.join(self.profile_dir, f"{name}_state.json")
 
     def _attach_console(self, page: Page):
         def _on_console(msg):
@@ -56,33 +69,64 @@ class BrowserController:
         self._playwright = await async_playwright().start()
         proxy_url = f"http://{self.proxy_host}:{self.proxy_port}"
 
+        launch_args = [
+            "--ignore-certificate-errors",
+            "--disable-features=IsolateOrigins,site-per-process",
+        ]
+        if self.unsafe_disable_web_security:
+            launch_args.append("--disable-web-security")
+            logger.warning("browser launched with --disable-web-security; CORS validation disabled")
+
         self._browser = await self._playwright.chromium.launch(
             headless=self.headless,
             proxy={"server": proxy_url},
-            args=[
-                "--ignore-certificate-errors",
-                "--disable-web-security",
-                "--disable-features=IsolateOrigins,site-per-process",
-            ],
+            args=launch_args,
         )
 
+        await self._create_named_context("default")
+        self.running = True
+        logger.info("browser_started proxy=%s headless=%s", proxy_url, self.headless)
+        return f"Browser started with proxy {proxy_url} (headless={self.headless})"
+
+    async def _create_named_context(self, name: str, from_profile: bool = True) -> BrowserContext:
+        """Create a new isolated browser context tagged with X-AgentProxy-Context.
+        If profile_dir + <name>_state.json exists and from_profile is True, restore it."""
         ctx_kwargs: Dict[str, Any] = {
             "ignore_https_errors": self.ignore_https_errors,
             "viewport": {"width": 1280, "height": 720},
             "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
         }
-        state_path = self._storage_state_path()
-        if state_path and os.path.exists(state_path):
+        state_path = self._storage_state_path(name)
+        if from_profile and state_path and os.path.exists(state_path):
             ctx_kwargs["storage_state"] = state_path
-            logger.info("browser_storage_state_loaded path=%s", state_path)
+            logger.info("storage_state_loaded context=%s path=%s", name, state_path)
 
-        self._context = await self._browser.new_context(**ctx_kwargs)
-        self._context.set_default_timeout(self.timeout)
-        self._page = await self._context.new_page()
-        self._attach_console(self._page)
-        self.running = True
-        logger.info("browser_started proxy=%s headless=%s", proxy_url, self.headless)
-        return f"Browser started with proxy {proxy_url} (headless={self.headless})"
+        ctx = await self._browser.new_context(**ctx_kwargs)
+        ctx.set_default_timeout(self.timeout)
+        # Tag every request from this context so the MITM layer can label flows.
+        await ctx.set_extra_http_headers({"X-AgentProxy-Context": name})
+        page = await ctx.new_page()
+        self._attach_console(page)
+        self.contexts[name] = ctx
+        self.pages[name] = page
+        return ctx
+
+    async def create_context(self, name: str, from_profile: bool = True) -> str:
+        if not self.running or not self._browser:
+            return "Browser not started"
+        if name in self.contexts:
+            return f"Context '{name}' already exists"
+        await self._create_named_context(name, from_profile=from_profile)
+        return f"Created context '{name}' (active still '{self.active}')"
+
+    def use_context(self, name: str) -> str:
+        if name not in self.contexts:
+            return f"Unknown context '{name}'. Available: {list(self.contexts)}"
+        self.active = name
+        return f"Active context now '{name}'"
+
+    def list_contexts(self) -> List[str]:
+        return list(self.contexts.keys())
 
     async def connect_cdp(self, endpoint_url: str = "http://127.0.0.1:9222") -> str:
         if self.running:
@@ -92,42 +136,63 @@ class BrowserController:
         self._browser = await self._playwright.chromium.connect_over_cdp(endpoint_url)
 
         if self._browser.contexts:
-            self._context = self._browser.contexts[0]
+            ctx = self._browser.contexts[0]
         else:
-            self._context = await self._browser.new_context(ignore_https_errors=self.ignore_https_errors)
+            ctx = await self._browser.new_context(ignore_https_errors=self.ignore_https_errors)
 
-        self._context.set_default_timeout(self.timeout)
-
-        pages = self._context.pages
-        self._page = pages[0] if pages else await self._context.new_page()
-        self._attach_console(self._page)
+        ctx.set_default_timeout(self.timeout)
+        # CDP mode: user manages their own profile via --user-data-dir; we still
+        # tag the context so flow labelling stays consistent.
+        try:
+            await ctx.set_extra_http_headers({"X-AgentProxy-Context": "default"})
+        except Exception:
+            pass
+        pages = ctx.pages
+        page = pages[0] if pages else await ctx.new_page()
+        self._attach_console(page)
+        self.contexts["default"] = ctx
+        self.pages["default"] = page
         self.running = True
         logger.info("browser_connected_cdp endpoint=%s", endpoint_url)
         return f"Browser connected over CDP: {endpoint_url}"
 
-    async def save_storage_state(self, path: Optional[str] = None) -> str:
-        if not self._context:
-            return "Browser not started"
-        target = path or self._storage_state_path()
+    async def save_storage_state(self, name: Optional[str] = None, path: Optional[str] = None) -> str:
+        """Snapshot a context's storage_state to disk.
+        - name=None  -> snapshot the active context, save to <profile_dir>/<active>_state.json
+        - name="foo" with live foo context -> snapshot foo, save to <profile_dir>/foo_state.json
+        - name="foo" without live foo context -> snapshot the active context, save to
+          <profile_dir>/foo_state.json (handy for "save current state under a new label")
+        """
+        target_name = name or self.active
+        ctx = self.contexts.get(target_name) or self._context
+        if not ctx:
+            return f"No live context to snapshot (asked '{target_name}')"
+        target = path or self._storage_state_path(target_name)
         if not target:
             return "No profile_dir configured and no path supplied"
         os.makedirs(os.path.dirname(target), exist_ok=True)
-        await self._context.storage_state(path=target)
-        return f"Saved storage state to {target}"
+        await ctx.storage_state(path=target)
+        return f"Saved storage state for '{target_name}' to {target}"
 
     async def stop(self) -> str:
         if not self.running:
             return "Browser is not running"
         try:
-            state_path = self._storage_state_path()
-            if state_path and self._context:
+            # Best-effort dump of every named context's storage_state
+            if self.profile_dir:
+                for name, ctx in self.contexts.items():
+                    try:
+                        path = self._storage_state_path(name)
+                        if path:
+                            os.makedirs(os.path.dirname(path), exist_ok=True)
+                            await ctx.storage_state(path=path)
+                    except Exception as e:
+                        logger.warning("storage_state save failed for '%s': %s", name, e)
+            for ctx in list(self.contexts.values()):
                 try:
-                    os.makedirs(os.path.dirname(state_path), exist_ok=True)
-                    await self._context.storage_state(path=state_path)
-                except Exception as e:
-                    logger.warning("storage_state save failed: %s", e)
-            if self._context:
-                await self._context.close()
+                    await ctx.close()
+                except Exception:
+                    pass
             if self._browser:
                 await self._browser.close()
             if self._playwright:
@@ -135,10 +200,11 @@ class BrowserController:
         except Exception as e:
             logger.error("Error stopping browser: %s", e)
         finally:
-            self._context = None
+            self.contexts.clear()
+            self.pages.clear()
+            self.active = "default"
             self._browser = None
             self._playwright = None
-            self._page = None
             self.running = False
         return "Browser stopped"
 
@@ -342,10 +408,14 @@ class BrowserController:
         headers: Optional[Dict[str, str]] = None,
         data: Optional[str] = None,
         timeout: Optional[int] = None,
+        context: Optional[str] = None,
     ) -> Dict[str, Any]:
-        """Send an HTTP request through the live browser context (reuses cookies/session)."""
-        if not self._context:
-            raise RuntimeError("Browser context not available")
+        """Send an HTTP request through a browser context (reuses cookies/session).
+        If `context` is None, uses the active one. Returns a dict shape that
+        replay_via_browser packages further."""
+        ctx = self.contexts.get(context) if context else self._context
+        if ctx is None:
+            raise RuntimeError(f"Browser context not available (asked: {context!r})")
         kwargs: Dict[str, Any] = {"method": method.upper()}
         if headers:
             kwargs["headers"] = headers
@@ -353,7 +423,7 @@ class BrowserController:
             kwargs["data"] = data
         if timeout is not None:
             kwargs["timeout"] = timeout
-        resp = await self._context.request.fetch(url, **kwargs)
+        resp = await ctx.request.fetch(url, **kwargs)
         body_bytes = await resp.body()
         body_text: Optional[str]
         try:
@@ -366,6 +436,20 @@ class BrowserController:
             "body": body_text,
             "body_size": len(body_bytes) if body_bytes else 0,
         }
+
+    async def ensure_context_from_profile(self, name: str) -> bool:
+        """Cold-start: if `name` context isn't live but a state.json exists, hydrate it.
+        Returns True iff the context is now available."""
+        if name in self.contexts:
+            return True
+        if not self._browser or not self.profile_dir:
+            return False
+        path = self._storage_state_path(name)
+        if not path or not os.path.exists(path):
+            return False
+        await self._create_named_context(name, from_profile=True)
+        logger.info("context_hydrated name=%s", name)
+        return True
 
     async def set_extra_http_headers(self, headers: Dict[str, str]) -> str:
         if not self._page:

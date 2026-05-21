@@ -38,6 +38,7 @@ class SessionConfig(BaseModel):
     body_preview_length: int = 2000
     detail_body_limit: int = 51200
     profile_dir: Optional[str] = None
+    unsafe_disable_web_security: bool = False
 
 
 class FlowSummary(BaseModel):

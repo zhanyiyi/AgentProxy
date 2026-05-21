@@ -15,6 +15,7 @@ dependencies = [
     "jsonpath-ng>=1.6.0",
     "beautifulsoup4>=4.12.0",
     "lxml>=4.9.0",
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]
@@ -30,3 +31,9 @@ agent-proxy = "agent_proxy.main:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent_proxy"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/agent_proxy/config/defaults.yaml" = "agent_proxy/config/defaults.yaml"

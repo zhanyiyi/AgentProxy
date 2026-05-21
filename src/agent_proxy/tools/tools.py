@@ -9,17 +9,22 @@ from ..models import SessionConfig, InterceptionRule
 
 def register_all_tools(mcp: FastMCP, session: SessionManager):
     @mcp.tool()
-    async def session_start(proxy_port: int = 8080, headless: bool = True, profile_dir: str = None) -> str:
+    async def session_start(proxy_port: int = 8080, headless: bool = True, profile_dir: str = None, unsafe_disable_web_security: bool = False) -> str:
         """Start a complete AgentProxy session: MITM proxy + browser with proxy configured.
         All browser traffic will automatically go through the MITM proxy for capture.
         Args:
             proxy_port: Port for the MITM proxy (default: 8080)
             headless: Run browser in headless mode (default: True)
-            profile_dir: Optional directory to persist browser storage state across sessions
-                        (cookies, localStorage). When set, login state is restored on next start
-                        and saved on stop. CDP mode does not use this.
+            profile_dir: Optional directory to persist per-context storage state across sessions.
+                Each named context dumps to <profile_dir>/<name>_state.json.
+            unsafe_disable_web_security: When True, launches Chromium with --disable-web-security.
+                This breaks SOP/CORS enforcement, so leave it OFF for real CORS-related testing.
         """
-        return await session.start_session(proxy_port=proxy_port, headless=headless, profile_dir=profile_dir)
+        return await session.start_session(
+            proxy_port=proxy_port, headless=headless,
+            profile_dir=profile_dir,
+            unsafe_disable_web_security=unsafe_disable_web_security,
+        )
 
     @mcp.tool()
     async def session_connect_cdp(endpoint_url: str = "http://127.0.0.1:9222", proxy_port: int = 8080) -> str:
@@ -43,13 +48,71 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return json.dumps(session.get_status(), indent=2)
 
     @mcp.tool()
-    async def session_save_profile(path: str = None) -> str:
+    async def session_save_profile(name: str = None, path: str = None) -> str:
         """Snapshot the current browser storage state (cookies + localStorage) to disk.
         Useful right after a manual login so the session can be restored next time.
         Args:
-            path: Optional explicit path. Defaults to <profile_dir>/state.json from session_start.
+            name: Context name to save (defaults to the active context). Saved to
+                <profile_dir>/<name>_state.json.
+            path: Optional explicit path overriding profile_dir resolution.
         """
-        return await session.browser.save_storage_state(path=path)
+        return await session.browser.save_storage_state(name=name, path=path)
+
+    @mcp.tool()
+    async def session_create_context(name: str, from_profile: bool = True) -> str:
+        """Create an isolated browser context (separate cookies/localStorage) within
+        the same browser process. The context is auto-tagged with X-AgentProxy-Context
+        so captured traffic carries `profile_label=<name>`.
+        Use it for dual-identity testing (e.g. attacker vs victim, low-priv vs admin).
+        Args:
+            name: Context name (e.g. 'victim', 'admin')
+            from_profile: When True (default) and a saved <name>_state.json exists,
+                restore that login state. Set False to start fresh.
+        """
+        return await session.browser.create_context(name, from_profile=from_profile)
+
+    @mcp.tool()
+    async def session_use_context(name: str) -> str:
+        """Switch the active browser context. All subsequent browser_* calls
+        operate on this context (its page / cookies / localStorage).
+        Args:
+            name: One of the names returned by session_list_contexts.
+        """
+        return session.browser.use_context(name)
+
+    @mcp.tool()
+    async def session_list_contexts() -> str:
+        """List all browser contexts currently live in the session, plus the active one."""
+        return json.dumps({
+            "contexts": session.browser.list_contexts(),
+            "active": session.browser.active,
+        }, indent=2)
+
+    @mcp.tool()
+    async def config_show(section: str = None) -> str:
+        """Inspect the active rule pack — semantic_params dictionaries, passive
+        scan rules, fuzz payload categories, etc.
+
+        Useful when adapting AgentProxy to a new target / language / framework:
+        you can verify what tags an agent will currently see before editing
+        the YAML.
+
+        Args:
+            section: Optional top-level section name to limit the response, e.g.
+                'semantic_params', 'passive_scan', 'fuzz_payloads',
+                'fuzz_categories', 'interesting_headers', 'source_paths'.
+                Pass None to dump everything.
+        """
+        from ..config import to_inspectable_dict
+        full = to_inspectable_dict(session.rules)
+        if section:
+            if section not in full:
+                return json.dumps({
+                    "error": f"unknown section '{section}'",
+                    "available": sorted(full.keys()),
+                }, indent=2)
+            return json.dumps({section: full[section]}, indent=2)
+        return json.dumps(full, indent=2)
 
     # ==================== Browser Tools ====================
 
@@ -201,6 +264,16 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """Get the accessibility tree of the current page (useful for understanding page structure)."""
         return await session.browser.get_accessibility_tree()
 
+    @mcp.tool()
+    async def browser_get_console_logs(clear: bool = False) -> str:
+        """Return JS console logs collected since session start.
+        Useful for XSS debugging, OAuth/CSRF flow failures, frontend auth issues,
+        and detecting CSP violations during pen testing.
+        Args:
+            clear: If True, clears the buffer after reading (default False)
+        """
+        return await session.browser.get_console_logs(clear=clear)
+
     # ==================== MITM / Traffic Tools ====================
 
     @mcp.tool()
@@ -316,6 +389,11 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         timeout: float = 10.0,
     ) -> str:
         """Fuzz an endpoint by substituting a parameter with security payloads. Detects anomalies like 5xx errors, status code deviations, and content length changes.
+
+        After judging the result, call `note_add(flow_id, verdict, ...)` so the
+        triage outcome (vulnerable / not_vulnerable / inconclusive) is recorded
+        — even when nothing fires, "not_vulnerable, tested X / Y / Z" is the
+        most valuable note for the next session.
         Args:
             flow_id: The flow to use as base request
             target_param: Name of the parameter to fuzz
@@ -374,19 +452,28 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     @mcp.tool()
     async def traffic_findings(severity: str = None, category: str = None,
                                 rule_id: str = None, flow_id: str = None,
+                                kind: str = "finding",
                                 limit: int = 50) -> str:
-        """List passive-scan findings (signals worth investigating). One row per finding:
-        rule_id / severity / category / flow_id / short evidence.
-        Use this BEFORE traffic_list when triaging — it surfaces the high-value flows.
+        """List passive-scan results — high-confidence FINDINGS by default,
+        lower-confidence SIGNALS via kind='signal' or kind='all'.
+        One row per match: rule_id / severity / category / kind / flow_id / short evidence.
+        Triage workflow: start here, then traffic_inspect / traffic_params /
+        traffic_replay_via_browser on the flows that look interesting.
+
         Args:
-            severity: Filter by 'info' | 'low' | 'medium' | 'high'
-            category: Filter by category, e.g. 'secret_leak', 'sqli_signal', 'cors_misconfig'
+            severity: Filter 'info' | 'low' | 'medium' | 'high'
+            category: Filter category, e.g. 'secret_leak', 'sqli_signal', 'cors_misconfig'
             rule_id: Filter by a specific rule
-            flow_id: Show findings for one flow only
+            flow_id: Show entries for one flow only
+            kind: 'finding' (default — high confidence), 'signal' (low confidence),
+                or 'all' to include both
             limit: Max rows (default 50)
         """
-        rows = session.mitm.db.list_findings(severity=severity, category=category,
-                                              rule_id=rule_id, flow_id=flow_id, limit=limit)
+        rows = session.mitm.db.list_findings(
+            severity=severity, category=category,
+            rule_id=rule_id, flow_id=flow_id,
+            kind=kind, limit=limit,
+        )
         return json.dumps(rows, indent=2)
 
     @mcp.tool()
@@ -401,16 +488,27 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         headers_json: str = None,
         body: str = None,
         timeout_ms: int = 30000,
+        context: str = "default",
     ) -> str:
-        """Replay a captured request through the live browser context — automatically reuses
-        the current session's cookies, refreshed tokens, and CSRF state. The fix for
-        'replay always 401' problems. Falls back to curl_cffi if the browser is not running.
+        """Replay a captured request through a named browser context — automatically
+        reuses that identity's cookies / refreshed tokens / CSRF state.
+        For dual-identity testing pass `context="victim"` (or any name you created
+        via session_create_context). Returns JSON with `new_flow_id` so you can
+        feed it directly into traffic_diff.
+
+        Cold/hot resolution:
+        - live context found → use it
+        - context absent but <profile_dir>/<context>_state.json exists → hydrate
+        - browser stopped but profile exists → curl_cffi+cookies fallback
+        - nothing matches → plain replay as default identity
+
         Args:
             flow_id: Flow to replay
             method: Override HTTP method
             headers_json: JSON object of headers to override/add
             body: Override request body
             timeout_ms: Request timeout in milliseconds (default 30000)
+            context: Browser context name to replay through (default 'default')
         """
         parsed_headers = None
         if headers_json:
@@ -432,6 +530,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             flow_id=flow_id, method=method,
             headers_override=parsed_headers, body=resolved_body,
             timeout_ms=timeout_ms,
+            context=context,
         )
 
     @mcp.tool()
@@ -439,12 +538,168 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """Compare two captured flows. Outputs status/size deltas plus a JSON field-level diff
         (added/removed/changed paths) for JSON responses, or a unified text diff otherwise.
         Use for IDOR / privilege-escalation / parameter-pollution verification.
+
+        After you reach a verdict on the diff, call `note_add(flow_id=flow_a, ...)`
+        so the conclusion isn't lost.
         Args:
             flow_a: First flow id (baseline)
             flow_b: Second flow id (comparison)
             max_lines: Cap for unified text diff lines (default 50)
         """
         return session.mitm.diff_flows(flow_a, flow_b, max_lines=max_lines)
+
+    # ==================== Tag / Link / Chain (multi-step trace) ====================
+
+    @mcp.tool()
+    async def traffic_tag(flow_id: str, tag: str) -> str:
+        """Tag a flow with a semantic alias (e.g. 'login', 'ssrf_config_create',
+        'idor_target_alice'). Tags persist in SQLite and survive session restarts.
+        One flow can have many tags; tags can be reused across flows.
+        """
+        ok = session.mitm.db.add_tag(flow_id, tag)
+        return f"Tagged: {tag}" if ok else "Failed to tag (empty tag or db error)"
+
+    @mcp.tool()
+    async def traffic_untag(flow_id: str, tag: str) -> str:
+        """Remove a tag from a flow."""
+        ok = session.mitm.db.remove_tag(flow_id, tag)
+        return f"Untagged: {tag}" if ok else "Tag not present"
+
+    @mcp.tool()
+    async def traffic_find_by_tag(tag: str) -> str:
+        """List all flow_ids that carry this tag. Use it as a stable index for
+        recurring entry points (login, upload, admin endpoints) instead of
+        searching by URL pattern."""
+        ids = session.mitm.db.find_by_tag(tag)
+        return json.dumps({"tag": tag, "flow_ids": ids, "count": len(ids)}, indent=2)
+
+    @mcp.tool()
+    async def traffic_link(source_id: str, target_id: str, relation: str = "") -> str:
+        """Record that source_id's output influences target_id's input.
+        Examples of relation strings: 'stored_input_trigger' (stored XSS/SSRF),
+        'param_passthrough' (file_id from upload to preview), 'identity_swap'
+        (replay with different identity), 'payload_mutation' (variant of source).
+        Used by traffic_chain and evidence_bundle to walk the multi-step DAG."""
+        ok = session.mitm.db.add_link(source_id, target_id, relation)
+        return f"Linked: {source_id} -> {target_id} ({relation})" if ok else "Failed to link"
+
+    @mcp.tool()
+    async def traffic_chain(flow_id: str, depth: int = 2) -> str:
+        """Return the local subgraph around `flow_id`: tags + upstream/downstream
+        flows reached within `depth` hops via traffic_link relations. The agent
+        uses this to assemble multi-step exploit chains (stored SSRF, OAuth flows,
+        chained IDOR) and to feed evidence_bundle.
+        Args:
+            depth: BFS depth on each side (default 2, max 5)
+        """
+        return json.dumps(session.mitm.db.get_chain(flow_id, depth=depth), indent=2)
+
+    @mcp.tool()
+    async def traffic_params(flow_id: str) -> str:
+        """Extract all mutable parameters of a flow (path / query / json body /
+        form / interesting headers / cookies) and tag each with semantic
+        categories like identity_param, ssrf_candidate, sql_candidate,
+        privilege_param, state_token, etc.
+
+        Use this BEFORE traffic_inspect — it tells the agent what to mutate
+        without burning tokens on the body. Result keys point you straight at
+        the most likely IDOR / SSRF / SQLi / privilege-escalation candidates.
+
+        Tag dictionaries are loaded from the YAML rule pack — call
+        config_show() to inspect what's currently active.
+        """
+        from ..core.param_extractor import extract_params
+        flow_data = session.mitm.db.get_detail(flow_id, level="full", body_preview_length=256 * 1024)
+        if not flow_data:
+            return "Flow not found"
+        return json.dumps(extract_params(flow_data, rules=session.rules), indent=2)
+
+    @mcp.tool()
+    async def evidence_bundle(flow_id: str, depth: int = 3) -> str:
+        """Generate a Markdown evidence bundle for a vulnerability — walks the
+        flow_links DAG `depth` hops on each side, emits each related flow's
+        method/url, status, profile_label, tags, findings, body previews,
+        triage notes (if any), and a curl reproducer. Drop the output straight
+        into a SRC report.
+        Args:
+            flow_id: The root flow id (typically the trigger / final exploit step).
+            depth: How many hops upstream and downstream to follow (default 3, max 5).
+        """
+        return session.mitm.evidence_bundle(flow_id, depth=depth)
+
+    @mcp.tool()
+    async def note_add(
+        flow_id: str,
+        verdict: str,
+        scenario: str = "",
+        sensitive_fields: str = "",
+        test_steps: str = "",
+        conclusion: str = "",
+    ) -> str:
+        """Record a triage note for a flow you just researched. ALWAYS call this
+        once you reach a verdict on a flow — even when no vulnerability was
+        found. The note is what future-you / the report builder reads back.
+
+        Keep each section short and concrete (1-3 sentences each is plenty;
+        each field is hard-capped at 1500 chars). One note per flow_id —
+        calling again overwrites.
+
+        Args:
+            flow_id: The flow being judged.
+            verdict: One of 'vulnerable' | 'not_vulnerable' | 'inconclusive'.
+                Use 'inconclusive' when the endpoint deserves a second look
+                with more context (different account, different payload, etc).
+            scenario: WHAT IS THIS — business action, what could go wrong,
+                what's notable in the traffic. e.g. "POST /api/order/cancel,
+                JSON body has orderId; identity_param 'userId' present in cookie."
+            sensitive_fields: WHICH FIELDS WERE TESTABLE — list the params /
+                headers / cookies you considered, plus their semantic tags
+                (use traffic_params if unsure). e.g. "orderId (object_id_param),
+                userId (identity_param), redirect (redirect_candidate)."
+            test_steps: WHAT YOU DID — the mutations / replays / diffs you ran
+                and what each one returned. e.g. "Replayed via victim context,
+                got 403; mutated orderId to 1, response identical to baseline;
+                tried redirect=https://evil, server stripped scheme."
+            conclusion: VERDICT JUSTIFICATION — for vulnerable: the impact +
+                evidence (which flow_id contains the proof). For not_vulnerable:
+                why you're confident. For inconclusive: what's still missing.
+                Mention assumptions you made or angles you skipped.
+        """
+        try:
+            note = session.mitm.db.upsert_note(
+                flow_id=flow_id, verdict=verdict,
+                scenario=scenario, sensitive_fields=sensitive_fields,
+                test_steps=test_steps, conclusion=conclusion,
+            )
+            return json.dumps({"status": "saved", "note": note}, indent=2)
+        except ValueError as e:
+            return json.dumps({"error": str(e)})
+
+    @mcp.tool()
+    async def note_get(
+        flow_id: str = None,
+        verdict: str = None,
+        limit: int = 50,
+    ) -> str:
+        """Read triage notes back. Without arguments returns the most recent 50
+        notes across all flows; pass `flow_id` for a single note or `verdict`
+        to filter (vulnerable / not_vulnerable / inconclusive).
+
+        Use this BEFORE re-investigating a flow — you may have already judged
+        it in an earlier turn.
+        """
+        if flow_id and not verdict:
+            note = session.mitm.db.get_note(flow_id)
+            return json.dumps(note or {"status": "no note for this flow"}, indent=2)
+        notes = session.mitm.db.list_notes(verdict=verdict, flow_id=flow_id, limit=limit)
+        stats = session.mitm.db.notes_stats()
+        return json.dumps({"stats": stats, "notes": notes}, indent=2)
+
+    @mcp.tool()
+    async def note_remove(flow_id: str) -> str:
+        """Delete the triage note for a flow."""
+        ok = session.mitm.db.remove_note(flow_id)
+        return "deleted" if ok else "no note for this flow"
 
     @mcp.tool()
     async def traffic_generate_code(flow_ids: str, framework: str = "curl_cffi") -> str:
@@ -672,3 +927,60 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return json.dumps(flows, indent=2)
         else:
             return f"Unknown format: {format}. Use 'openapi', 'patterns', or 'traffic'"
+
+    # ==================== Prompts ====================
+
+    @mcp.prompt()
+    async def triage_note(flow_id: str) -> str:
+        """Walk through the four-step triage checklist for a flow and save it.
+
+        Invoke this prompt whenever you finish researching a flow — it primes
+        you with the structure SRC researchers actually use, so notes are
+        consistent across the session and the agent doesn't skip steps."""
+        # Pull the flow's current shape so the agent has context inline.
+        detail = session.mitm.db.get_detail(flow_id, level="meta")
+        if not detail:
+            return f"Flow `{flow_id}` not found. Use traffic_list to find a valid id first."
+        req = detail.get("request") or {}
+        resp = detail.get("response") or {}
+        existing = session.mitm.db.get_note(flow_id)
+        existing_block = ""
+        if existing:
+            existing_block = (
+                "\n**An existing note is present** — calling note_add will OVERWRITE it. "
+                f"Current verdict: `{existing['verdict']}`. Re-read with note_get if needed.\n"
+            )
+        return f"""You just finished researching flow `{flow_id}`:
+
+- **{req.get('method')}** `{req.get('url')}`
+- Status: `{resp.get('status_code')}`
+{existing_block}
+Now write a triage note via `note_add`. Fill ALL FOUR sections — keep each
+to 1–3 short sentences. Don't skip a section just because nothing happened
+there; "tested X, no anomaly" is exactly the kind of note future-you will
+thank present-you for.
+
+1. **scenario** — What is this endpoint doing in business terms? What could
+   go wrong? What's notable in the captured traffic (auth headers? identity
+   params? unusual response fields?)?
+
+2. **sensitive_fields** — Which params / headers / cookies were testable?
+   List their names + the semantic tags from `traffic_params` (identity,
+   ssrf, sql, redirect, etc.). If you didn't run traffic_params yet, do
+   that first.
+
+3. **test_steps** — What did you actually try? Replays, mutations, diffs,
+   fuzz. For each, what was the response? Cite concrete flow_ids when you
+   created replay flows.
+
+4. **conclusion** — Pick a verdict and justify it:
+   - `vulnerable` — name the impact and point at the proof flow_id.
+   - `not_vulnerable` — what makes you confident? Which angles did you
+     cover? Note any assumptions.
+   - `inconclusive` — what's still missing? Different account? Other
+     payload class? OOB callback? Mention angles you skipped.
+
+Then call:
+note_add(flow_id="{flow_id}", verdict="...", scenario="...",
+         sensitive_fields="...", test_steps="...", conclusion="...")
+"""

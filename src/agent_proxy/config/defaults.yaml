@@ -1,0 +1,328 @@
+# AgentProxy default rule pack.
+# This file ships inside the package and is loaded on every session start.
+#
+# To customise:
+#   1. Copy this file to e.g. ~/work/my_rules.yaml
+#   2. Edit only the sections you care about (deep merge — unspecified keys
+#      keep the defaults from this file)
+#   3. Start the server with `agent-proxy --config ~/work/my_rules.yaml`
+#      OR set env var `AGENT_PROXY_CONFIG=~/work/my_rules.yaml`
+#
+# All values here can be inspected at runtime via the `config_show` MCP tool.
+
+# 11 categories of semantic parameter tags. Every traffic_params() call
+# annotates path/query/json/form/header/cookie names with the tags below.
+# Word matching is lowercase + split on -/_/. before exact compare; prefix/
+# suffix matches also count. Add new entries freely — agent immediately picks
+# them up after restart.
+semantic_params:
+  identity_param:
+    - userid
+    - uid
+    - user_id
+    - accountid
+    - account_id
+    - tenantid
+    - tenant_id
+    - orgid
+    - org_id
+    - organizationid
+    - companyid
+    - company_id
+    - memberid
+    - member_id
+    - owner
+    - ownerid
+    - creator
+    - creatorid
+    - larkaccountid
+    - serviceid
+    - appid
+    - app_id
+
+  object_id_param:
+    - historyid
+    - history_id
+    - taskid
+    - task_id
+    - fileid
+    - file_id
+    - objectid
+    - object_id
+    - groupid
+    - group_id
+    - roomid
+    - room_id
+    - knowledgebaseid
+    - datasetid
+    - dashboardid
+    - configid
+    - config_id
+    - anchor_id
+    - ticket
+
+  privilege_param:
+    - role
+    - roles
+    - permission
+    - permissions
+    - scope
+    - isadmin
+    - is_admin
+    - admin
+    - privilege
+    - privileges
+    - level
+    - access_level
+
+  money_param:
+    - price
+    - amount
+    - balance
+    - fee
+    - cost
+    - total
+    - discount
+    - credits
+    - points
+
+  ssrf_candidate:
+    - url
+    - uri
+    - src
+    - source
+    - callback
+    - callbackurl
+    - callback_url
+    - webhook
+    - webhook_url
+    - notify_url
+    - endpoint
+    - host
+    - proxy
+    - fetch
+    - import
+    - datasource
+    - data_source
+    - restapi
+    - rest_api
+    - image_url
+    - avatar_url
+
+  object_storage:
+    - bucket
+    - object
+    - objectkey
+    - object_key
+    - tos
+    - s3
+    - oss
+    - cos
+
+  redirect_candidate:
+    - redirect
+    - redirect_uri
+    - redirect_url
+    - redirecturi
+    - redirecturl
+    - next
+    - return
+    - returnurl
+    - return_url
+    - goto
+    - dest
+    - destination
+
+  file_param:
+    - file
+    - filename
+    - filepath
+    - path
+    - include
+    - load
+    - preview
+    - download
+    - image
+    - avatar
+
+  sql_candidate:
+    - sql
+    - query
+    - where
+    - filter
+    - orderby
+    - order_by
+    - order
+    - sort
+    - sortby
+    - sort_by
+    - group
+    - groupby
+    - having
+    - metrics
+    - fields
+    - columns
+
+  expression_candidate:
+    - expr
+    - expression
+    - script
+    - template
+    - tpl
+    - el
+    - formula
+    - rule
+
+  command_candidate:
+    - cmd
+    - command
+    - exec
+    - shell
+    - process
+
+  state_token:
+    - csrf
+    - xsrf
+    - _token
+    - token
+    - code
+    - state
+    - nonce
+
+
+# Headers that traffic_params() will surface to the agent. Cookie / Auth
+# values are normalised so the actual secret never enters the agent context.
+interesting_headers:
+  - authorization
+  - cookie
+  - x-csrf-token
+  - x-xsrf-token
+  - x-api-key
+  - x-auth-token
+  - x-access-token
+  - origin
+  - referer
+  - x-forwarded-for
+  - x-real-ip
+  - x-forwarded-host
+  - x-original-url
+
+
+# Passive-scan rules.
+# `kind: finding` = high confidence — surfaced by traffic_findings() default
+# `kind: signal`  = low confidence — only when the agent asks kind="signal"|"all"
+passive_scan:
+  # URL path substrings that trigger the `debug_endpoint` finding.
+  # Each entry becomes one alternative inside a single regex; escape regex
+  # meta characters yourself when needed.
+  debug_paths:
+    - /actuator(?:/|$)
+    - /debug(?:/|$)
+    - /swagger(?:-ui)?
+    - /api-docs
+    - /\.git/
+    - /\.env(?:$|\.)
+    - /phpinfo\.php
+    - /server-status
+    - /server-info
+    - /druid/
+    - /console/
+    - /wp-admin/
+    - /trace\.axd
+
+  # Parameter names that trigger the `sensitive_param` SIGNAL.
+  sensitive_param_names:
+    - redirect
+    - redirect_uri
+    - redirect_url
+    - url
+    - next
+    - callback
+    - return
+    - returnurl
+    - return_url
+    - goto
+    - dest
+    - destination
+    - file
+    - filename
+    - path
+    - filepath
+    - include
+    - page
+    - cmd
+    - exec
+    - command
+    - template
+    - tpl
+
+  # Response-body regex rules.
+  # severity: info | low | medium | high
+  # category: free-form (used by traffic_findings(category=...) filter)
+  # kind: finding | signal
+  body_rules:
+    - id: aws_access_key
+      severity: high
+      category: secret_leak
+      kind: finding
+      regex: 'AKIA[0-9A-Z]{16}'
+
+    - id: private_key_block
+      severity: high
+      category: secret_leak
+      kind: finding
+      regex: '-----BEGIN (?:RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----'
+
+    - id: jwt_in_body
+      severity: medium
+      category: secret_leak
+      kind: finding
+      regex: 'eyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}'
+
+    - id: sqli_db_error
+      severity: high
+      category: sqli_signal
+      kind: finding
+      flags: i
+      regex: 'SQLSTATE\[|ORA-\d{4,5}|MySQL server version|You have an error in your SQL syntax|PostgreSQL.*?ERROR|SQLiteException|System\.Data\.SQLClient\.SqlException'
+
+    - id: stacktrace
+      severity: medium
+      category: error_signal
+      kind: finding
+      flags: m
+      regex: 'Traceback \(most recent call last\)|^\s+at [\w\.$]+\([\w\.]+:\d+\)|Whitelabel Error Page'
+
+
+# Fuzz payloads consumed by traffic_fuzz(payload_category=...).
+# Add new categories freely (e.g. ssti, xxe, nosql, log4shell). Each
+# category just needs a list of strings; AgentProxy substitutes them into
+# the target parameter and watches for status / length / reflection anomalies.
+fuzz_payloads:
+  sqli:
+    - "'"
+    - '"'
+    - "' OR '1'='1"
+    - "'; DROP TABLE users--"
+    - "1' ORDER BY 1--+"
+
+  xss:
+    - '<script>alert(1)</script>'
+    - '"><script>alert(1)</script>'
+    - '<img src=x onerror=alert(1)>'
+
+  path_traversal:
+    - '../../../etc/passwd'
+    - '..%2F..%2F..%2Fetc%2Fpasswd'
+    - '/windows/win.ini'
+
+  ssrf:
+    - 'http://127.0.0.1'
+    - 'http://localhost'
+    - 'http://169.254.169.254/latest/meta-data/'
+
+  command_injection:
+    - '; ls'
+    - '| whoami'
+    - '$(cat /etc/passwd)'
+    - '`id`'

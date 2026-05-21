@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import re
+import time
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse, parse_qs, urlencode, parse_qsl
 from collections import Counter
@@ -15,6 +16,7 @@ from jsonpath_ng import parse as parse_jsonpath
 from bs4 import BeautifulSoup
 
 from ..models import InterceptionRule, ScopeConfig
+from ..config import RuleConfig, load_rule_config
 from .traffic_db import TrafficDB
 from .passive_scan import PassiveScanner
 
@@ -121,17 +123,39 @@ class TrafficRecorder:
         self.db = db
         self.scanner = scanner or PassiveScanner()
 
+    @staticmethod
+    def _strip_context_label(flow: http.HTTPFlow) -> Optional[str]:
+        """Pop our internal X-AgentProxy-Context header before it leaves the proxy.
+        Returned value (if any) is stored as flows.profile_label."""
+        try:
+            label = flow.request.headers.pop("X-AgentProxy-Context", None)
+            if label is None:
+                # mitmproxy header objects are case-insensitive but pop() above
+                # only removes the exact key; defensively try lowercase too
+                for hk in list(flow.request.headers.keys()):
+                    if hk.lower() == "x-agentproxy-context":
+                        label = flow.request.headers[hk]
+                        del flow.request.headers[hk]
+                        break
+            return label
+        except Exception:
+            return None
+
     def request(self, flow: http.HTTPFlow):
+        # Always strip our internal label header so the target server never sees it.
+        label = self._strip_context_label(flow)
+        if label:
+            flow.metadata["profile_label"] = label
         if self.scope.is_allowed(flow):
             try:
-                self.db.save_flow(flow)
+                self.db.save_flow(flow, profile_label=flow.metadata.get("profile_label"))
             except Exception as e:
                 logger.error("Failed to save request flow: %s", e)
 
     def response(self, flow: http.HTTPFlow):
         if self.scope.is_allowed(flow):
             try:
-                self.db.save_flow(flow)
+                self.db.save_flow(flow, profile_label=flow.metadata.get("profile_label"))
                 self.scanner.scan(flow, self.db)
             except Exception as e:
                 logger.error("Failed to save flow: %s", e)
@@ -139,19 +163,22 @@ class TrafficRecorder:
     def error(self, flow: http.HTTPFlow):
         if self.scope.is_allowed(flow):
             try:
-                self.db.save_flow(flow)
+                self.db.save_flow(flow, profile_label=flow.metadata.get("profile_label"))
             except Exception as e:
                 logger.error("Failed to save flow error: %s", e)
 
 
 class MitmController:
-    def __init__(self, db_path: str = "agent_proxy_traffic.db"):
+    def __init__(self, db_path: str = "agent_proxy_traffic.db",
+                 rules: Optional[RuleConfig] = None):
         self.master: Optional[DumpMaster] = None
         self.proxy_task: Optional[asyncio.Task] = None
         self.scope_config = ScopeConfig()
         self.scope_manager = ScopeManager(self.scope_config)
         self.db = TrafficDB(db_path)
-        self.recorder = TrafficRecorder(self.scope_manager, self.db)
+        self.rules = rules or load_rule_config()
+        self.recorder = TrafficRecorder(self.scope_manager, self.db,
+                                        scanner=PassiveScanner(rules=self.rules))
         self.interceptor = TrafficInterceptor()
         self.running = False
         self.port = 8080
@@ -249,12 +276,13 @@ class MitmController:
             if flow_obj and flow_obj.body is not None:
                 target_content = flow_obj.body
             else:
-                target_content = original_request.get("body_preview")
+                target_content = original_request.get("body")
             if not target_content:
                 target_content = None
 
         proxy_url = f"http://{self.host}:{self.port}"
 
+        before_ts = time.time()
         try:
             async with AsyncSession(
                 impersonate="chrome120",
@@ -271,10 +299,107 @@ class MitmController:
                     request_kwargs["data"] = target_content
                 response = await client.request(**request_kwargs)
 
-            return f"Replayed successfully! (Status: {response.status_code}). Check traffic for the new flow."
+            # Give mitmproxy a beat to flush the response into SQLite, then
+            # look up the freshly captured flow id so the agent can chain into diff/evidence.
+            new_flow_id = None
+            for _ in range(10):
+                new_flow_id = self.db.find_replay_match(target_url, target_method, before_ts)
+                if new_flow_id:
+                    break
+                await asyncio.sleep(0.1)
+
+            return json.dumps({
+                "via": "curl_cffi",
+                "status_code": response.status_code,
+                "size": len(response.content) if response.content else 0,
+                "new_flow_id": new_flow_id,
+            })
         except Exception as e:
             logger.error("Replay failed: %s", e)
-            return f"Replay failed: {str(e)}"
+            return json.dumps({"via": "curl_cffi", "error": str(e)})
+
+    async def replay_with_storage_state(
+        self,
+        flow_id: str,
+        storage_state_path: str,
+        method: Optional[str] = None,
+        headers: Optional[Dict[str, str]] = None,
+        body: Optional[str] = None,
+        timeout: float = 30.0,
+        context_label: Optional[str] = None,
+    ) -> str:
+        """Cold replay path: load cookies from a Playwright storage_state.json,
+        then send via curl_cffi. Used when no live browser context exists for the
+        target identity but a saved profile does."""
+        if not os.path.exists(storage_state_path):
+            return json.dumps({"error": f"storage_state not found: {storage_state_path}"})
+        try:
+            with open(storage_state_path, "r", encoding="utf-8") as f:
+                state = json.load(f)
+        except Exception as e:
+            return json.dumps({"error": f"Failed to read storage_state: {e}"})
+
+        flow_data = self.db.get_detail(flow_id, level="full", body_preview_length=256 * 1024)
+        if not flow_data:
+            return json.dumps({"error": "Flow not found"})
+
+        original = flow_data["request"]
+        target_url = original["url"]
+        target_method = (method or original["method"]).upper()
+        target_headers = dict(original.get("headers") or {})
+        for k in ("Host", "Content-Length", "Content-Encoding", "Cookie"):
+            target_headers.pop(k, None)
+            target_headers.pop(k.lower(), None)
+        if headers:
+            target_headers.update(headers)
+
+        # Build cookie dict from storage_state for matching domain
+        parsed = urlparse(target_url)
+        target_host = parsed.hostname or ""
+        cookies: Dict[str, str] = {}
+        for c in state.get("cookies", []):
+            dom = (c.get("domain") or "").lstrip(".")
+            if not dom or target_host == dom or target_host.endswith(f".{dom}"):
+                cookies[c["name"]] = c["value"]
+
+        target_body = body if body is not None else original.get("body")
+        proxy_url = f"http://{self.host}:{self.port}"
+        before_ts = time.time()
+        try:
+            async with AsyncSession(
+                impersonate="chrome120",
+                proxies={"http": proxy_url, "https": proxy_url},
+                verify=self._get_verify_param(),
+                timeout=timeout,
+                cookies=cookies,
+            ) as client:
+                kwargs: Dict[str, Any] = {"method": target_method, "url": target_url, "headers": target_headers}
+                if target_body is not None:
+                    kwargs["data"] = target_body
+                resp = await client.request(**kwargs)
+
+            new_flow_id = None
+            for _ in range(10):
+                new_flow_id = self.db.find_replay_match(target_url, target_method, before_ts)
+                if new_flow_id:
+                    break
+                await asyncio.sleep(0.1)
+            # The cold path can't inject X-AgentProxy-Context (no live browser),
+            # so backfill profile_label here.
+            if new_flow_id and context_label:
+                with self.db._get_conn() as conn:
+                    conn.execute("UPDATE flows SET profile_label = ? WHERE id = ?",
+                                 (context_label, new_flow_id))
+            return json.dumps({
+                "via": "curl_cffi+storage_state",
+                "context": context_label,
+                "status_code": resp.status_code,
+                "size": len(resp.content) if resp.content else 0,
+                "new_flow_id": new_flow_id,
+            })
+        except Exception as e:
+            logger.error("Storage-state replay failed: %s", e)
+            return json.dumps({"error": str(e)})
 
     async def fuzz_endpoint(
         self,
@@ -288,16 +413,9 @@ class MitmController:
         if not flow_data:
             return "Flow not found"
 
-        payloads_map = {
-            "sqli": ["'", '"', "' OR '1'='1", "'; DROP TABLE users--", "1' ORDER BY 1--+"],
-            "xss": ["<script>alert(1)</script>", '"><script>alert(1)</script>', "<img src=x onerror=alert(1)>"],
-            "path_traversal": ["../../../etc/passwd", "..%2F..%2F..%2Fetc%2Fpasswd", "/windows/win.ini"],
-            "ssrf": ["http://127.0.0.1", "http://localhost", "http://169.254.169.254/latest/meta-data/"],
-            "command_injection": ["; ls", "| whoami", "$(cat /etc/passwd)", "`id`"],
-        }
-
+        payloads_map = self.rules.fuzz_payloads
         if payload_category not in payloads_map:
-            return f"Unknown payload category. Use: {', '.join(payloads_map.keys())}"
+            return f"Unknown payload category. Use: {', '.join(sorted(payloads_map.keys()))}"
 
         payloads = payloads_map[payload_category]
         original_request = flow_data["request"]
@@ -312,11 +430,11 @@ class MitmController:
         baseline_len = 0
         baseline_flow = self.db.get_flow_object(flow_id)
         if baseline_flow:
-            flow_detail = self.db.get_detail(flow_id)
+            flow_detail = self.db.get_detail(flow_id, level="full", body_preview_length=256 * 1024)
             if flow_detail and flow_detail.get("response"):
                 baseline_status = flow_detail["response"].get("status_code", 200)
-                baseline_len = flow_detail["response"].get("body_preview", "")
-                baseline_len = len(baseline_len) if baseline_len else 0
+                baseline_body = flow_detail["response"].get("body", "") or ""
+                baseline_len = len(baseline_body)
 
         proxy_url = f"http://{self.host}:{self.port}"
         anomalies = []
@@ -343,13 +461,13 @@ class MitmController:
                     if flow_obj and flow_obj.body:
                         req_body = flow_obj.body
                     else:
-                        req_body = original_request.get("body_preview")
+                        req_body = original_request.get("body")
 
                 elif param_type == "json_body":
                     flow_obj = self.db.get_flow_object(flow_id)
                     body_content = flow_obj.body if flow_obj else None
                     if not body_content:
-                        body_content = original_request.get("body_preview", "")
+                        body_content = original_request.get("body", "")
                     try:
                         if isinstance(body_content, bytes):
                             body_content = body_content.decode("utf-8")
@@ -483,12 +601,12 @@ class MitmController:
         return {"detected_auth_types": detected, "details": auth_signals}
 
     def extract_from_flow(self, flow_id: str, json_path: Optional[str] = None, css_selector: Optional[str] = None) -> str:
-        flow_data = self.db.get_detail(flow_id)
+        flow_data = self.db.get_detail(flow_id, level="full", body_preview_length=256 * 1024)
         if not flow_data:
             return "Flow not found"
 
         response = flow_data.get("response")
-        body_content = response.get("body_preview") if response else None
+        body_content = response.get("body") if response else None
         if not body_content:
             return "Flow has no response body"
 
@@ -616,7 +734,7 @@ class MitmController:
     def generate_scraper_code(self, flow_ids: List[str], target_framework: str = "curl_cffi") -> str:
         flows_data = []
         for fid in flow_ids:
-            data = self.db.get_detail(fid)
+            data = self.db.get_detail(fid, level="full", body_preview_length=256 * 1024)
             if data:
                 flows_data.append(data)
 
@@ -640,7 +758,7 @@ class MitmController:
                 headers.pop("Host", None)
                 headers.pop("Content-Length", None)
                 headers.pop("Content-Encoding", None)
-                body = req.get("body_preview")
+                body = req.get("body")
 
                 flow_obj = self.db.get_flow_object(flow["id"])
                 if flow_obj and flow_obj.body:
@@ -682,7 +800,7 @@ class MitmController:
                 headers.pop("Host", None)
                 headers.pop("Content-Length", None)
                 headers.pop("Content-Encoding", None)
-                body = req.get("body_preview")
+                body = req.get("body")
                 flow_obj = self.db.get_flow_object(flow["id"])
                 if flow_obj and flow_obj.body:
                     body = flow_obj.body
@@ -874,3 +992,89 @@ class MitmController:
                 "endpoints": endpoints,
             })
         return json.dumps(result, indent=2)
+
+    def evidence_bundle(self, flow_id: str, depth: int = 3) -> str:
+        """Walk the link DAG around `flow_id` (configurable depth) and emit a
+        Markdown report containing every related flow's request/response summary,
+        tags, findings, and a curl reproducer. The agent uses this as the final
+        artifact — drop it into a SRC report or a PoC PR.
+
+        Pure string concat; no template engine. Output stays under ~30 KB even
+        for chains of ~10 flows because each body is preview-sized.
+        """
+        chain = self.db.get_chain(flow_id, depth=depth)
+        ordered_ids: List[str] = []
+        for u in reversed(chain.get("upstream", [])):
+            ordered_ids.append(u["flow_id"])
+        ordered_ids.append(flow_id)
+        for d in chain.get("downstream", []):
+            ordered_ids.append(d["flow_id"])
+        # de-dup, preserve order
+        seen = set()
+        ordered_ids = [x for x in ordered_ids if not (x in seen or seen.add(x))]
+
+        lines: List[str] = []
+        lines.append(f"# Evidence Bundle — root flow `{flow_id[:8]}…`")
+        lines.append("")
+        if chain["tags"]:
+            lines.append("**Root tags:** " + ", ".join(f"`{t}`" for t in chain["tags"]))
+            lines.append("")
+        lines.append(f"**Chain size:** {len(ordered_ids)} flow(s) (depth={depth})")
+        lines.append("")
+
+        for fid in ordered_ids:
+            data = self.db.get_detail(fid, level="preview")
+            if not data:
+                continue
+            req = data.get("request") or {}
+            resp = data.get("response") or {}
+            tags = self.db.get_tags(fid)
+            findings = self.db.list_findings(flow_id=fid, kind="all", limit=20)
+            note = self.db.get_note(fid)
+
+            marker = " (root)" if fid == flow_id else ""
+            lines.append(f"## Flow `{fid[:8]}…`{marker}")
+            lines.append("")
+            lines.append(f"- **{req.get('method')}** `{req.get('url')}`")
+            if resp:
+                lines.append(f"- Status: `{resp.get('status_code')}`")
+            label = None
+            with self.db._get_conn() as conn:
+                row = conn.execute("SELECT profile_label FROM flows WHERE id = ?", (fid,)).fetchone()
+                if row and row[0]:
+                    label = row[0]
+            if label:
+                lines.append(f"- Profile: `{label}`")
+            if tags:
+                lines.append(f"- Tags: " + ", ".join(f"`{t}`" for t in tags))
+            if findings:
+                lines.append(f"- Findings:")
+                for f in findings:
+                    lines.append(f"  - `{f['kind']}/{f['severity']}` **{f['rule_id']}** — {f.get('evidence','')}")
+            if note:
+                lines.append("")
+                lines.append(f"**Triage note** — verdict: `{note['verdict']}`")
+                for label_, key in [("Scenario", "scenario"),
+                                    ("Sensitive fields", "sensitive_fields"),
+                                    ("Test steps", "test_steps"),
+                                    ("Conclusion", "conclusion")]:
+                    val = note.get(key)
+                    if val:
+                        lines.append(f"- *{label_}*: {val}")
+            lines.append("")
+            lines.append("**Request body (preview):**")
+            lines.append("```")
+            lines.append((req.get("body") or "")[:1000] or "<empty>")
+            lines.append("```")
+            if resp:
+                lines.append("**Response body (preview):**")
+                lines.append("```")
+                lines.append((resp.get("body") or "")[:1000] or "<empty>")
+                lines.append("```")
+            lines.append("**Reproduce:**")
+            lines.append("```bash")
+            lines.append(data.get("curl_command") or "")
+            lines.append("```")
+            lines.append("")
+
+        return "\n".join(lines)
