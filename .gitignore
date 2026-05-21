@@ -9,6 +9,7 @@ __pycache__/
 .coverage
 htmlcov/
 
+.mcp.json
 docs/
 tests/
 
