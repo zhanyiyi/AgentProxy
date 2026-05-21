@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "agent-proxy": {
+      "command": "python",
+      "args": ["-m", "agent_proxy.main"],
+      "env": {}
+    }
+  }
+}
