@@ -27,23 +27,18 @@ AgentProxy can either launch its own Playwright Chromium browser or connect to a
 .
 ├── config/
 │   └── mcp.json              # JSON-style MCP example
-├── docs/
-│   ├── architecture.md       # Architecture notes
-│   ├── design.md             # Tool and module design
-│   └── prd.md                # Product requirements
 ├── src/agent_proxy/
 │   ├── main.py               # MCP server entrypoint
 │   ├── models.py             # Pydantic models
 │   ├── core/                 # Browser, MITM, session, and DB controllers
 │   └── tools/                # MCP tool registration
-├── tests/
 ├── pyproject.toml
 └── setup.sh
 ```
 
 ## Requirements
 
-Use a Linux machine with Python 3.10 or newer. The project has been tested on Kali/Debian-like systems.
+Use a Linux machine with Python 3.10 or newer.
 
 Required system tools:
 
@@ -67,7 +62,7 @@ For manual browser windows, the machine must have a working graphical desktop, X
 Clone or copy this repository to the target machine, then install it in a virtual environment:
 
 ```bash
-cd /path/to/dpx-flow
+cd /path/to/AgentProxy
 python3 -m venv .venv
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install -e ".[dev]"
@@ -133,20 +128,9 @@ Codex reads MCP servers from `~/.codex/config.toml`. Add this block, replacing t
 
 ```toml
 [mcp_servers.agent-proxy]
-command = "/path/to/dpx-flow/.venv/bin/python"
+command = "/path/to/AgentProxy/.venv/bin/python"
 args = ["-m", "agent_proxy.main"]
-cwd = "/path/to/dpx-flow"
-startup_timeout_sec = 30
-tool_timeout_sec = 120
-```
-
-Example for this machine:
-
-```toml
-[mcp_servers.agent-proxy]
-command = "/home/kali/Desktop/dpx-flow/.venv/bin/python"
-args = ["-m", "agent_proxy.main"]
-cwd = "/home/kali/Desktop/dpx-flow"
+cwd = "/path/to/AgentProxy"
 startup_timeout_sec = 30
 tool_timeout_sec = 120
 ```
@@ -159,9 +143,9 @@ The JSON equivalent, useful for other MCP clients, is:
 {
   "mcpServers": {
     "agent-proxy": {
-      "command": "/path/to/dpx-flow/.venv/bin/python",
+      "command": "/path/to/AgentProxy/.venv/bin/python",
       "args": ["-m", "agent_proxy.main"],
-      "cwd": "/path/to/dpx-flow"
+      "cwd": "/path/to/AgentProxy"
     }
   }
 }
@@ -250,7 +234,7 @@ kill <pid>
 You can run the MCP server directly:
 
 ```bash
-cd /path/to/dpx-flow
+cd /path/to/AgentProxy
 .venv/bin/python -m agent_proxy.main
 ```
 
@@ -367,9 +351,9 @@ Check `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.agent-proxy]
-command = "/absolute/path/to/dpx-flow/.venv/bin/python"
+command = "/absolute/path/to/AgentProxy/.venv/bin/python"
 args = ["-m", "agent_proxy.main"]
-cwd = "/absolute/path/to/dpx-flow"
+cwd = "/absolute/path/to/AgentProxy"
 ```
 
 Then restart Codex and run `/mcp`.
@@ -379,7 +363,7 @@ Then restart Codex and run `/mcp`.
 Install the project into the virtual environment:
 
 ```bash
-cd /path/to/dpx-flow
+cd /path/to/AgentProxy
 .venv/bin/python -m pip install -e ".[dev]"
 ```
 
@@ -449,13 +433,6 @@ For external Chrome, include:
 Some sites may still enforce extra TLS, certificate pinning, bot checks, or browser integrity checks. Use a real Chrome profile and manual mode when possible.
 
 ## Development
-
-Run tests:
-
-```bash
-cd /path/to/dpx-flow
-.venv/bin/python -m pytest
-```
 
 Run a local import check:
 
