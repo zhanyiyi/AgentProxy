@@ -9,14 +9,17 @@ from ..models import SessionConfig, InterceptionRule
 
 def register_all_tools(mcp: FastMCP, session: SessionManager):
     @mcp.tool()
-    async def session_start(proxy_port: int = 8080, headless: bool = True) -> str:
+    async def session_start(proxy_port: int = 8080, headless: bool = True, profile_dir: str = None) -> str:
         """Start a complete AgentProxy session: MITM proxy + browser with proxy configured.
         All browser traffic will automatically go through the MITM proxy for capture.
         Args:
             proxy_port: Port for the MITM proxy (default: 8080)
             headless: Run browser in headless mode (default: True)
+            profile_dir: Optional directory to persist browser storage state across sessions
+                        (cookies, localStorage). When set, login state is restored on next start
+                        and saved on stop. CDP mode does not use this.
         """
-        return await session.start_session(proxy_port=proxy_port, headless=headless)
+        return await session.start_session(proxy_port=proxy_port, headless=headless, profile_dir=profile_dir)
 
     @mcp.tool()
     async def session_connect_cdp(endpoint_url: str = "http://127.0.0.1:9222", proxy_port: int = 8080) -> str:
@@ -38,6 +41,15 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     async def session_status() -> str:
         """Get current session status including proxy, browser, and traffic info."""
         return json.dumps(session.get_status(), indent=2)
+
+    @mcp.tool()
+    async def session_save_profile(path: str = None) -> str:
+        """Snapshot the current browser storage state (cookies + localStorage) to disk.
+        Useful right after a manual login so the session can be restored next time.
+        Args:
+            path: Optional explicit path. Defaults to <profile_dir>/state.json from session_start.
+        """
+        return await session.browser.save_storage_state(path=path)
 
     # ==================== Browser Tools ====================
 
@@ -192,29 +204,33 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     # ==================== MITM / Traffic Tools ====================
 
     @mcp.tool()
-    async def traffic_list(limit: int = 20) -> str:
-        """List captured HTTP/HTTPS traffic flows. Shows recent requests with summary info.
+    async def traffic_list(limit: int = 20, with_findings: bool = False) -> str:
+        """List captured HTTP/HTTPS traffic flows. Returns a compact summary by default.
+        Each row is just id/method/url/status/size — call traffic_inspect for details.
         Args:
             limit: Maximum number of flows to return (default: 20)
+            with_findings: When True, attach a per-flow finding count
         """
-        flows = session.mitm.db.get_summary(limit=limit)
+        flows = session.mitm.db.get_summary(limit=limit, with_findings=with_findings)
         return json.dumps(flows, indent=2)
 
     @mcp.tool()
-    async def traffic_inspect(flow_id: str, full_body: bool = False) -> str:
-        """Inspect full details of a captured traffic flow (request + response headers and body).
+    async def traffic_inspect(flow_id: str, level: str = "preview", full_body: bool = False) -> str:
+        """Inspect a captured flow at one of three detail levels.
         Args:
             flow_id: The ID of the flow to inspect
-            full_body: If True, return full request body instead of preview (default: False)
+            level: One of 'meta' (headers only), 'preview' (default, body truncated to 2KB),
+                   or 'full' (entire body up to 256KB cap)
+            full_body: Legacy alias — when True, equivalent to level='full'
         """
-        data = session.mitm.db.get_detail(flow_id, body_preview_length=51200 if full_body else 2000)
+        if full_body:
+            level = "full"
+        if level not in ("meta", "preview", "full"):
+            return f"Invalid level '{level}'. Use 'meta', 'preview', or 'full'."
+        body_len = 2000 if level == "preview" else (256 * 1024 if level == "full" else 0)
+        data = session.mitm.db.get_detail(flow_id, level=level, body_preview_length=body_len)
         if not data:
             return "Flow not found"
-        if full_body and data.get("request"):
-            flow_obj = session.mitm.db.get_flow_object(flow_id)
-            if flow_obj and flow_obj.body is not None:
-                data["request"]["body"] = flow_obj.body
-                data["request"].pop("body_preview", None)
         return json.dumps(data, indent=2)
 
     @mcp.tool()
@@ -346,6 +362,91 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return session.mitm.export_openapi_spec(domain=domain, limit=limit)
 
     @mcp.tool()
+    async def site_map(domain: str = None) -> str:
+        """Build a site map: hosts → endpoints → (method, path, params, status_dist,
+        auth_required, finding count, sample_flow_id). One call gives the agent the
+        target's attack surface in a flat, scannable structure.
+        Args:
+            domain: Optional substring filter on URL
+        """
+        return session.mitm.site_map(domain=domain)
+
+    @mcp.tool()
+    async def traffic_findings(severity: str = None, category: str = None,
+                                rule_id: str = None, flow_id: str = None,
+                                limit: int = 50) -> str:
+        """List passive-scan findings (signals worth investigating). One row per finding:
+        rule_id / severity / category / flow_id / short evidence.
+        Use this BEFORE traffic_list when triaging — it surfaces the high-value flows.
+        Args:
+            severity: Filter by 'info' | 'low' | 'medium' | 'high'
+            category: Filter by category, e.g. 'secret_leak', 'sqli_signal', 'cors_misconfig'
+            rule_id: Filter by a specific rule
+            flow_id: Show findings for one flow only
+            limit: Max rows (default 50)
+        """
+        rows = session.mitm.db.list_findings(severity=severity, category=category,
+                                              rule_id=rule_id, flow_id=flow_id, limit=limit)
+        return json.dumps(rows, indent=2)
+
+    @mcp.tool()
+    async def traffic_findings_stats() -> str:
+        """Aggregate finding counts by severity and category — quick attack-surface overview."""
+        return json.dumps(session.mitm.db.findings_stats(), indent=2)
+
+    @mcp.tool()
+    async def traffic_replay_via_browser(
+        flow_id: str,
+        method: str = None,
+        headers_json: str = None,
+        body: str = None,
+        timeout_ms: int = 30000,
+    ) -> str:
+        """Replay a captured request through the live browser context — automatically reuses
+        the current session's cookies, refreshed tokens, and CSRF state. The fix for
+        'replay always 401' problems. Falls back to curl_cffi if the browser is not running.
+        Args:
+            flow_id: Flow to replay
+            method: Override HTTP method
+            headers_json: JSON object of headers to override/add
+            body: Override request body
+            timeout_ms: Request timeout in milliseconds (default 30000)
+        """
+        parsed_headers = None
+        if headers_json:
+            try:
+                parsed_headers = json.loads(headers_json)
+            except json.JSONDecodeError:
+                return "headers_json must be valid JSON"
+        if session.mitm.session_variables and parsed_headers:
+            for hk, hv in list(parsed_headers.items()):
+                if isinstance(hv, str):
+                    for k, v in session.mitm.session_variables.items():
+                        hv = hv.replace(f"${k}", str(v))
+                    parsed_headers[hk] = hv
+        resolved_body = body
+        if resolved_body and session.mitm.session_variables:
+            for k, v in session.mitm.session_variables.items():
+                resolved_body = resolved_body.replace(f"${k}", str(v))
+        return await session.replay_via_browser(
+            flow_id=flow_id, method=method,
+            headers_override=parsed_headers, body=resolved_body,
+            timeout_ms=timeout_ms,
+        )
+
+    @mcp.tool()
+    async def traffic_diff(flow_a: str, flow_b: str, max_lines: int = 50) -> str:
+        """Compare two captured flows. Outputs status/size deltas plus a JSON field-level diff
+        (added/removed/changed paths) for JSON responses, or a unified text diff otherwise.
+        Use for IDOR / privilege-escalation / parameter-pollution verification.
+        Args:
+            flow_a: First flow id (baseline)
+            flow_b: Second flow id (comparison)
+            max_lines: Cap for unified text diff lines (default 50)
+        """
+        return session.mitm.diff_flows(flow_a, flow_b, max_lines=max_lines)
+
+    @mcp.tool()
     async def traffic_generate_code(flow_ids: str, framework: str = "curl_cffi") -> str:
         """Generate executable scraper/automation code from captured flows.
         Args:
@@ -377,11 +478,11 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             group_index: Which capture group to extract (default: 1)
         """
         import re
-        flow_data = session.mitm.db.get_detail(flow_id)
+        flow_data = session.mitm.db.get_detail(flow_id, level="full", body_preview_length=256 * 1024)
         if not flow_data:
             return "Flow not found"
         response = flow_data.get("response")
-        body_content = response.get("body_preview") if response else None
+        body_content = response.get("body") if response else None
         if not body_content:
             return "Flow has no response body"
         try:
@@ -538,15 +639,16 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return await session.api_discover(domain=domain)
 
     @mcp.tool()
-    async def security_scan(flow_id: str, target_param: str, param_type: str = "query", payload_categories: str = "sqli,xss,path_traversal") -> str:
+    async def security_scan(flow_id: str, target_param: str, param_type: str = "query", payload_categories: List[str] = None) -> str:
         """Run a comprehensive security scan on a captured request. Tests multiple vulnerability categories.
         Args:
             flow_id: The flow to use as base request
             target_param: Parameter name to test
             param_type: Parameter location: 'query' or 'json_body'
-            payload_categories: Comma-separated categories: sqli,xss,path_traversal,ssrf,command_injection
+            payload_categories: List of categories. Defaults to ['sqli','xss','path_traversal'].
+                Available: sqli, xss, path_traversal, ssrf, command_injection
         """
-        categories = [c.strip() for c in payload_categories.split(",") if c.strip()]
+        categories = payload_categories or ["sqli", "xss", "path_traversal"]
         return await session.security_scan(
             flow_id=flow_id,
             target_param=target_param,

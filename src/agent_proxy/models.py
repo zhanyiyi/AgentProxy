@@ -37,6 +37,7 @@ class SessionConfig(BaseModel):
     max_traffic_display: int = 50
     body_preview_length: int = 2000
     detail_body_limit: int = 51200
+    profile_dir: Optional[str] = None
 
 
 class FlowSummary(BaseModel):
@@ -84,3 +85,11 @@ class BrowserState(BaseModel):
     url: str = ""
     title: str = ""
     running: bool = False
+
+
+class Finding(BaseModel):
+    flow_id: str
+    rule_id: str
+    severity: Literal["info", "low", "medium", "high"] = "info"
+    category: str
+    evidence: str = ""

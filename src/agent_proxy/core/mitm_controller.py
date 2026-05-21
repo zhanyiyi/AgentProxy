@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 
 from ..models import InterceptionRule, ScopeConfig
 from .traffic_db import TrafficDB
+from .passive_scan import PassiveScanner
 
 structlog.configure(
     processors=[
@@ -40,9 +41,15 @@ class ScopeManager:
         self.config.allowed_domains = domains
 
     def is_allowed(self, flow: http.HTTPFlow) -> bool:
+        if flow.request.method.upper() in {m.upper() for m in self.config.ignore_methods}:
+            return False
+        parsed = urlparse(flow.request.url)
+        path = (parsed.path or "").lower()
+        for ext in self.config.ignore_extensions:
+            if path.endswith(ext):
+                return False
         if not self.config.allowed_domains:
             return True
-        parsed = urlparse(flow.request.url)
         hostname = parsed.hostname or ""
         return any(hostname == d or hostname.endswith(f".{d}") for d in self.config.allowed_domains)
 
@@ -109,9 +116,10 @@ class TrafficInterceptor:
 
 
 class TrafficRecorder:
-    def __init__(self, scope: ScopeManager, db: TrafficDB):
+    def __init__(self, scope: ScopeManager, db: TrafficDB, scanner: Optional[PassiveScanner] = None):
         self.scope = scope
         self.db = db
+        self.scanner = scanner or PassiveScanner()
 
     def request(self, flow: http.HTTPFlow):
         if self.scope.is_allowed(flow):
@@ -124,6 +132,7 @@ class TrafficRecorder:
         if self.scope.is_allowed(flow):
             try:
                 self.db.save_flow(flow)
+                self.scanner.scan(flow, self.db)
             except Exception as e:
                 logger.error("Failed to save flow: %s", e)
 
@@ -359,16 +368,28 @@ class MitmController:
                             request_kwargs["data"] = b
                         resp = await client.request(**request_kwargs)
                         status = resp.status_code
-                        content_len = len(resp.content) if resp.content else 0
+                        content = resp.content or b""
+                        content_len = len(content)
+                        try:
+                            body_text = content.decode("utf-8", errors="replace")
+                        except Exception:
+                            body_text = ""
+                        reflected = bool(p) and p in body_text
 
+                        anomaly = None
                         if status >= 500:
-                            return {"payload": p, "anomaly": "Server Error (5xx)", "status": status}
-                        if status != baseline_status:
-                            return {"payload": p, "anomaly": f"Status Code Deviation ({baseline_status} -> {status})", "status": status}
-                        if baseline_len > 0:
+                            anomaly = {"payload": p, "anomaly": "Server Error (5xx)", "status": status}
+                        elif status != baseline_status:
+                            anomaly = {"payload": p, "anomaly": f"Status Code Deviation ({baseline_status} -> {status})", "status": status}
+                        elif baseline_len > 0:
                             diff_ratio = abs(content_len - baseline_len) / baseline_len
                             if diff_ratio > 0.2:
-                                return {"payload": p, "anomaly": "Content Length Deviation (>20%)", "status": status, "len": content_len}
+                                anomaly = {"payload": p, "anomaly": "Content Length Deviation (>20%)", "status": status, "len": content_len}
+                        if reflected and anomaly is None:
+                            anomaly = {"payload": p, "anomaly": "Payload Reflected in Response", "status": status, "len": content_len}
+                        if anomaly is not None:
+                            anomaly["reflected"] = reflected
+                            return anomaly
                         return None
                     except Exception as e:
                         return {"payload": p, "anomaly": f"Request Failed: {str(e)}"}
@@ -719,3 +740,137 @@ class MitmController:
         elif "xml" in ct.lower():
             return "xml"
         return "unknown"
+
+    def diff_flows(self, flow_a: str, flow_b: str, max_lines: int = 50) -> str:
+        a = self.db.get_detail(flow_a, level="full")
+        b = self.db.get_detail(flow_b, level="full")
+        if not a or not b:
+            return json.dumps({"error": "one or both flows not found"})
+
+        def _resp(d):
+            return d.get("response") or {}
+        ra, rb = _resp(a), _resp(b)
+        diff = {
+            "a": flow_a,
+            "b": flow_b,
+            "status": [ra.get("status_code"), rb.get("status_code")],
+            "size": [
+                len(ra.get("body") or ""), len(rb.get("body") or "")
+            ],
+            "content_type": [
+                self._detect_content_type(ra.get("headers", {}) or {}),
+                self._detect_content_type(rb.get("headers", {}) or {}),
+            ],
+        }
+        body_a, body_b = ra.get("body") or "", rb.get("body") or ""
+        ct_a = (ra.get("headers", {}) or {}).get("content-type",
+                (ra.get("headers", {}) or {}).get("Content-Type", "")).lower()
+        if "json" in ct_a:
+            try:
+                ja, jb = json.loads(body_a or "{}"), json.loads(body_b or "{}")
+                diff["json_diff"] = self._json_field_diff(ja, jb)
+            except Exception:
+                pass
+        if "json_diff" not in diff:
+            import difflib
+            lines_a = body_a.splitlines()[:5000]
+            lines_b = body_b.splitlines()[:5000]
+            udiff = list(difflib.unified_diff(
+                lines_a, lines_b, fromfile="a", tofile="b", lineterm=""))[:max_lines]
+            diff["text_diff"] = udiff
+        return json.dumps(diff, indent=2)
+
+    @staticmethod
+    def _json_field_diff(a, b, prefix: str = "") -> Dict[str, List[str]]:
+        added: List[str] = []
+        removed: List[str] = []
+        changed: List[str] = []
+
+        def walk(x, y, p):
+            if isinstance(x, dict) and isinstance(y, dict):
+                for k in y:
+                    if k not in x:
+                        added.append(f"{p}.{k}" if p else k)
+                    else:
+                        walk(x[k], y[k], f"{p}.{k}" if p else k)
+                for k in x:
+                    if k not in y:
+                        removed.append(f"{p}.{k}" if p else k)
+            elif isinstance(x, list) and isinstance(y, list):
+                if len(x) != len(y):
+                    changed.append(f"{p}[len {len(x)}->{len(y)}]")
+                for i in range(min(len(x), len(y))):
+                    walk(x[i], y[i], f"{p}[{i}]")
+            else:
+                if x != y:
+                    changed.append(p or "<root>")
+
+        walk(a, b, prefix)
+        return {"added": added[:50], "removed": removed[:50], "changed": changed[:50]}
+
+    def site_map(self, domain: Optional[str] = None) -> str:
+        """Group endpoints by host with finding counts. Flat structure, agent-friendly."""
+        flows = self.db.get_all_for_analysis(lightweight=True)
+        if domain:
+            flows = [f for f in flows if domain in f["request"]["url"]]
+
+        with self.db._get_conn() as conn:
+            conn.row_factory = __import__("sqlite3").Row
+            finding_rows = conn.execute(
+                "SELECT flow_id, COUNT(*) c FROM findings GROUP BY flow_id"
+            ).fetchall()
+        findings_count = {r["flow_id"]: r["c"] for r in finding_rows}
+
+        host_map: Dict[str, Dict[str, Any]] = {}
+        for f in flows:
+            parsed = urlparse(f["request"]["url"])
+            host = parsed.hostname or "unknown"
+            normalized_path, _ = self._normalize_path(parsed.path)
+            method = f["request"]["method"]
+            key = f"{method} {normalized_path}"
+
+            host_entry = host_map.setdefault(host, {"host": host, "endpoints": {}, "flow_count": 0, "findings": 0})
+            host_entry["flow_count"] += 1
+            host_entry["findings"] += findings_count.get(f["id"], 0)
+
+            ep = host_entry["endpoints"].setdefault(key, {
+                "method": method,
+                "path": normalized_path,
+                "params": set(),
+                "status_dist": Counter(),
+                "auth_required": False,
+                "count": 0,
+                "findings": 0,
+                "sample_flow_id": f["id"],
+            })
+            ep["count"] += 1
+            ep["findings"] += findings_count.get(f["id"], 0)
+            for p in parse_qs(parsed.query).keys():
+                ep["params"].add(p)
+            req_headers = f["request"].get("headers", {}) or {}
+            if any(k.lower() in ("authorization", "cookie", "x-api-key", "x-auth-token") for k in req_headers):
+                ep["auth_required"] = True
+            if f["response"]:
+                ep["status_dist"][f["response"].get("status_code", 0)] += 1
+
+        result = []
+        for host, entry in sorted(host_map.items(), key=lambda x: -x[1]["flow_count"]):
+            endpoints = []
+            for _, ep in sorted(entry["endpoints"].items(), key=lambda x: -x[1]["count"]):
+                endpoints.append({
+                    "method": ep["method"],
+                    "path": ep["path"],
+                    "params": sorted(ep["params"]),
+                    "status_dist": dict(ep["status_dist"]),
+                    "auth_required": ep["auth_required"],
+                    "count": ep["count"],
+                    "findings": ep["findings"],
+                    "sample_flow_id": ep["sample_flow_id"],
+                })
+            result.append({
+                "host": host,
+                "flow_count": entry["flow_count"],
+                "findings": entry["findings"],
+                "endpoints": endpoints,
+            })
+        return json.dumps(result, indent=2)

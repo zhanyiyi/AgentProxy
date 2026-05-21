@@ -1,11 +1,13 @@
 # AgentProxy
 
-AgentProxy is an AI-agent-native web debugging proxy. It exposes browser automation, MITM traffic capture, request replay, API discovery, and basic security testing as MCP tools so Codex, Claude Code, Cursor, and other MCP clients can operate a browser and analyze traffic in one workflow.
+AgentProxy is an AI-agent-native web debugging proxy. It exposes browser automation, MITM traffic capture, request replay, API discovery, **passive vulnerability scanning**, and basic security testing as MCP tools so Codex, Claude Code, Cursor, and other MCP clients can operate a browser and analyze traffic in one workflow.
 
 The core idea is simple:
 
 ```text
 AI Agent -> MCP stdio -> AgentProxy -> Playwright browser + mitmproxy -> target website
+                                          │
+                                          └─→ SQLite (flows + findings tables)
 ```
 
 AgentProxy can either launch its own Playwright Chromium browser or connect to an already-running Chrome/Chromium instance over CDP. The CDP mode is the recommended mode for manual login, MFA, captcha, password-manager, and real-browser-profile workflows.
@@ -14,8 +16,14 @@ AgentProxy can either launch its own Playwright Chromium browser or connect to a
 
 - Start and stop a complete browser + MITM session from MCP.
 - Capture HTTP and HTTPS traffic into a local SQLite database.
+- **Passive scanner** — every captured response is auto-checked against 8 high-precision rules (secret leaks, SQL errors, CORS misconfig, debug endpoints, etc) and findings stored in a separate table.
+- **Layered traffic abstraction** — `traffic_list` returns compact summaries, `traffic_inspect` exposes `meta`/`preview`/`full` levels so the agent only loads what it needs.
+- **Site map** — one call gives a host-grouped attack-surface map with endpoint params, status distribution, auth requirements, and finding counts.
+- **Browser-context replay** — `traffic_replay_via_browser` reuses live cookies/tokens so replay does not 401.
+- **Profile persistence** — login state survives across sessions via `storage_state` dump/restore.
+- **Traffic diff** — JSON field-level diff for IDOR / privilege-escalation verification.
 - Navigate, click, fill, type, run JavaScript, inspect HTML/text, manage cookies, and take screenshots.
-- List, search, inspect, replay, and fuzz captured traffic.
+- List, search, inspect, replay, and fuzz captured traffic (fuzz now flags reflected payloads).
 - Extract values with JSONPath or CSS selectors.
 - Detect common auth signals such as session cookies, bearer tokens, JWTs, API keys, CSRF tokens, and basic auth.
 - Reconstruct API endpoint patterns and generate OpenAPI output.
@@ -170,6 +178,27 @@ Expected behavior:
 - `traffic_list` shows captured traffic from Baidu and related static/resource domains.
 - `session_stop` closes the browser and proxy.
 
+## Recommended Triage Workflow
+
+The agent-friendly path is to look at signals before bodies:
+
+```text
+session_start(proxy_port=8081, profile_dir="/tmp/agentproxy/target1")
+browser_navigate(url="https://target.example.com")
+# ... drive the browser through the app ...
+
+traffic_findings_stats()                    # how dense is the attack surface?
+site_map()                                  # host-grouped endpoint map
+traffic_findings(severity="high")           # what should I look at first?
+traffic_inspect(flow_id="<id>", level="meta")     # confirm context cheaply
+traffic_inspect(flow_id="<id>", level="full")     # only when needed
+traffic_replay_via_browser(flow_id="<id>")        # retry with live cookies
+traffic_diff(flow_a="<id1>", flow_b="<id2>")      # IDOR / privilege check
+session_stop()
+```
+
+`session_start(profile_dir=...)` saves storage state on stop and restores it next time so login state survives sessions.
+
 ## Manual Login / Captcha Mode With External Chrome
 
 Use external Chrome/Chromium mode when you need a visible browser for manual login, password entry, MFA, captcha, or an existing browser profile.
@@ -259,8 +288,9 @@ Useful flags:
 Session:
 
 ```text
-session_start(proxy_port=8080, headless=true)
+session_start(proxy_port=8080, headless=true, profile_dir?)
 session_connect_cdp(endpoint_url="http://127.0.0.1:9222", proxy_port=8080)
+session_save_profile(path?)
 session_status()
 session_stop()
 ```
@@ -287,17 +317,24 @@ browser_accessibility_tree()
 Traffic:
 
 ```text
-traffic_list(limit)
-traffic_inspect(flow_id, full_body)
+traffic_list(limit=20, with_findings=false)
+traffic_inspect(flow_id, level="preview")    # meta | preview | full
 traffic_search(query?, domain?, method?, limit)
 traffic_clear()
 traffic_extract(flow_id, json_path?, css_selector?)
 traffic_replay(flow_id, method?, headers_json?, body?, timeout)
+traffic_replay_via_browser(flow_id, method?, headers_json?, body?, timeout_ms)
+traffic_diff(flow_a, flow_b, max_lines=50)
 traffic_fuzz(flow_id, target_param, param_type, payload_category)
+traffic_findings(severity?, category?, rule_id?, flow_id?, limit=50)
+traffic_findings_stats()
+site_map(domain?)
 traffic_auth_detect(flow_ids?)
 traffic_api_patterns(domain?, limit?)
 traffic_openapi(domain?, limit?)
 traffic_generate_code(flow_ids, framework)
+traffic_set_session_variable(name, value)
+traffic_extract_session_variable(name, flow_id, regex_pattern, group_index=1)
 ```
 
 Intercept and scope:

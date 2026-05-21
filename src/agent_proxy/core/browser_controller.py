@@ -2,6 +2,7 @@ import asyncio
 import base64
 import json
 import logging
+import os
 from typing import Any, Dict, List, Optional
 
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
@@ -17,17 +18,36 @@ class BrowserController:
         headless: bool = True,
         ignore_https_errors: bool = True,
         timeout: int = 30000,
+        profile_dir: Optional[str] = None,
     ):
         self.proxy_host = proxy_host
         self.proxy_port = proxy_port
         self.headless = headless
         self.ignore_https_errors = ignore_https_errors
         self.timeout = timeout
+        self.profile_dir = profile_dir
         self._playwright = None
         self._browser: Optional[Browser] = None
         self._context: Optional[BrowserContext] = None
         self._page: Optional[Page] = None
+        self._console_logs: List[str] = []
+        self._console_max = 500
         self.running = False
+
+    def _storage_state_path(self) -> Optional[str]:
+        if not self.profile_dir:
+            return None
+        return os.path.join(self.profile_dir, "state.json")
+
+    def _attach_console(self, page: Page):
+        def _on_console(msg):
+            try:
+                self._console_logs.append(f"[{msg.type}] {msg.text}")
+                if len(self._console_logs) > self._console_max:
+                    del self._console_logs[: -self._console_max]
+            except Exception:
+                pass
+        page.on("console", _on_console)
 
     async def start(self) -> str:
         if self.running:
@@ -46,14 +66,20 @@ class BrowserController:
             ],
         )
 
-        self._context = await self._browser.new_context(
-            ignore_https_errors=self.ignore_https_errors,
-            viewport={"width": 1280, "height": 720},
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        )
+        ctx_kwargs: Dict[str, Any] = {
+            "ignore_https_errors": self.ignore_https_errors,
+            "viewport": {"width": 1280, "height": 720},
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        }
+        state_path = self._storage_state_path()
+        if state_path and os.path.exists(state_path):
+            ctx_kwargs["storage_state"] = state_path
+            logger.info("browser_storage_state_loaded path=%s", state_path)
 
+        self._context = await self._browser.new_context(**ctx_kwargs)
         self._context.set_default_timeout(self.timeout)
         self._page = await self._context.new_page()
+        self._attach_console(self._page)
         self.running = True
         logger.info("browser_started proxy=%s headless=%s", proxy_url, self.headless)
         return f"Browser started with proxy {proxy_url} (headless={self.headless})"
@@ -74,14 +100,32 @@ class BrowserController:
 
         pages = self._context.pages
         self._page = pages[0] if pages else await self._context.new_page()
+        self._attach_console(self._page)
         self.running = True
         logger.info("browser_connected_cdp endpoint=%s", endpoint_url)
         return f"Browser connected over CDP: {endpoint_url}"
+
+    async def save_storage_state(self, path: Optional[str] = None) -> str:
+        if not self._context:
+            return "Browser not started"
+        target = path or self._storage_state_path()
+        if not target:
+            return "No profile_dir configured and no path supplied"
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        await self._context.storage_state(path=target)
+        return f"Saved storage state to {target}"
 
     async def stop(self) -> str:
         if not self.running:
             return "Browser is not running"
         try:
+            state_path = self._storage_state_path()
+            if state_path and self._context:
+                try:
+                    os.makedirs(os.path.dirname(state_path), exist_ok=True)
+                    await self._context.storage_state(path=state_path)
+                except Exception as e:
+                    logger.warning("storage_state save failed: %s", e)
             if self._context:
                 await self._context.close()
             if self._browser:
@@ -280,15 +324,48 @@ class BrowserController:
         except Exception as e:
             return f"Accessibility tree failed: {str(e)}"
 
-    async def get_console_logs(self) -> str:
-        if not self._page:
+    async def get_console_logs(self, clear: bool = False) -> str:
+        if not self.running:
             return "Browser not started"
         try:
-            logs = []
-            self._page.on("console", lambda msg: logs.append(f"[{msg.type}] {msg.text}"))
+            logs = list(self._console_logs)
+            if clear:
+                self._console_logs.clear()
             return json.dumps(logs, indent=2)
         except Exception as e:
             return f"Console logs failed: {str(e)}"
+
+    async def request_fetch(
+        self,
+        url: str,
+        method: str = "GET",
+        headers: Optional[Dict[str, str]] = None,
+        data: Optional[str] = None,
+        timeout: Optional[int] = None,
+    ) -> Dict[str, Any]:
+        """Send an HTTP request through the live browser context (reuses cookies/session)."""
+        if not self._context:
+            raise RuntimeError("Browser context not available")
+        kwargs: Dict[str, Any] = {"method": method.upper()}
+        if headers:
+            kwargs["headers"] = headers
+        if data is not None:
+            kwargs["data"] = data
+        if timeout is not None:
+            kwargs["timeout"] = timeout
+        resp = await self._context.request.fetch(url, **kwargs)
+        body_bytes = await resp.body()
+        body_text: Optional[str]
+        try:
+            body_text = body_bytes.decode("utf-8", errors="replace")
+        except Exception:
+            body_text = None
+        return {
+            "status": resp.status,
+            "headers": dict(resp.headers),
+            "body": body_text,
+            "body_size": len(body_bytes) if body_bytes else 0,
+        }
 
     async def set_extra_http_headers(self, headers: Dict[str, str]) -> str:
         if not self._page:
