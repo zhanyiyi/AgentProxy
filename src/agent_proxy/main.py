@@ -6,6 +6,7 @@ from mcp.server.fastmcp import FastMCP
 
 from .core.session_manager import SessionManager
 from .models import SessionConfig
+from .prompt_loader import load_prompts
 from .tools import register_all_tools
 
 logging.basicConfig(
@@ -22,10 +23,16 @@ def create_server(config: SessionConfig = None, user_config_path: str = None) ->
 
     mcp = FastMCP(
         "AgentProxy",
-        instructions="AI-Agent-Native Web Debug Proxy - Browser Automation + MITM Traffic Interception",
+        instructions=(
+            "AI-Agent-Native Web Debug Proxy — Browser Automation + MITM "
+            "Traffic Interception. If a `pentest_workflow` prompt is "
+            "registered, call it once at the start of an engagement to get "
+            "the playbook keyed to the current session state."
+        ),
     )
 
     register_all_tools(mcp, session)
+    load_prompts(mcp, session)
     return mcp
 
 

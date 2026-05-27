@@ -929,58 +929,8 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return f"Unknown format: {format}. Use 'openapi', 'patterns', or 'traffic'"
 
     # ==================== Prompts ====================
-
-    @mcp.prompt()
-    async def triage_note(flow_id: str) -> str:
-        """Walk through the four-step triage checklist for a flow and save it.
-
-        Invoke this prompt whenever you finish researching a flow — it primes
-        you with the structure SRC researchers actually use, so notes are
-        consistent across the session and the agent doesn't skip steps."""
-        # Pull the flow's current shape so the agent has context inline.
-        detail = session.mitm.db.get_detail(flow_id, level="meta")
-        if not detail:
-            return f"Flow `{flow_id}` not found. Use traffic_list to find a valid id first."
-        req = detail.get("request") or {}
-        resp = detail.get("response") or {}
-        existing = session.mitm.db.get_note(flow_id)
-        existing_block = ""
-        if existing:
-            existing_block = (
-                "\n**An existing note is present** — calling note_add will OVERWRITE it. "
-                f"Current verdict: `{existing['verdict']}`. Re-read with note_get if needed.\n"
-            )
-        return f"""You just finished researching flow `{flow_id}`:
-
-- **{req.get('method')}** `{req.get('url')}`
-- Status: `{resp.get('status_code')}`
-{existing_block}
-Now write a triage note via `note_add`. Fill ALL FOUR sections — keep each
-to 1–3 short sentences. Don't skip a section just because nothing happened
-there; "tested X, no anomaly" is exactly the kind of note future-you will
-thank present-you for.
-
-1. **scenario** — What is this endpoint doing in business terms? What could
-   go wrong? What's notable in the captured traffic (auth headers? identity
-   params? unusual response fields?)?
-
-2. **sensitive_fields** — Which params / headers / cookies were testable?
-   List their names + the semantic tags from `traffic_params` (identity,
-   ssrf, sql, redirect, etc.). If you didn't run traffic_params yet, do
-   that first.
-
-3. **test_steps** — What did you actually try? Replays, mutations, diffs,
-   fuzz. For each, what was the response? Cite concrete flow_ids when you
-   created replay flows.
-
-4. **conclusion** — Pick a verdict and justify it:
-   - `vulnerable` — name the impact and point at the proof flow_id.
-   - `not_vulnerable` — what makes you confident? Which angles did you
-     cover? Note any assumptions.
-   - `inconclusive` — what's still missing? Different account? Other
-     payload class? OOB callback? Mention angles you skipped.
-
-Then call:
-note_add(flow_id="{flow_id}", verdict="...", scenario="...",
-         sensitive_fields="...", test_steps="...", conclusion="...")
-"""
+    # NOTE: All MCP prompts live in the repo's `prompts/` directory and are
+    # loaded by `agent_proxy.prompt_loader`. They are intentionally NOT
+    # embedded in this file — see prompts/README.md for the rationale and
+    # format. If `prompts/` is missing or empty AgentProxy still runs; only
+    # tools are exposed.

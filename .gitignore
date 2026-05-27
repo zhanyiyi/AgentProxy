@@ -12,6 +12,8 @@ htmlcov/
 .mcp.json
 docs/
 tests/
+prompts/
+分析*.md
 
 agent_proxy_traffic.db
 *.sqlite

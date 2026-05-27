@@ -304,6 +304,22 @@ config_show(section="semantic_params")
 
 Invalid regex entries are skipped with a warning so a single typo never breaks the rest of the pack.
 
+## Optional: Local Prompt Pack
+
+AgentProxy auto-loads MCP prompts from a `prompts/` directory at the repo root (or wherever `AGENT_PROXY_PROMPTS_DIR` points). This is intentionally **separate from the package** — drop in a curated SRC playbook, target-specific reconnaissance routine, or per-engagement triage prompt without editing code or rebuilding the wheel.
+
+```text
+prompts/
+├── pentest_workflow.md     ← .md = required, frontmatter + body
+├── pentest_workflow.py     ← .py = optional, dynamic context provider
+├── triage_note.md
+└── triage_note.py
+```
+
+Each `.md` file becomes one MCP prompt (name = filename stem). `{{ placeholder }}` in the body gets substituted from the sibling `.py`'s `context(session, **args) -> dict`, or from prompt arguments declared in the front-matter.
+
+If the directory is missing, AgentProxy starts normally with zero prompts registered. The directory is `.gitignore`d so your private playbook never leaks into the repo. See `prompts/README.md` (if present) for the full format.
+
 ## Recommended Triage Workflow
 
 The agent-friendly path is to look at signals before bodies:
