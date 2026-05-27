@@ -547,6 +547,9 @@ session_use_context(name)
 session_list_contexts()
 session_status()
 session_stop()
+cert_status(ca_path?, nickname?)
+cert_install_firefox(ca_path?, nickname?)
+cert_install_chrome(ca_path?, nickname?)
 config_show(section?)
 ```
 
@@ -752,6 +755,15 @@ This gives you the same clean lock the built-in browser gets, without trusting t
 
 *Option 2 — install the mitmproxy CA into Chrome's NSS store (one-time, real green lock)*
 
+The fast path is the MCP tool — call it from the agent:
+
+```text
+cert_install_chrome()
+# returns {"ok": true, "results": [...], "note": "Restart Chrome..."}
+```
+
+Or do it by hand:
+
 ```bash
 sudo apt-get install -y libnss3-tools   # if certutil isn't installed
 mkdir -p ~/.pki/nssdb
@@ -762,6 +774,27 @@ certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n mitmproxy \
 After this, Chrome treats mitmproxy as a real CA. You can drop the `--ignore-certificate-errors*` flags entirely. To revoke later: `certutil -d sql:$HOME/.pki/nssdb -D -n mitmproxy`.
 
 > **Don't** add the mitmproxy CA to the OS trust store (`/usr/local/share/ca-certificates/`) on a machine you also use for normal browsing — anyone holding `~/.mitmproxy/mitmproxy-ca.pem` could MITM your real traffic. Keep the trust scoped to the NSS store, or use Option 1's per-launch SPKI pin.
+
+**External Firefox** — Firefox does **not** read the OS trust store, the NSS shared DB, or Chrome's `~/.pki/nssdb`. Each profile has its own `cert9.db` under `~/.mozilla/firefox/<profile>/`. Without trusting the CA there, you'll see `MOZILLA_PKIX_ERROR_MITM_DETECTED` on every HTTPS site.
+
+Use the MCP tool — it auto-discovers all profiles (including snap installs) and installs the CA into each:
+
+```text
+cert_status()           # see which profiles are missing trust
+cert_install_firefox()  # install into all profiles, restart Firefox after
+```
+
+Manual equivalent if you prefer:
+
+```bash
+sudo apt-get install -y libnss3-tools
+for prof in ~/.mozilla/firefox/*.default*; do
+  certutil -d "sql:$prof" -A -t "C,," -n mitmproxy \
+           -i ~/.mitmproxy/mitmproxy-ca-cert.pem
+done
+```
+
+Restart Firefox after installation.
 
 Some sites may still fail with extra TLS pinning, bot checks, or browser-integrity checks. For those, use a real Chrome profile and manual mode.
 

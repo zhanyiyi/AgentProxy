@@ -3,6 +3,13 @@ from typing import Any, Dict, List, Optional
 
 from mcp.server.fastmcp import FastMCP
 
+from ..core.cert_installer import (
+    DEFAULT_CA_PATH,
+    DEFAULT_NICKNAME,
+    cert_status as cert_status_impl,
+    install_chrome as cert_install_chrome_impl,
+    install_firefox as cert_install_firefox_impl,
+)
 from ..core.session_manager import SessionManager
 from ..models import SessionConfig, InterceptionRule
 
@@ -65,6 +72,58 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     async def session_stop() -> str:
         """Stop the AgentProxy session: close browser and MITM proxy."""
         return await session.stop_session()
+
+    @mcp.tool()
+    async def cert_status(ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
+        """Report whether the mitmproxy CA is installed in each Firefox
+        profile and the Chrome NSS DB on this machine. Read-only — call it
+        to diagnose 'Not Secure' / MOZILLA_PKIX_ERROR_MITM_DETECTED before
+        running cert_install_firefox / cert_install_chrome.
+
+        Args:
+            ca_path: Path to mitmproxy's CA pem (defaults to
+                ~/.mitmproxy/mitmproxy-ca-cert.pem).
+            nickname: NSS nickname to look up (defaults to 'mitmproxy').
+        """
+        return json.dumps(cert_status_impl(ca_path=ca_path, nickname=nickname), indent=2)
+
+    @mcp.tool()
+    async def cert_install_firefox(ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
+        """Install the mitmproxy CA into every detected Firefox profile.
+
+        Firefox does NOT use the OS or Chrome NSS store — it has its own
+        cert9.db per profile. This is the fix for
+        MOZILLA_PKIX_ERROR_MITM_DETECTED when capturing Firefox traffic
+        through AgentProxy.
+
+        Requires `certutil` (Debian/Kali/Ubuntu: `sudo apt-get install -y
+        libnss3-tools`). Restart Firefox afterwards.
+
+        Args:
+            ca_path: Path to the mitmproxy CA pem file.
+            nickname: NSS nickname to register the CA under.
+        """
+        return json.dumps(
+            cert_install_firefox_impl(ca_path=ca_path, nickname=nickname), indent=2,
+        )
+
+    @mcp.tool()
+    async def cert_install_chrome(ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
+        """Install the mitmproxy CA into the Chrome / Chromium NSS DB
+        (~/.pki/nssdb). The fix for the 'Not Secure' lock when capturing
+        Chrome traffic; not needed for AgentProxy's built-in Playwright
+        Chromium (that path uses --ignore-certificate-errors-spki-list
+        automatically).
+
+        Requires `certutil`. Restart Chrome afterwards.
+
+        Args:
+            ca_path: Path to the mitmproxy CA pem file.
+            nickname: NSS nickname to register the CA under.
+        """
+        return json.dumps(
+            cert_install_chrome_impl(ca_path=ca_path, nickname=nickname), indent=2,
+        )
 
     @mcp.tool()
     async def session_status() -> str:
