@@ -167,6 +167,83 @@ class SessionManager:
             ),
         })
 
+    async def attach_browser(
+        self,
+        headless: Optional[bool] = None,
+        profile_dir: Optional[str] = None,
+        unsafe_disable_web_security: Optional[bool] = None,
+        hydrate_host: Optional[str] = None,
+    ) -> str:
+        """Hot-attach a Playwright browser to an existing mitm-only session.
+        The mitm proxy is reused at its current port (no restart, no flow
+        loss). Required state: mitm running, browser NOT running.
+
+        Use it to upgrade a passive capture session into an active one
+        without losing the flows you've already collected — common when
+        you started with the external browser logged in and now want the
+        agent to drive a context against the same target.
+
+        Args:
+            headless / profile_dir / unsafe_disable_web_security: same
+                semantics as session_start; default to the SessionConfig
+                values.
+            hydrate_host: optional shortcut — after the browser starts,
+                hydrate the default context with cookies + auth headers
+                from the traffic DB for this host. Equivalent to calling
+                browser_hydrate_from_traffic afterwards."""
+        if not self._session_active or not self.mitm.running:
+            return json.dumps({
+                "status": "error",
+                "error": (
+                    "No active mitm session to attach to. Call "
+                    "session_start_proxy_only first, or use session_start "
+                    "to do both at once."
+                ),
+            })
+        if self.browser.running:
+            return json.dumps({
+                "status": "error",
+                "error": (
+                    "Browser is already running. Use session_stop and a "
+                    "fresh session_start if you need to reconfigure it."
+                ),
+            })
+
+        # Reuse the live mitm port (do NOT restart the proxy).
+        self.browser.proxy_port = self.mitm.port
+        if headless is not None:
+            self.browser.headless = headless
+        if profile_dir is not None:
+            self.browser.profile_dir = profile_dir or None
+        if unsafe_disable_web_security is not None:
+            self.browser.unsafe_disable_web_security = unsafe_disable_web_security
+
+        try:
+            browser_result = await self.browser.start()
+            logger.info("Browser attached: %s", browser_result)
+        except Exception as e:
+            # Don't drop the mitm — caller can still use it passively.
+            await self.browser.stop()
+            return json.dumps({
+                "status": "error",
+                "error": f"browser failed to start: {e}",
+                "mitm_still_running": True,
+            })
+
+        result: Dict[str, Any] = {
+            "status": "browser_attached",
+            "browser": browser_result,
+            "proxy_port": self.mitm.port,
+            "headless": self.browser.headless,
+            "profile_dir": self.browser.profile_dir,
+            "contexts": self.browser.list_contexts(),
+            "active_context": self.browser.active,
+        }
+        if hydrate_host:
+            hydrate_raw = await self.hydrate_browser_from_traffic(host=hydrate_host)
+            result["hydrate"] = json.loads(hydrate_raw)
+        return json.dumps(result, indent=2)
+
     async def stop_session(self) -> str:
         if not self._session_active and not self.browser.running and not self.mitm.running:
             return "No active session"
@@ -257,6 +334,84 @@ class SessionManager:
             "contexts": self.browser.list_contexts(),
             "active_context": self.browser.active,
         }
+
+    async def hydrate_browser_from_traffic(
+        self,
+        host: str,
+        context: str = "default",
+        limit: int = 200,
+    ) -> str:
+        """Seed a live browser context with cookies + auth headers extracted
+        from the traffic DB for `host`. Use case: external browser was
+        already logged in, mitm captured the session, now we want the
+        internal Playwright context to replay against the same target
+        without re-doing the login.
+
+        Cookies go into the context (so requests originated from any page
+        in the context carry them). Auth headers go onto the page via
+        set_extra_http_headers (per-page; Playwright lacks a per-context
+        equivalent).
+
+        Returns a JSON status payload."""
+        if not self.browser.running:
+            return json.dumps({
+                "status": "error",
+                "error": "Browser is not running. Use session_start or session_attach_browser first.",
+            })
+        ctx = self.browser.contexts.get(context)
+        page = self.browser.pages.get(context)
+        if ctx is None or page is None:
+            return json.dumps({
+                "status": "error",
+                "error": f"Unknown context '{context}'. Available: {self.browser.list_contexts()}",
+            })
+
+        state = self.mitm.db.collect_session_state(host=host, limit=limit)
+        if not state["cookies"] and not state["headers"]:
+            return json.dumps({
+                "status": "no_state_found",
+                "host": state["host"],
+                "stats": state["stats"],
+                "hint": (
+                    f"No cookies / auth headers seen for '{host}' in the "
+                    f"last {limit} flows. Drive the external browser through "
+                    f"a logged-in page first, then retry."
+                ),
+            })
+
+        injected_cookies = 0
+        if state["cookies"]:
+            try:
+                await ctx.add_cookies(state["cookies"])
+                injected_cookies = len(state["cookies"])
+            except Exception as e:
+                return json.dumps({
+                    "status": "error",
+                    "error": f"add_cookies failed: {e}",
+                    "host": state["host"],
+                })
+
+        injected_headers = {}
+        if state["headers"]:
+            try:
+                await page.set_extra_http_headers(state["headers"])
+                injected_headers = state["headers"]
+            except Exception as e:
+                return json.dumps({
+                    "status": "partial",
+                    "host": state["host"],
+                    "cookies_injected": injected_cookies,
+                    "headers_error": str(e),
+                })
+
+        return json.dumps({
+            "status": "ok",
+            "host": state["host"],
+            "context": context,
+            "cookies_injected": injected_cookies,
+            "headers_injected": list(injected_headers.keys()),
+            "stats": state["stats"],
+        }, indent=2)
 
     async def replay_via_browser(
         self,

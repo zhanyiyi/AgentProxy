@@ -391,6 +391,162 @@ class TrafficDB:
             cursor = conn.execute(sql, params)
             return [dict(row) for row in cursor.fetchall()]
 
+    AUTH_HEADER_WHITELIST = (
+        "authorization",
+        "x-csrf-token",
+        "x-xsrf-token",
+        "x-auth-token",
+        "x-api-token",
+        "x-api-key",
+        "x-session-token",
+        "cookie",  # surfaced separately under cookies, but listed for completeness
+    )
+
+    def collect_session_state(
+        self,
+        host: str,
+        limit: int = 200,
+        max_cookie_value_len: int = 8192,
+    ) -> Dict[str, Any]:
+        """Aggregate the most recent auth state captured for `host`.
+
+        Returns a dict shaped to be fed straight into Playwright:
+            {
+              "host": "...",
+              "cookies": [{"name", "value", "domain", "path"}, ...],
+              "headers": {"Authorization": "...", "X-CSRF-Token": "..."},
+              "stats": {"flows_scanned": N, "cookie_sources": [...]}
+            }
+
+        Cookie sourcing priority (most-recent-first scan, last writer wins):
+          1. Request `Cookie:` header — what the browser is *currently*
+             sending and what the server is *currently* accepting.
+          2. Response `Set-Cookie` header — picks up freshly-issued
+             credentials that haven't been replayed yet.
+
+        Auth headers come from the whitelist above and are taken from the
+        most recent request that carried them. Cookies and headers are
+        scoped to flows whose URL hostname == host or ends with ".host"
+        (subdomain-safe, unlike a raw url LIKE)."""
+        host = (host or "").strip().lower().lstrip(".")
+        if not host:
+            return {"host": "", "cookies": [], "headers": {}, "stats": {"flows_scanned": 0, "cookie_sources": []}}
+
+        # Pull recent flows whose URL contains the host substring; we'll
+        # filter to true hostname matches in Python to avoid `evil.foo.com`
+        # leaking when host="foo.com".
+        with self._get_conn() as conn:
+            conn.row_factory = sqlite3.Row
+            cursor = conn.execute(
+                "SELECT id, url, request_headers, response_headers, timestamp "
+                "FROM flows WHERE url LIKE ? ORDER BY timestamp DESC LIMIT ?",
+                (f"%{host}%", limit),
+            )
+            rows = cursor.fetchall()
+
+        cookies: Dict[str, Dict[str, str]] = {}
+        cookie_sources: List[str] = []
+        headers: Dict[str, str] = {}
+        scanned = 0
+
+        # Iterate oldest-first so newer values overwrite — semantics of
+        # "last writer wins" expressed naturally with a simple loop.
+        for row in reversed(rows):
+            url_host = (urlparse(row["url"]).hostname or "").lower()
+            if url_host != host and not url_host.endswith(f".{host}"):
+                continue
+            scanned += 1
+
+            req_headers = _parse_headers_ordered(row["request_headers"])
+            resp_headers = _parse_headers_ordered(row["response_headers"])
+
+            # ---- request Cookie: header ----
+            for k, v in req_headers:
+                if k.lower() == "cookie" and v:
+                    self._absorb_cookie_header(v, url_host, cookies, max_cookie_value_len)
+                    if "request_cookie" not in cookie_sources:
+                        cookie_sources.append("request_cookie")
+
+            # ---- response Set-Cookie ----
+            for k, v in resp_headers:
+                if k.lower() == "set-cookie" and v:
+                    self._absorb_set_cookie(v, url_host, cookies, max_cookie_value_len)
+                    if "response_set_cookie" not in cookie_sources:
+                        cookie_sources.append("response_set_cookie")
+
+            # ---- whitelisted auth headers (request side) ----
+            for k, v in req_headers:
+                if k.lower() in self.AUTH_HEADER_WHITELIST and k.lower() != "cookie" and v:
+                    headers[k] = v  # preserve original case of the most recent occurrence
+
+        return {
+            "host": host,
+            "cookies": list(cookies.values()),
+            "headers": headers,
+            "stats": {
+                "flows_scanned": scanned,
+                "cookie_sources": cookie_sources,
+            },
+        }
+
+    @staticmethod
+    def _absorb_cookie_header(
+        raw: str, url_host: str,
+        sink: Dict[str, Dict[str, str]], max_value_len: int,
+    ) -> None:
+        """Parse `Cookie: a=1; b=2` into Playwright cookie dicts. We don't
+        know each cookie's true scope from a request header, so use the
+        request's hostname as a safe default — it's exactly the scope
+        under which the browser sent them."""
+        for pair in raw.split(";"):
+            pair = pair.strip()
+            if "=" not in pair:
+                continue
+            name, _, value = pair.partition("=")
+            name = name.strip()
+            value = value.strip()
+            if not name or len(value) > max_value_len:
+                continue
+            sink[name] = {
+                "name": name,
+                "value": value,
+                "domain": url_host,
+                "path": "/",
+            }
+
+    @staticmethod
+    def _absorb_set_cookie(
+        raw: str, url_host: str,
+        sink: Dict[str, Dict[str, str]], max_value_len: int,
+    ) -> None:
+        """Parse a single Set-Cookie line, honouring Domain= / Path= when
+        present. Multiple Set-Cookie headers arrive as separate rows in
+        our list-of-tuples format, so this only handles ONE per call."""
+        parts = [p.strip() for p in raw.split(";") if p.strip()]
+        if not parts or "=" not in parts[0]:
+            return
+        name, _, value = parts[0].partition("=")
+        name = name.strip()
+        value = value.strip()
+        if not name or len(value) > max_value_len:
+            return
+        domain = url_host
+        path = "/"
+        for attr in parts[1:]:
+            k, _, v = attr.partition("=")
+            k = k.strip().lower()
+            v = v.strip()
+            if k == "domain" and v:
+                domain = v.lstrip(".")
+            elif k == "path" and v:
+                path = v
+        sink[name] = {
+            "name": name,
+            "value": value,
+            "domain": domain,
+            "path": path,
+        }
+
     def clear(self):
         with self._get_conn() as conn:
             conn.execute("DELETE FROM flows")

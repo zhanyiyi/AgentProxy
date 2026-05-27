@@ -69,6 +69,38 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return await session.start_mitm_only(proxy_port=proxy_port)
 
     @mcp.tool()
+    async def session_attach_browser(
+        headless: bool = True,
+        profile_dir: str = None,
+        unsafe_disable_web_security: bool = False,
+        hydrate_host: str = None,
+    ) -> str:
+        """Hot-attach a Playwright browser to an existing mitm-only session.
+
+        Reuses the running mitm proxy at its current port — no restart,
+        no traffic loss. Required state: a session is active and only
+        the proxy is running (typical after session_start_proxy_only).
+
+        Use it to upgrade passive capture to active driving while keeping
+        every flow you collected. If `hydrate_host` is set, the default
+        context is automatically seeded with cookies / auth headers from
+        the DB for that host (equivalent to browser_hydrate_from_traffic
+        run right after).
+
+        Args:
+            headless: Run browser in headless mode (default True).
+            profile_dir: Optional storage_state directory.
+            unsafe_disable_web_security: Disable SOP/CORS (default False).
+            hydrate_host: Optional hostname — auto-hydrate after start.
+        """
+        return await session.attach_browser(
+            headless=headless,
+            profile_dir=profile_dir,
+            unsafe_disable_web_security=unsafe_disable_web_security,
+            hydrate_host=hydrate_host,
+        )
+
+    @mcp.tool()
     async def session_stop() -> str:
         """Stop the AgentProxy session: close browser and MITM proxy."""
         return await session.stop_session()
@@ -346,6 +378,31 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     async def browser_accessibility_tree() -> str:
         """Get the accessibility tree of the current page (useful for understanding page structure)."""
         return await session.browser.get_accessibility_tree()
+
+    @mcp.tool()
+    async def browser_hydrate_from_traffic(host: str, context: str = "default", limit: int = 200) -> str:
+        """Seed the internal browser context with cookies and auth headers
+        already captured in the traffic DB for `host`.
+
+        Typical flow: an external browser (system Chrome / Firefox) is
+        logged in to the target, mitm captured its traffic, and now you
+        want the internal Playwright context to act under that identity
+        without redoing the login. Run this once after starting / attaching
+        the browser.
+
+        Cookies are sourced first from request `Cookie:` headers (most
+        accurate snapshot of what the server is currently honouring), then
+        from `Set-Cookie` responses. Auth headers come from a fixed
+        whitelist (Authorization, X-CSRF-Token, X-XSRF-Token,
+        X-Auth-Token, X-Api-Token, X-Api-Key, X-Session-Token). Hostname
+        scoping is exact-or-subdomain.
+
+        Args:
+            host: Target hostname (e.g. 'app.example.com').
+            context: Browser context name (defaults to 'default').
+            limit: Max recent flows to scan (default 200).
+        """
+        return await session.hydrate_browser_from_traffic(host=host, context=context, limit=limit)
 
     @mcp.tool()
     async def browser_get_console_logs(clear: bool = False) -> str:

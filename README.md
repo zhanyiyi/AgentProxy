@@ -508,6 +508,40 @@ Stop the listener:
 session_stop()
 ```
 
+## Reusing Existing Auth State (passive → active)
+
+A common pattern: you already have a system Firefox / Chrome logged in to the target, mitm has been quietly capturing its traffic, and now you want the agent's internal Playwright browser to drive the same target — without redoing the login. AgentProxy gives you a one-shot path:
+
+```text
+# 1. Start passive capture and let the external browser populate the DB.
+session_start_proxy_only(proxy_port=8081)
+# (drive your system Firefox / Chrome through any logged-in pages)
+
+# 2. Hot-attach a Playwright browser. mitm port stays the same, no flow loss.
+session_attach_browser(headless=False, hydrate_host="app.example.com")
+
+# 3. Drive the internal browser as the logged-in user.
+browser_navigate(url="https://app.example.com/dashboard")
+```
+
+`hydrate_host="app.example.com"` is the key bit — after the browser starts, AgentProxy scans the recent flows for that host, extracts the cookies the external browser was sending plus a whitelist of auth headers (`Authorization`, `X-CSRF-Token`, `X-XSRF-Token`, `X-Auth-Token`, `X-Api-Token`, `X-Api-Key`, `X-Session-Token`), and injects them into the default context.
+
+Equivalent step-by-step form, useful when you want to inspect first:
+
+```text
+session_start_proxy_only(proxy_port=8081)
+session_attach_browser(headless=False)
+browser_hydrate_from_traffic(host="app.example.com")    # inspect the JSON
+browser_navigate(url="https://app.example.com/dashboard")
+```
+
+Notes:
+
+- **Cookie source priority**: request `Cookie:` headers first (what the server is currently honouring), `Set-Cookie` responses second. Latest value wins.
+- **Hostname scoping** is exact-or-subdomain — `host="example.com"` matches `api.example.com` but rejects `example.com.attacker.io`.
+- `attach_browser` requires the proxy to be running and the browser to be off; otherwise it returns a structured error and leaves the mitm untouched.
+- The traffic DB is persistent (SQLite + WAL), so flows captured in step 1 stay available throughout the active session and beyond.
+
 ## Running The MCP Server Manually
 
 You can run the MCP server directly:
@@ -541,6 +575,7 @@ Session:
 session_start(proxy_port=8080, headless=true, profile_dir?, unsafe_disable_web_security?)
 session_connect_cdp(endpoint_url="http://127.0.0.1:9222", proxy_port=8080)
 session_start_proxy_only(proxy_port=8080)
+session_attach_browser(headless=true, profile_dir?, unsafe_disable_web_security?, hydrate_host?)
 session_save_profile(name?, path?)
 session_create_context(name, from_profile=true)
 session_use_context(name)
@@ -570,6 +605,7 @@ browser_set_cookies(cookies_json)
 browser_set_headers(headers_json)
 browser_set_offline(offline)
 browser_accessibility_tree()
+browser_hydrate_from_traffic(host, context="default", limit=200)
 ```
 
 Traffic:
