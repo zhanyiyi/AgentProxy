@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import hashlib
 import json
 import logging
 import os
@@ -8,6 +9,30 @@ from typing import Any, Dict, List, Optional
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
 
 logger = logging.getLogger("agent_proxy.browser")
+
+MITMPROXY_CA_PATH = os.path.expanduser("~/.mitmproxy/mitmproxy-ca-cert.pem")
+
+
+def _mitmproxy_ca_spki_b64(cert_path: str = MITMPROXY_CA_PATH) -> Optional[str]:
+    """base64(SHA256(SubjectPublicKeyInfo DER)) for Chromium's
+    --ignore-certificate-errors-spki-list. Returns None if the CA file
+    isn't on disk yet (first run before mitmproxy generated it)."""
+    if not os.path.exists(cert_path):
+        return None
+    try:
+        # mitmproxy already pulls in `cryptography`; safe to import.
+        from cryptography import x509
+        from cryptography.hazmat.primitives import serialization
+        with open(cert_path, "rb") as f:
+            cert = x509.load_pem_x509_certificate(f.read())
+        spki_der = cert.public_key().public_bytes(
+            encoding=serialization.Encoding.DER,
+            format=serialization.PublicFormat.SubjectPublicKeyInfo,
+        )
+        return base64.b64encode(hashlib.sha256(spki_der).digest()).decode("ascii")
+    except Exception as e:
+        logger.warning("mitmproxy CA SPKI hash failed: %s", e)
+        return None
 
 
 class BrowserController:
@@ -70,9 +95,24 @@ class BrowserController:
         proxy_url = f"http://{self.proxy_host}:{self.proxy_port}"
 
         launch_args = [
-            "--ignore-certificate-errors",
             "--disable-features=IsolateOrigins,site-per-process",
         ]
+        spki = _mitmproxy_ca_spki_b64()
+        if spki:
+            # Pin Chromium's trust to mitmproxy's CA only — fixes the "Not
+            # Secure" lock without globally disabling cert validation.
+            launch_args.append(f"--ignore-certificate-errors-spki-list={spki}")
+        else:
+            # mitmproxy hasn't generated its CA yet (first run, or homedir
+            # cleared). Fall back to the blanket bypass so traffic still
+            # captures; the lock will read "Not Secure" until the CA is on
+            # disk and the browser is restarted.
+            launch_args.append("--ignore-certificate-errors")
+            logger.warning(
+                "mitmproxy CA not found at %s; using --ignore-certificate-errors fallback. "
+                "Restart the session once mitmproxy generates the CA for a clean lock.",
+                MITMPROXY_CA_PATH,
+            )
         if self.unsafe_disable_web_security:
             launch_args.append("--disable-web-security")
             logger.warning("browser launched with --disable-web-security; CORS validation disabled")

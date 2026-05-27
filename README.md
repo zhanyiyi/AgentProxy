@@ -430,6 +430,8 @@ google-chrome \
   about:blank
 ```
 
+> The `--ignore-certificate-errors` flag keeps the page loading but leaves a "Not Secure" lock in the address bar. For a clean lock with external Chrome, swap it for the SPKI-pinned variant — see [HTTPS pages load but the address bar shows "Not Secure"](#https-pages-load-but-the-address-bar-shows-not-secure) under Troubleshooting.
+
 If you use Chromium:
 
 ```bash
@@ -686,17 +688,48 @@ session_connect_cdp(endpoint_url="http://127.0.0.1:9222", proxy_port=8090)
 
 If using external Chrome, its `--proxy-server` port must match the `proxy_port` passed to `session_connect_cdp`.
 
-### HTTPS pages load but some resources fail
+### HTTPS pages load but the address bar shows "Not Secure"
 
-For the built-in Playwright browser, AgentProxy launches with `ignore_https_errors` and Chrome certificate-error flags.
+mitmproxy intercepts HTTPS by re-signing each site with its own CA at `~/.mitmproxy/mitmproxy-ca-cert.pem`. The browser doesn't trust that CA out of the box, so even though the page loads the lock turns red.
 
-For external Chrome, include:
+**Built-in Playwright browser** (default mode) — handled automatically. AgentProxy reads the mitmproxy CA on startup, computes its SPKI hash, and pins Chromium's trust to it via `--ignore-certificate-errors-spki-list=<hash>`. Result: clean lock, no warnings, real CAs still validated. If `~/.mitmproxy/mitmproxy-ca-cert.pem` is missing on the very first run, AgentProxy falls back to `--ignore-certificate-errors` and logs a warning — restart the session once mitmproxy has generated the CA.
+
+**External Chrome via CDP** — the user launches Chrome, so AgentProxy can't inject the flag for you. Two options:
+
+*Option 1 — pin SPKI on the command line (per-launch, no system changes)*
 
 ```bash
---ignore-certificate-errors
+# 1. compute the SPKI hash once
+SPKI=$(openssl x509 -in ~/.mitmproxy/mitmproxy-ca-cert.pem -pubkey -noout \
+       | openssl pkey -pubin -outform DER \
+       | openssl dgst -sha256 -binary | base64)
+
+# 2. start Chrome with the pinned CA
+google-chrome \
+  --remote-debugging-port=9222 \
+  --user-data-dir=/tmp/agent-proxy-user-profile \
+  --proxy-server=http://127.0.0.1:8081 \
+  --ignore-certificate-errors-spki-list="$SPKI" \
+  --no-sandbox \
+  about:blank
 ```
 
-Some sites may still enforce extra TLS, certificate pinning, bot checks, or browser integrity checks. Use a real Chrome profile and manual mode when possible.
+This gives you the same clean lock the built-in browser gets, without trusting the CA system-wide.
+
+*Option 2 — install the mitmproxy CA into Chrome's NSS store (one-time, real green lock)*
+
+```bash
+sudo apt-get install -y libnss3-tools   # if certutil isn't installed
+mkdir -p ~/.pki/nssdb
+certutil -d sql:$HOME/.pki/nssdb -A -t "C,," -n mitmproxy \
+         -i ~/.mitmproxy/mitmproxy-ca-cert.pem
+```
+
+After this, Chrome treats mitmproxy as a real CA. You can drop the `--ignore-certificate-errors*` flags entirely. To revoke later: `certutil -d sql:$HOME/.pki/nssdb -D -n mitmproxy`.
+
+> **Don't** add the mitmproxy CA to the OS trust store (`/usr/local/share/ca-certificates/`) on a machine you also use for normal browsing — anyone holding `~/.mitmproxy/mitmproxy-ca.pem` could MITM your real traffic. Keep the trust scoped to the NSS store, or use Option 1's per-launch SPKI pin.
+
+Some sites may still fail with extra TLS pinning, bot checks, or browser-integrity checks. For those, use a real Chrome profile and manual mode.
 
 ## Development
 
