@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import socket
 import time
 from typing import Any, Dict, List, Optional
 
@@ -33,6 +34,32 @@ class SessionManager:
             unsafe_disable_web_security=self.config.unsafe_disable_web_security,
         )
         self._session_active = False
+        self._last_mitm_error: Optional[str] = None
+
+    async def _safe_mitm_start(self, port: int) -> Optional[str]:
+        """Try to start the mitm proxy. Returns the success string on bind,
+        or None on failure (caller renders an error payload). Centralised so
+        all three session entry points report port-conflict errors the same
+        way."""
+        try:
+            return await self.mitm.start(port=port, host=self.config.proxy_host)
+        except Exception as e:
+            logger.error("mitm proxy start failed on port %s: %s", port, e)
+            self._last_mitm_error = str(e)
+            return None
+
+    def _mitm_start_error_payload(self, port: int, mode: str) -> str:
+        return json.dumps({
+            "status": "error",
+            "mode": mode,
+            "error": self._last_mitm_error or "mitmproxy failed to start",
+            "proxy_port": port,
+            "hint": (
+                f"Check whether something else is bound to "
+                f"{self.config.proxy_host}:{port} "
+                f"(`ss -ltnp 'sport = :{port}'`) or pick a different port."
+            ),
+        })
 
     async def start_session(self, proxy_port: Optional[int] = None, headless: Optional[bool] = None, profile_dir: Optional[str] = None, unsafe_disable_web_security: Optional[bool] = None) -> str:
         if self._session_active:
@@ -49,7 +76,9 @@ class SessionManager:
         if unsafe_disable_web_security is not None:
             self.browser.unsafe_disable_web_security = unsafe_disable_web_security
 
-        proxy_result = await self.mitm.start(port=port, host=self.config.proxy_host)
+        proxy_result = await self._safe_mitm_start(port)
+        if proxy_result is None:
+            return self._mitm_start_error_payload(port, mode="full")
         logger.info("Proxy started: %s", proxy_result)
 
         try:
@@ -81,7 +110,9 @@ class SessionManager:
         self.mitm.port = port
         self.browser.proxy_port = port
 
-        proxy_result = await self.mitm.start(port=port, host=self.config.proxy_host)
+        proxy_result = await self._safe_mitm_start(port)
+        if proxy_result is None:
+            return self._mitm_start_error_payload(port, mode="cdp")
         logger.info("Proxy started: %s", proxy_result)
 
         try:
@@ -116,7 +147,9 @@ class SessionManager:
         port = proxy_port or self.config.proxy_port
         self.mitm.port = port
 
-        proxy_result = await self.mitm.start(port=port, host=self.config.proxy_host)
+        proxy_result = await self._safe_mitm_start(port)
+        if proxy_result is None:
+            return self._mitm_start_error_payload(port, mode="mitm_only")
         logger.info("Proxy started (browser-less): %s", proxy_result)
         self._session_active = True
 
@@ -198,12 +231,26 @@ class SessionManager:
 
         return json.dumps(all_results, indent=2)
 
+    def _proxy_listening(self) -> bool:
+        """TCP probe the proxy port. Distinguishes 'we think it's running'
+        from 'it's actually accepting connections' — surfaces the case where
+        mitmproxy crashed silently or never bound."""
+        if not self.mitm.running:
+            return False
+        try:
+            with socket.create_connection((self.config.proxy_host, self.mitm.port), timeout=0.3):
+                return True
+        except OSError:
+            return False
+
     def get_status(self) -> Dict[str, Any]:
         return {
             "session_active": self._session_active,
             "proxy_running": self.mitm.running,
+            "proxy_listening": self._proxy_listening(),
             "browser_running": self.browser.running,
             "proxy_port": self.mitm.port,
+            "proxy_host": self.config.proxy_host,
             "traffic_count": len(self.mitm.db.get_summary(limit=9999)),
             "interception_rules": len(self.mitm.interceptor.rules),
             "profile_dir": self.browser.profile_dir,

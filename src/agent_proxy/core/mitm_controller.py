@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import re
+import socket
 import time
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse, parse_qs, urlencode, parse_qsl
@@ -197,6 +198,22 @@ class MitmController:
         if self.running:
             return f"MITM proxy already running on port {self.port}"
 
+        # Pre-flight: try to bind the port ourselves and immediately release.
+        # mitmproxy's DumpMaster handles bind errors via SystemExit on a
+        # background task, which is hostile to error reporting from an MCP
+        # tool — so check up front. There's a small TOCTOU window between
+        # this check and DumpMaster's own bind, but for the realistic case
+        # ("agent already has a server on 8080") it gives a clean error.
+        try:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+                probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+                probe.bind((host, port))
+        except OSError as e:
+            raise RuntimeError(
+                f"cannot bind {host}:{port} ({e}). "
+                f"Check `ss -ltnp 'sport = :{port}'` or pick a different port."
+            ) from e
+
         self.port = port
         self.host = host
         opts = options.Options(listen_host=host, listen_port=port)
@@ -205,6 +222,36 @@ class MitmController:
         self.master.addons.add(self.interceptor)
 
         self.proxy_task = asyncio.create_task(self.master.run())
+
+        # Wait until the proxy is actually accepting connections. mitmproxy's
+        # bind happens inside an addon coroutine after master.run() starts,
+        # so even after create_task returns, listen_addrs() may briefly be
+        # empty. Without this poll, callers race the bind and lose traffic.
+        ps_addon = self.master.addons.get("proxyserver")
+        deadline = asyncio.get_event_loop().time() + 5.0
+        while True:
+            if self.proxy_task.done():
+                exc = self.proxy_task.exception()
+                self.master = None
+                self.proxy_task = None
+                if exc is not None:
+                    raise RuntimeError(f"mitmproxy failed to start on {host}:{port}: {exc}") from exc
+                raise RuntimeError(f"mitmproxy exited immediately on {host}:{port}")
+            if ps_addon and ps_addon.listen_addrs():
+                break
+            if asyncio.get_event_loop().time() > deadline:
+                self.master.shutdown()
+                try:
+                    await asyncio.wait_for(self.proxy_task, timeout=2.0)
+                except (asyncio.TimeoutError, Exception):
+                    self.proxy_task.cancel()
+                self.master = None
+                self.proxy_task = None
+                raise RuntimeError(
+                    f"mitmproxy did not bind {host}:{port} within 5s"
+                )
+            await asyncio.sleep(0.05)
+
         self.running = True
         logger.info("proxy_started", host=host, port=port)
         return f"Started MITM proxy on {host}:{port}"
