@@ -102,6 +102,38 @@ class SessionManager:
             "cdp_endpoint": endpoint_url,
         })
 
+    async def start_mitm_only(self, proxy_port: Optional[int] = None) -> str:
+        """Start only the mitmproxy listener — no Playwright browser, no CDP.
+        For passive capture from external clients (system Chrome/Firefox, mobile
+        device, curl, scripts) that point their HTTP(S) proxy at us. The agent
+        keeps full read-only access to traffic via traffic_*/site_map/findings.
+
+        browser_*/browse_and_capture/traffic_replay_via_browser will fail (no
+        live page); traffic_replay (curl_cffi) still works."""
+        if self._session_active:
+            return "Session already active. Use session_stop first."
+
+        port = proxy_port or self.config.proxy_port
+        self.mitm.port = port
+
+        proxy_result = await self.mitm.start(port=port, host=self.config.proxy_host)
+        logger.info("Proxy started (browser-less): %s", proxy_result)
+        self._session_active = True
+
+        return json.dumps({
+            "status": "session_started",
+            "mode": "mitm_only",
+            "proxy": proxy_result,
+            "proxy_port": port,
+            "proxy_host": self.config.proxy_host,
+            "hint": (
+                f"Point browsers / curl / mobile devices at "
+                f"http://{self.config.proxy_host}:{port}. For HTTPS, install "
+                f"~/.mitmproxy/mitmproxy-ca-cert.pem (see README "
+                f"'HTTPS pages load but the address bar shows Not Secure')."
+            ),
+        })
+
     async def stop_session(self) -> str:
         if not self._session_active and not self.browser.running and not self.mitm.running:
             return "No active session"

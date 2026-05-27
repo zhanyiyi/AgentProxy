@@ -38,6 +38,30 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return await session.connect_cdp_session(endpoint_url=endpoint_url, proxy_port=proxy_port)
 
     @mcp.tool()
+    async def session_start_proxy_only(proxy_port: int = 8080) -> str:
+        """Start only the MITM proxy — no Playwright browser, no CDP attach.
+
+        Use this for browser-less / passive capture: any external client
+        (system Chrome, Firefox, mobile device, curl, script) that you
+        point at http://127.0.0.1:<proxy_port> will have its traffic
+        captured into SQLite. Agent-side traffic_*/site_map/findings keep
+        working as usual.
+
+        Caveats:
+          - browser_* tools, browse_and_capture, and
+            traffic_replay_via_browser require a live page and will return
+            an error in this mode. Use traffic_replay for curl_cffi-based
+            replay instead.
+          - For HTTPS, the external client must trust mitmproxy's CA at
+            ~/.mitmproxy/mitmproxy-ca-cert.pem. See README's HTTPS
+            troubleshooting section for the per-browser steps.
+
+        Args:
+            proxy_port: Port for the MITM proxy (default: 8080)
+        """
+        return await session.start_mitm_only(proxy_port=proxy_port)
+
+    @mcp.tool()
     async def session_stop() -> str:
         """Stop the AgentProxy session: close browser and MITM proxy."""
         return await session.stop_session()

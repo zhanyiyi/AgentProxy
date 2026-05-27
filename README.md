@@ -475,6 +475,39 @@ ss -ltnp 'sport = :9222'
 kill <pid>
 ```
 
+## Browser-less Passive Capture Mode
+
+Sometimes you don't need AgentProxy to drive a browser at all — you just want a MITM listener so any external client (system Chrome, Firefox, mobile device, `curl`, or your own scripts) can route traffic through it. Common cases:
+
+- Capturing your everyday Chrome profile's traffic without launching a fresh Playwright instance.
+- Capturing a phone or VM where the only setting you can change is "HTTP proxy".
+- Capturing a CLI tool (`curl`, `git`, `npm`) by exporting `HTTPS_PROXY=http://127.0.0.1:8081`.
+
+Start the listener:
+
+```text
+session_start_proxy_only(proxy_port=8081)
+session_status()
+```
+
+Then point the external client at `http://127.0.0.1:8081`. For HTTPS to work cleanly, that client must trust `~/.mitmproxy/mitmproxy-ca-cert.pem` — see the [HTTPS troubleshooting section](#https-pages-load-but-the-address-bar-shows-not-secure) for per-browser steps (NSS for Chrome, `about:preferences` for Firefox, "Profile → Install" on iOS, etc.).
+
+What works in this mode:
+
+- All read-only traffic tools: `traffic_list`, `traffic_inspect`, `traffic_search`, `traffic_findings`, `traffic_params`, `traffic_diff`, `site_map`, `evidence_bundle`, `note_*`, `traffic_tag`/`link`/`chain`.
+- Replay via `traffic_replay` (uses `curl_cffi`, no browser needed).
+- Interception rules (`intercept_*`) and scope (`scope_*`).
+
+What doesn't work (returns an error):
+
+- `browser_*`, `browse_and_capture`, `traffic_replay_via_browser` — they need a live Playwright/CDP page. If you also need browser-driven replay later, stop the proxy-only session and switch to `session_start` or `session_connect_cdp`.
+
+Stop the listener:
+
+```text
+session_stop()
+```
+
 ## Running The MCP Server Manually
 
 You can run the MCP server directly:
@@ -507,6 +540,7 @@ Session:
 ```text
 session_start(proxy_port=8080, headless=true, profile_dir?, unsafe_disable_web_security?)
 session_connect_cdp(endpoint_url="http://127.0.0.1:9222", proxy_port=8080)
+session_start_proxy_only(proxy_port=8080)
 session_save_profile(name?, path?)
 session_create_context(name, from_profile=true)
 session_use_context(name)
