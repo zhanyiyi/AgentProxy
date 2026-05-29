@@ -37,3 +37,29 @@ packages = ["src/agent_proxy"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "src/agent_proxy/config/defaults.yaml" = "agent_proxy/config/defaults.yaml"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "integration: tests that launch a real mitmproxy + Chromium (slow, needs network/ports)",
+]
+filterwarnings = [
+    # Keep our own code's warnings visible by default.
+    "default",
+    # Silence noisy third-party DeprecationWarnings.
+    # mitmproxy -> pyparsing (leaveWhitespace / setParseAction / parseString)
+    "ignore:.*leaveWhitespace.*:DeprecationWarning",
+    "ignore:.*setParseAction.*:DeprecationWarning",
+    "ignore:.*parseString.*:DeprecationWarning",
+    "ignore::DeprecationWarning:pyparsing",
+    "ignore::DeprecationWarning:pyparsing.core",
+    "ignore::DeprecationWarning:mitmproxy.flowfilter",
+    # ldap3 -> tagMap / typeMap deprecations
+    "ignore:.*tagMap.*:DeprecationWarning",
+    "ignore:.*typeMap.*:DeprecationWarning",
+    "ignore::DeprecationWarning:pyasn1",
+    "ignore::DeprecationWarning:ldap3",
+    # pytest collection noise from helper classes named Test* in test apps
+    "ignore::pytest.PytestCollectionWarning",
+]

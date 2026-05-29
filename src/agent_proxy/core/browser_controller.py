@@ -5,6 +5,7 @@ import json
 import logging
 import os
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlsplit
 
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
 
@@ -60,6 +61,11 @@ class BrowserController:
         self.contexts: Dict[str, BrowserContext] = {}
         self.pages: Dict[str, Page] = {}
         self.active: str = "default"
+        # Host-scoped auth headers per context: {ctx_name: {host: {hdr: val}}}.
+        # A single route handler per context consults this map, so repeated
+        # hydration of different hosts accumulates rather than shadowing.
+        self._scoped_auth: Dict[str, Dict[str, Dict[str, str]]] = {}
+        self._scoped_routes: set = set()
         self._console_logs: List[str] = []
         self._console_max = 500
         self.running = False
@@ -158,6 +164,58 @@ class BrowserController:
             return f"Context '{name}' already exists"
         await self._create_named_context(name, from_profile=from_profile)
         return f"Created context '{name}' (active still '{self.active}')"
+
+    async def add_scoped_auth_headers(self, context: str, host: str,
+                                      headers: Dict[str, str]) -> int:
+        """Inject auth headers ONLY on requests to `host` (or its subdomains).
+
+        Playwright's `set_extra_http_headers` is NOT host-scoped — it attaches
+        the given headers to *every* request the page makes, so hydrating with
+        a target's `Authorization` / `X-Auth-Token` would leak that credential
+        to any third-party origin the page touches (analytics, CDN, an
+        attacker-controlled page). This records the headers in a per-context
+        host→headers map consulted by ONE route handler, so hydrating multiple
+        hosts accumulates instead of shadowing. Returns the number of headers
+        that will be injected for this host.
+        """
+        ctx = self.contexts.get(context)
+        if ctx is None or not headers:
+            return 0
+        host = (host or "").lower().lstrip(".")
+        host_map = self._scoped_auth.setdefault(context, {})
+        host_map.setdefault(host, {}).update(headers)
+
+        def _headers_for(req_host: str) -> Dict[str, str]:
+            req_host = (req_host or "").lower()
+            merged: Dict[str, str] = {}
+            for h, hdrs in host_map.items():
+                if req_host == h or req_host.endswith("." + h):
+                    merged.update(hdrs)
+            return merged
+
+        # Register the route handler exactly once per context.
+        if context not in self._scoped_routes:
+            async def _handler(route):
+                try:
+                    req = route.request
+                    req_host = urlsplit(req.url).hostname or ""
+                    extra = _headers_for(req_host)
+                    if extra:
+                        merged = dict(req.headers)  # preserves context tag etc.
+                        merged.update(extra)
+                        await route.continue_(headers=merged)
+                    else:
+                        await route.continue_()
+                except Exception:
+                    # Never let a routing error wedge the page; fall through.
+                    try:
+                        await route.continue_()
+                    except Exception:
+                        pass
+
+            await ctx.route("**/*", _handler)
+            self._scoped_routes.add(context)
+        return len(headers)
 
     def use_context(self, name: str) -> str:
         if name not in self.contexts:
@@ -313,26 +371,41 @@ class BrowserController:
         except Exception as e:
             return f"Screenshot failed: {str(e)}"
 
-    async def get_text(self, selector: Optional[str] = None) -> str:
+    # Cap page-content getters so a single call on a large SPA can't flood the
+    # agent's context. Caller can request more, but never unbounded by default.
+    MAX_CONTENT_CHARS = 40000
+
+    @classmethod
+    def _truncate_content(cls, text: str, max_chars: Optional[int]) -> str:
+        limit = cls.MAX_CONTENT_CHARS if max_chars is None else max_chars
+        if limit and len(text) > limit:
+            return text[:limit] + f"\n...[truncated {len(text) - limit} chars of {len(text)}]"
+        return text
+
+    async def get_text(self, selector: Optional[str] = None,
+                       max_chars: Optional[int] = None) -> str:
         if not self._page:
             return "Browser not started"
         try:
             if selector:
                 text = await self._page.text_content(selector, timeout=self.timeout)
-                return text or ""
+                text = text or ""
             else:
-                return await self._page.inner_text("body")
+                text = await self._page.inner_text("body")
+            return self._truncate_content(text, max_chars)
         except Exception as e:
             return f"Get text failed: {str(e)}"
 
-    async def get_html(self, selector: Optional[str] = None) -> str:
+    async def get_html(self, selector: Optional[str] = None,
+                       max_chars: Optional[int] = None) -> str:
         if not self._page:
             return "Browser not started"
         try:
             if selector:
-                return await self._page.inner_html(selector, timeout=self.timeout)
+                html = await self._page.inner_html(selector, timeout=self.timeout)
             else:
-                return await self._page.content()
+                html = await self._page.content()
+            return self._truncate_content(html, max_chars)
         except Exception as e:
             return f"Get HTML failed: {str(e)}"
 

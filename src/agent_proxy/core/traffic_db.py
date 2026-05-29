@@ -1,13 +1,17 @@
 import json
+import logging
 import shlex
 import sqlite3
 import os
 import time
+from contextlib import contextmanager
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse, parse_qs
 
 from mitmproxy import http
 
+
+logger = logging.getLogger(__name__)
 
 MAX_BODY_BYTES = 256 * 1024
 BINARY_CT_PREFIXES = ("image/", "video/", "audio/", "font/")
@@ -61,12 +65,56 @@ class TrafficDB:
         self.db_path = db_path
         self._init_db()
 
+    def _restrict_db_permissions(self) -> None:
+        """Create the DB file (if absent) and chmod it + its WAL/SHM sidecars to
+        0600. Best-effort: silently skipped on platforms without POSIX perms."""
+        if self.db_path in (":memory:", "") or self.db_path.startswith("file::memory:"):
+            return
+        try:
+            # Touch the file so we can set perms before any secrets land in it.
+            if not os.path.exists(self.db_path):
+                fd = os.open(self.db_path, os.O_CREAT | os.O_RDWR, 0o600)
+                os.close(fd)
+            for suffix in ("", "-wal", "-shm"):
+                p = self.db_path + suffix
+                if os.path.exists(p):
+                    os.chmod(p, 0o600)
+        except OSError:
+            pass
+
+    @contextmanager
     def _get_conn(self):
+        """Yield a connection, commit on success / rollback on error, then close.
+
+        sqlite3's own `with conn:` block commits or rolls back the *transaction*
+        but does NOT close the connection — under per-call usage that leaks the
+        FD until refcount GC reclaims it. Wrapping in this contextmanager makes
+        the existing `with self._get_conn() as conn:` call sites close the
+        connection deterministically. WAL keeps concurrent readers cheap, so a
+        fresh connection per operation is fine; the win here is no FD growth and
+        no leaked handles on the long-lived MCP process.
+        """
         conn = sqlite3.connect(self.db_path, check_same_thread=False)
         conn.execute("PRAGMA synchronous=NORMAL")
-        return conn
+        # The background flow-writer thread and event-loop tool calls (tags,
+        # notes, manual findings) can both write concurrently. WAL allows one
+        # writer at a time; without a busy_timeout the loser raises "database
+        # is locked" immediately. Wait instead of failing.
+        conn.execute("PRAGMA busy_timeout=5000")
+        try:
+            yield conn
+            conn.commit()
+        except Exception:
+            conn.rollback()
+            raise
+        finally:
+            conn.close()
 
     def _init_db(self):
+        # The traffic DB stores captured requests/responses verbatim, including
+        # cookies, Authorization headers and tokens. Restrict it to the owner
+        # so other local users can't read another engagement's secrets.
+        self._restrict_db_permissions()
         with self._get_conn() as conn:
             conn.execute("PRAGMA journal_mode=WAL")
             conn.execute("""
@@ -91,6 +139,7 @@ class TrafficDB:
                 ("response_body_truncated", "INTEGER DEFAULT 0"),
                 ("response_body_omitted", "TEXT"),
                 ("profile_label", "TEXT"),
+                ("replay_nonce", "TEXT"),
             ]:
                 try:
                     conn.execute(f"ALTER TABLE flows ADD COLUMN {col} {ddl}")
@@ -100,6 +149,7 @@ class TrafficDB:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_url ON flows(url)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_method ON flows(method)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_profile_label ON flows(profile_label)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_replay_nonce ON flows(replay_nonce)")
 
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS findings (
@@ -110,17 +160,23 @@ class TrafficDB:
                     category TEXT NOT NULL,
                     evidence TEXT,
                     created_at REAL NOT NULL,
-                    UNIQUE(flow_id, rule_id, evidence)
+                    kind TEXT NOT NULL DEFAULT 'finding',
+                    UNIQUE(flow_id, rule_id, evidence, kind)
                 )
             """)
             conn.execute("CREATE INDEX IF NOT EXISTS idx_findings_flow ON findings(flow_id)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_findings_severity ON findings(severity)")
 
-            # findings.kind: "finding" (default) or "signal" (lower-confidence signals)
+            # findings.kind: "finding" (default) or "signal" (lower-confidence).
+            # Legacy DBs created the table with UNIQUE(flow_id, rule_id, evidence)
+            # and no `kind`, which silently dropped a finding when the same
+            # evidence already existed as a signal (and vice versa). Migrate
+            # those to UNIQUE(flow_id, rule_id, evidence, kind).
             try:
                 conn.execute("ALTER TABLE findings ADD COLUMN kind TEXT NOT NULL DEFAULT 'finding'")
             except sqlite3.OperationalError:
                 pass
+            self._migrate_findings_unique(conn)
 
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS flow_tags (
@@ -161,7 +217,52 @@ class TrafficDB:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_notes_verdict ON flow_notes(verdict)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_notes_updated ON flow_notes(updated_at)")
 
-    def save_flow(self, flow: http.HTTPFlow, profile_label: Optional[str] = None):
+        # Enabling WAL above created the -wal/-shm sidecars; re-assert 0600 on
+        # them now (they didn't exist during the first call). The -wal file
+        # holds the freshest, not-yet-checkpointed captured secrets.
+        self._restrict_db_permissions()
+
+    @staticmethod
+    def _migrate_findings_unique(conn) -> None:
+        """Rebuild the findings table if it still has the legacy UNIQUE that
+        omits `kind`. Idempotent: a no-op once the new constraint is present."""
+        row = conn.execute(
+            "SELECT sql FROM sqlite_master WHERE type='table' AND name='findings'"
+        ).fetchone()
+        if not row or not row[0]:
+            return
+        ddl = row[0]
+        # Already migrated (constraint mentions kind) — nothing to do.
+        if "evidence, kind" in ddl.replace("  ", " "):
+            return
+        if "UNIQUE(flow_id, rule_id, evidence)" not in ddl.replace("  ", " "):
+            return  # unknown shape; leave it alone
+        conn.execute("""
+            CREATE TABLE findings_new (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                flow_id TEXT NOT NULL,
+                rule_id TEXT NOT NULL,
+                severity TEXT NOT NULL,
+                category TEXT NOT NULL,
+                evidence TEXT,
+                created_at REAL NOT NULL,
+                kind TEXT NOT NULL DEFAULT 'finding',
+                UNIQUE(flow_id, rule_id, evidence, kind)
+            )
+        """)
+        conn.execute("""
+            INSERT OR IGNORE INTO findings_new
+                (id, flow_id, rule_id, severity, category, evidence, created_at, kind)
+            SELECT id, flow_id, rule_id, severity, category, evidence, created_at,
+                   COALESCE(kind, 'finding')
+            FROM findings
+        """)
+        conn.execute("DROP TABLE findings")
+        conn.execute("ALTER TABLE findings_new RENAME TO findings")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_findings_flow ON findings(flow_id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_findings_severity ON findings(severity)")
+
+    def save_flow(self, flow, profile_label: Optional[str] = None):
         req_body, req_truncated = self._extract_body(flow.request)
         resp_body, resp_truncated, resp_omitted = (None, 0, None)
         if flow.response:
@@ -170,6 +271,11 @@ class TrafficDB:
                 resp_omitted = "binary"
         status_code = flow.response.status_code if flow.response else None
         size = len(flow.response.content) if flow.response and flow.response.content else 0
+        replay_nonce = None
+        try:
+            replay_nonce = (getattr(flow, "metadata", None) or {}).get("replay_nonce")
+        except Exception:
+            replay_nonce = None
 
         with self._get_conn() as conn:
             conn.execute(
@@ -180,8 +286,8 @@ class TrafficDB:
                     response_headers, response_body,
                     timestamp, size,
                     request_body_truncated, response_body_truncated, response_body_omitted,
-                    profile_label
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    profile_label, replay_nonce
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                     url=excluded.url,
                     method=excluded.method,
@@ -194,7 +300,8 @@ class TrafficDB:
                     request_body_truncated=excluded.request_body_truncated,
                     response_body_truncated=excluded.response_body_truncated,
                     response_body_omitted=excluded.response_body_omitted,
-                    profile_label=COALESCE(excluded.profile_label, flows.profile_label)
+                    profile_label=COALESCE(excluded.profile_label, flows.profile_label),
+                    replay_nonce=COALESCE(excluded.replay_nonce, flows.replay_nonce)
             """,
                 (
                     flow.id,
@@ -215,6 +322,7 @@ class TrafficDB:
                     resp_truncated,
                     resp_omitted,
                     profile_label,
+                    replay_nonce,
                 ),
             )
 
@@ -565,6 +673,7 @@ class TrafficDB:
                 )
             return True
         except Exception:
+            logger.exception("add_finding failed (flow=%s rule=%s)", flow_id, rule_id)
             return False
 
     def list_findings(
@@ -818,6 +927,25 @@ class TrafficDB:
                 ).fetchall()
             }
             return {"total": total, "by_verdict": by_verdict}
+
+    def count_flows(self) -> int:
+        """Cheap total flow count — avoids materializing rows just to len() them."""
+        with self._get_conn() as conn:
+            return conn.execute("SELECT COUNT(*) FROM flows").fetchone()[0]
+
+    def find_replay_match_by_nonce(self, nonce: str) -> Optional[str]:
+        """Find the flow captured for a specific replay, correlated by the
+        unique X-AgentProxy-Replay nonce the replay tool injected. Unambiguous
+        even under concurrent replays to the same url+method."""
+        if not nonce:
+            return None
+        with self._get_conn() as conn:
+            row = conn.execute(
+                "SELECT id FROM flows WHERE replay_nonce = ? "
+                "ORDER BY timestamp DESC LIMIT 1",
+                (nonce,),
+            ).fetchone()
+            return row[0] if row else None
 
     def find_replay_match(self, url: str, method: str, since_ts: float) -> Optional[str]:
         """Find the most recent flow matching url+method captured after since_ts.

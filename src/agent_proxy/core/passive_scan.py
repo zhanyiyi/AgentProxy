@@ -7,6 +7,7 @@ that applies them.
 """
 from __future__ import annotations
 
+import logging
 import re
 from typing import Iterable, List, Optional, Tuple
 from urllib.parse import urlparse, parse_qs
@@ -14,6 +15,8 @@ from urllib.parse import urlparse, parse_qs
 from mitmproxy import http
 
 from ..config import RuleConfig
+
+logger = logging.getLogger(__name__)
 
 
 class PassiveScanner:
@@ -38,6 +41,10 @@ class PassiveScanner:
             count += self._scan_url_and_params(flow, db)
             count += self._scan_response(flow, db)
         except Exception:
+            # A malformed rule or unexpected body must not break the capture
+            # pipeline, but silently returning 0 hides real bugs — log it.
+            logger.exception("passive scan failed for flow %s",
+                             getattr(flow, "id", "?"))
             return count
         return count
 
@@ -149,11 +156,14 @@ class PassiveScanner:
         return n
 
 
-def scan_existing_flows(db, scanner: "PassiveScanner | None" = None) -> int:
-    """Re-scan already-stored flows (used after enabling new rules)."""
+def scan_existing_flows(db, scanner: "PassiveScanner | None" = None, limit: int = 2000) -> int:
+    """Re-scan already-stored flows (used after enabling new rules).
+
+    Bounded to the most-recent `limit` flows so a huge capture session can't
+    pull the entire table (with bodies) into memory."""
     scanner = scanner or PassiveScanner()
     count = 0
-    flows = db.get_all_for_analysis(lightweight=False)
+    flows = db.get_all_for_analysis(limit=limit, lightweight=False)
     for f in flows:
         # Build a minimal mitmproxy-flow-like adapter
         class _Adapter:

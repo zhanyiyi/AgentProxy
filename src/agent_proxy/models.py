@@ -39,6 +39,7 @@ class SessionConfig(BaseModel):
     detail_body_limit: int = 51200
     profile_dir: Optional[str] = None
     unsafe_disable_web_security: bool = False
+    db_path: str = "agent_proxy_traffic.db"
 
 
 class FlowSummary(BaseModel):

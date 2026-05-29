@@ -47,14 +47,28 @@ def main():
     parser.add_argument("--config", type=str, default=None,
                         help="Path to a YAML rule pack overriding the bundled defaults. "
                              "Falls back to AGENT_PROXY_CONFIG env var, then ./agent_proxy.yaml.")
+    parser.add_argument("--db-path", type=str, default="agent_proxy_traffic.db",
+                        help="SQLite path for captured traffic (default: ./agent_proxy_traffic.db). "
+                             "Use a per-engagement path to isolate sessions.")
 
     args = parser.parse_args()
+
+    # The proxy has no authentication. Binding off-loopback turns it into an
+    # open MITM relay for anyone on the network — warn loudly.
+    if args.host not in ("127.0.0.1", "localhost", "::1"):
+        logger.warning(
+            "MITM proxy binding to non-loopback host %s with NO authentication. "
+            "Anyone who can reach this port (and trusts the CA) can route traffic "
+            "through it. Use 127.0.0.1 unless you specifically intend this.",
+            args.host,
+        )
 
     config = SessionConfig(
         proxy_port=args.port,
         proxy_host=args.host,
         headless=args.headless,
         browser_timeout=args.timeout,
+        db_path=args.db_path,
     )
 
     mcp = create_server(config, user_config_path=args.config)

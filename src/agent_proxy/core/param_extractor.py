@@ -35,20 +35,42 @@ def _get_default_rules() -> RuleConfig:
     return _DEFAULT_RULES
 
 
+_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])")
+
+
+def _tokenize(name: str) -> Set[str]:
+    """Split a param name into comparison tokens.
+
+    Splits on separators (-, _, ., whitespace) AND camelCase boundaries so
+    `userId` -> {user, id}, `X-CSRF-Token` -> {x, csrf, token}. The fully
+    lowercased original is also kept for compound substring checks.
+    """
+    n = name.strip()
+    if not n:
+        return set()
+    camel = _CAMEL_BOUNDARY.sub(" ", n)
+    tokens = {t for t in re.split(r"[-_.\s]+", camel.lower()) if t}
+    tokens.add(n.lower())
+    return tokens
+
+
 def _tags_for(name: str, semantic_dict: Dict[str, Set[str]]) -> List[str]:
     n = name.lower().strip()
     if not n:
         return []
-    # Normalize: split on -, _, . into tokens; also keep the joined form for compound matches.
-    tokens = set(re.split(r"[-_.\s]+", n))
-    tokens.add(n)
+    tokens = _tokenize(name)
     out: List[str] = []
     for cat, words in semantic_dict.items():
+        # 1) Exact token match — precise, works for short words too
+        #    (uid, url, s3, sql ...) without false positives.
         if any(t in words for t in tokens):
             out.append(cat)
             continue
-        # also catch "x_csrf_token" / "x-csrf" style by checking word-suffix match
-        if any(n.endswith(w) or n.startswith(w) for w in words):
+        # 2) Prefix/suffix match for glued compounds like "csrftoken" /
+        #    "redirecturl", but ONLY for words >= 4 chars and only at a word
+        #    boundary. Short dictionary words (el, tos, fee, src) and mid-word
+        #    substrings (script in "description") otherwise spuriously match.
+        if any(len(w) >= 4 and (n.startswith(w) or n.endswith(w)) for w in words):
             out.append(cat)
     return out
 
@@ -127,7 +149,7 @@ def extract_params(flow_detail: Dict[str, Any],
                 _walk_json(parsed_body, "", out["json"], semantic_dict)
             except Exception:
                 pass
-        elif "x-www-form-urlencoded" in ct or "&" in body and "=" in body:
+        elif "x-www-form-urlencoded" in ct or ("&" in body and "=" in body):
             try:
                 for k, _ in parse_qsl(body):
                     out["form"].append({"name": k, "tags": _tags_for(k, semantic_dict)})

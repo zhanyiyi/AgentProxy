@@ -229,6 +229,106 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return json.dumps({section: full[section]}, indent=2)
         return json.dumps(full, indent=2)
 
+    @mcp.tool()
+    async def config_add_passive_rule(
+        rule_id: str,
+        regex: str,
+        severity: str = "medium",
+        category: str = "custom",
+        kind: str = "finding",
+        flags: str = "i",
+        rescan: bool = True,
+    ) -> str:
+        """Add a passive body-scan regex rule to the LIVE rule pack.
+
+        Use this to adapt the scanner to the current target in-band — e.g. add
+        an internal access-key pattern the bundled pack misses (AKLT*, STS
+        triples, a company token prefix). The rule takes effect immediately for
+        new traffic; with rescan=True it is also applied to already-captured
+        flows so you see hits without re-driving the site. The edit is in-memory
+        only (not written to YAML) — it adapts the pack for this engagement.
+
+        Args:
+            rule_id: Unique id (re-using an id replaces that rule).
+            regex: Python regex to search response bodies for.
+            severity: info | low | medium | high.
+            category: grouping label, e.g. 'secret_leak'.
+            kind: 'finding' (high-confidence) or 'signal' (lower-confidence).
+            flags: regex flags string, any of i/m/s/x (default 'i').
+            rescan: also scan already-captured flows now (default True).
+        """
+        import re as _re
+        from ..core.passive_scan import scan_existing_flows, PassiveScanner
+        try:
+            rule = session.rules.add_body_rule(
+                rule_id=rule_id, regex=regex, severity=severity,
+                category=category, kind=kind, flags=flags,
+            )
+        except _re.error as e:
+            return json.dumps({"status": "error", "error": f"invalid regex: {e}"})
+        new_hits = 0
+        if rescan:
+            new_hits = scan_existing_flows(
+                session.mitm.db, PassiveScanner(rules=session.rules)
+            )
+        return json.dumps({
+            "status": "ok",
+            "added": {"id": rule.id, "severity": rule.severity,
+                      "category": rule.category, "kind": rule.kind,
+                      "regex": rule.pattern.pattern},
+            "total_body_rules": len(session.rules.body_rules),
+            "rescan_findings_written": new_hits,
+            "note": "in-memory only; not persisted to YAML",
+        }, indent=2)
+
+    @mcp.tool()
+    async def config_add_fuzz_payloads(category: str, payloads: List[str]) -> str:
+        """Add payloads to a fuzz category in the LIVE rule pack (created if new).
+
+        Lets you bring target-specific payloads in-band — e.g. a ClickHouse
+        `url()`/`extractvalue` SSRF/SQLi probe, an SSTI marker, a custom OOB
+        token. Available immediately to `traffic_fuzz`/`security_scan`. In-memory
+        only.
+
+        Args:
+            category: fuzz category name (e.g. 'sqli', 'ssti', 'clickhouse_ssrf').
+            payloads: list of payload strings to append (de-duplicated).
+        """
+        if not payloads:
+            return json.dumps({"status": "error", "error": "payloads is empty"})
+        merged = session.rules.add_fuzz_payloads(category, payloads)
+        return json.dumps({
+            "status": "ok",
+            "category": category,
+            "payloads_in_category": merged,
+            "all_categories": sorted(session.rules.fuzz_payloads.keys()),
+            "note": "in-memory only; not persisted to YAML",
+        }, indent=2)
+
+    @mcp.tool()
+    async def config_add_semantic_params(category: str, words: List[str]) -> str:
+        """Add parameter-name keywords to a semantic category in the LIVE rule
+        pack so `traffic_params` tags them going forward.
+
+        Use it when a target names sensitive params unconventionally (e.g.
+        'larkAccountId' -> identity_param, 'inner_url' -> ssrf_candidate). Tags
+        apply to the next `traffic_params` call. In-memory only.
+
+        Args:
+            category: semantic tag (e.g. 'identity_param', 'ssrf_candidate').
+            words: param-name keywords to add to that category.
+        """
+        if not words:
+            return json.dumps({"status": "error", "error": "words is empty"})
+        bucket = session.rules.add_semantic_params(category, words)
+        return json.dumps({
+            "status": "ok",
+            "category": category,
+            "words_in_category": sorted(bucket),
+            "all_categories": sorted(session.rules.semantic_params.keys()),
+            "note": "in-memory only; not persisted to YAML",
+        }, indent=2)
+
     # ==================== Browser Tools ====================
 
     @mcp.tool()
@@ -290,20 +390,31 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return await session.browser.screenshot()
 
     @mcp.tool()
-    async def browser_get_text(selector: str = None) -> str:
+    async def browser_get_text(selector: str = None, max_chars: int = 40000) -> str:
         """Get text content from the page or a specific element.
+
+        Output is capped at `max_chars` (default 40000) and marked when
+        truncated — a full-page body on a large SPA can otherwise flood the
+        agent's context. Pass a CSS `selector` to read only the relevant
+        element, or raise `max_chars` if you really need more.
         Args:
             selector: CSS selector (optional, defaults to entire page body)
+            max_chars: Max characters returned before truncation (default 40000)
         """
-        return await session.browser.get_text(selector)
+        return await session.browser.get_text(selector, max_chars=max_chars)
 
     @mcp.tool()
-    async def browser_get_html(selector: str = None) -> str:
+    async def browser_get_html(selector: str = None, max_chars: int = 40000) -> str:
         """Get HTML content from the page or a specific element.
+
+        Output is capped at `max_chars` (default 40000) and marked when
+        truncated. Prefer a CSS `selector` over reading the whole document —
+        full page HTML is usually huge and token-expensive.
         Args:
             selector: CSS selector (optional, defaults to entire page)
+            max_chars: Max characters returned before truncation (default 40000)
         """
-        return await session.browser.get_html(selector)
+        return await session.browser.get_html(selector, max_chars=max_chars)
 
     @mcp.tool()
     async def browser_execute_js(script: str) -> str:
@@ -528,7 +639,26 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         payload_category: str = "sqli",
         timeout: float = 10.0,
     ) -> str:
-        """Fuzz an endpoint by substituting a parameter with security payloads. Detects anomalies like 5xx errors, status code deviations, and content length changes.
+        """Fuzz an endpoint by substituting one parameter with a category of
+        security payloads, then flag responses that deviate from the baseline.
+
+        Returns JSON:
+          {
+            "baseline_status": int, "baseline_len": int,
+            "anomalies": [
+              {"payload": str,
+               "anomaly": "Server Error (5xx)" | "Status Code Deviation (a -> b)"
+                          | "Content Length Deviation (>20%)"
+                          | "Payload Reflected in Response" | "Request Failed: ...",
+               "status": int, "len": int (when relevant),
+               "reflected": bool (present when the payload echoed back)}
+            ]
+          }
+        An empty `anomalies` list means nothing deviated — NOT proof of safety.
+        `"reflected": true` is the strongest signal (potential XSS/injection);
+        confirm it by inspecting the captured flow. This tool does NOT return a
+        new_flow_id — re-run the winning payload via `traffic_replay` (which
+        does) if you need to diff it.
 
         After judging the result, call `note_add(flow_id, verdict, ...)` so the
         triage outcome (vulnerable / not_vulnerable / inconclusive) is recorded
@@ -1052,19 +1182,24 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         )
 
     @mcp.tool()
-    async def export_session(format: str = "openapi", domain: str = None) -> str:
+    async def export_session(format: str = "openapi", domain: str = None, limit: int = 200) -> str:
         """Export session data in various formats.
+
         Args:
-            format: Export format: 'openapi' (OpenAPI spec), 'patterns' (API patterns), 'traffic' (all traffic JSON)
-            domain: Filter by domain (optional)
+            format: 'openapi' (OpenAPI spec), 'patterns' (API patterns),
+                'traffic' (raw flow JSON — WARNING: large; capped by `limit`).
+            domain: Filter by domain (optional).
+            limit: For format='traffic' only — max most-recent flows to dump
+                (default 200). Raise deliberately; dumping the whole table with
+                bodies can blow the agent's context window.
         """
         if format == "openapi":
             return session.mitm.export_openapi_spec(domain=domain)
         elif format == "patterns":
             return session.mitm.get_api_patterns(domain=domain)
         elif format == "traffic":
-            flows = session.mitm.db.get_all_for_analysis()
-            return json.dumps(flows, indent=2)
+            flows = session.mitm.db.get_all_for_analysis(limit=limit)
+            return json.dumps({"count": len(flows), "limit": limit, "flows": flows}, indent=2)
         else:
             return f"Unknown format: {format}. Use 'openapi', 'patterns', or 'traffic'"
 

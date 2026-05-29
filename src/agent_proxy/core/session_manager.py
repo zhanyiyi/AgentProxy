@@ -23,7 +23,7 @@ class SessionManager:
             self.rules = rule_config
         else:
             self.rules = load_rule_config(user_config_path)
-        self.mitm = MitmController(db_path="agent_proxy_traffic.db", rules=self.rules)
+        self.mitm = MitmController(db_path=self.config.db_path, rules=self.rules)
         self.browser = BrowserController(
             proxy_host=self.config.proxy_host,
             proxy_port=self.config.proxy_port,
@@ -328,7 +328,7 @@ class SessionManager:
             "browser_running": self.browser.running,
             "proxy_port": self.mitm.port,
             "proxy_host": self.config.proxy_host,
-            "traffic_count": len(self.mitm.db.get_summary(limit=9999)),
+            "traffic_count": self.mitm.db.count_flows(),
             "interception_rules": len(self.mitm.interceptor.rules),
             "profile_dir": self.browser.profile_dir,
             "contexts": self.browser.list_contexts(),
@@ -348,9 +348,9 @@ class SessionManager:
         without re-doing the login.
 
         Cookies go into the context (so requests originated from any page
-        in the context carry them). Auth headers go onto the page via
-        set_extra_http_headers (per-page; Playwright lacks a per-context
-        equivalent).
+        in the context carry them). Auth headers are injected via a
+        host-scoped route handler so they ride ONLY on requests to `host`
+        (or its subdomains) — never leaking the credential cross-origin.
 
         Returns a JSON status payload."""
         if not self.browser.running:
@@ -394,7 +394,12 @@ class SessionManager:
         injected_headers = {}
         if state["headers"]:
             try:
-                await page.set_extra_http_headers(state["headers"])
+                # Host-scoped injection — do NOT use page.set_extra_http_headers,
+                # which would attach these credentials to every origin the page
+                # touches (cross-origin credential leak).
+                await self.browser.add_scoped_auth_headers(
+                    context, state["host"], state["headers"]
+                )
                 injected_headers = state["headers"]
             except Exception as e:
                 return json.dumps({
@@ -440,6 +445,13 @@ class SessionManager:
             target_headers.update(headers_override)
         target_body = body if body is not None else flow_obj.body
 
+        # Replay-correlation nonce — stripped by the recorder before forwarding
+        # and stored on the captured flow, so we map the result back even under
+        # concurrent replays to the same endpoint.
+        import uuid as _uuid
+        replay_nonce = _uuid.uuid4().hex
+        target_headers["X-AgentProxy-Replay"] = replay_nonce
+
         # Step 1: live context
         ctx_label = context
         if self.browser.running and self.browser._browser is not None:
@@ -465,7 +477,8 @@ class SessionManager:
                 import asyncio as _aio
                 new_flow_id = None
                 for _ in range(10):
-                    new_flow_id = self.mitm.db.find_replay_match(flow_obj.url, target_method, before_ts)
+                    new_flow_id = (self.mitm.db.find_replay_match_by_nonce(replay_nonce)
+                                   or self.mitm.db.find_replay_match(flow_obj.url, target_method, before_ts))
                     if new_flow_id:
                         break
                     await _aio.sleep(0.1)

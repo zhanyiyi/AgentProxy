@@ -47,6 +47,42 @@ class RuleConfig:
     fuzz_payloads: Dict[str, List[str]] = field(default_factory=dict)
     source_paths: List[str] = field(default_factory=list)
 
+    # ----- Runtime mutation (used by the config_* MCP tools) -----
+    # These edit the in-memory rule pack live; because the scanner, param
+    # extractor and fuzz engine all share this one object, additions take
+    # effect immediately with no restart. They do NOT persist to YAML — they
+    # adapt the pack for the current engagement.
+
+    def add_body_rule(self, rule_id: str, regex: str, severity: str = "medium",
+                      category: str = "custom", kind: str = "finding",
+                      flags: str = "i") -> BodyRule:
+        """Add/replace a passive body-scan regex rule. Raises re.error on a bad
+        pattern (caller surfaces it to the agent)."""
+        pattern = re.compile(regex, _compile_flags(flags))
+        rule = BodyRule(id=str(rule_id), severity=str(severity),
+                        category=str(category), kind=str(kind), pattern=pattern)
+        # Rebind atomically (single assignment) rather than mutate-in-place, so
+        # the passive scanner — which iterates this list on the writer thread —
+        # always sees a complete old or new list, never a mid-append one.
+        self.body_rules = [r for r in self.body_rules if r.id != rule.id] + [rule]
+        return rule
+
+    def add_fuzz_payloads(self, category: str, payloads: List[str]) -> List[str]:
+        """Append payloads to a fuzz category (created if new). De-duplicated,
+        order-preserving."""
+        existing = self.fuzz_payloads.setdefault(str(category), [])
+        for p in payloads:
+            p = str(p)
+            if p not in existing:
+                existing.append(p)
+        return existing
+
+    def add_semantic_params(self, category: str, words: List[str]) -> Set[str]:
+        """Add param-name keywords to a semantic category (created if new)."""
+        bucket = self.semantic_params.setdefault(str(category), set())
+        bucket.update(str(w).lower() for w in words)
+        return bucket
+
 
 def _deep_merge(base: dict, override: dict) -> dict:
     """Recursive dict merge. Lists & scalars in `override` REPLACE those in `base`."""

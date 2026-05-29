@@ -5,6 +5,7 @@ import os
 import re
 import socket
 import time
+import uuid
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse, parse_qs, urlencode, parse_qsl
 from collections import Counter
@@ -20,6 +21,7 @@ from ..models import InterceptionRule, ScopeConfig
 from ..config import RuleConfig, load_rule_config
 from .traffic_db import TrafficDB
 from .passive_scan import PassiveScanner
+from .flow_writer import FlowWriter
 
 structlog.configure(
     processors=[
@@ -119,54 +121,75 @@ class TrafficInterceptor:
 
 
 class TrafficRecorder:
-    def __init__(self, scope: ScopeManager, db: TrafficDB, scanner: Optional[PassiveScanner] = None):
+    def __init__(self, scope: ScopeManager, db: TrafficDB, scanner: Optional[PassiveScanner] = None,
+                 writer: Optional["FlowWriter"] = None):
         self.scope = scope
         self.db = db
         self.scanner = scanner or PassiveScanner()
+        # Background writer keeps SQLite + passive scan off the event loop.
+        # Falls back to inline writes if no writer is wired (e.g. unit tests).
+        self.writer = writer
 
     @staticmethod
-    def _strip_context_label(flow: http.HTTPFlow) -> Optional[str]:
-        """Pop our internal X-AgentProxy-Context header before it leaves the proxy.
-        Returned value (if any) is stored as flows.profile_label."""
+    def _pop_internal_header(flow: http.HTTPFlow, name: str) -> Optional[str]:
+        """Pop one of our internal X-AgentProxy-* headers before the request
+        leaves the proxy, so the target server never sees it."""
         try:
-            label = flow.request.headers.pop("X-AgentProxy-Context", None)
-            if label is None:
-                # mitmproxy header objects are case-insensitive but pop() above
-                # only removes the exact key; defensively try lowercase too
+            val = flow.request.headers.pop(name, None)
+            if val is None:
+                lname = name.lower()
                 for hk in list(flow.request.headers.keys()):
-                    if hk.lower() == "x-agentproxy-context":
-                        label = flow.request.headers[hk]
+                    if hk.lower() == lname:
+                        val = flow.request.headers[hk]
                         del flow.request.headers[hk]
                         break
-            return label
+            return val
         except Exception:
             return None
 
+    @classmethod
+    def _strip_context_label(cls, flow: http.HTTPFlow) -> Optional[str]:
+        """Pop our internal X-AgentProxy-Context header before it leaves the proxy.
+        Returned value (if any) is stored as flows.profile_label."""
+        return cls._pop_internal_header(flow, "X-AgentProxy-Context")
+
     def request(self, flow: http.HTTPFlow):
-        # Always strip our internal label header so the target server never sees it.
+        # Always strip our internal headers so the target server never sees
+        # them. This MUST stay inline — it mutates the live request before
+        # mitmproxy forwards it.
         label = self._strip_context_label(flow)
         if label:
             flow.metadata["profile_label"] = label
+        # Replay correlation nonce — injected by replay tools so we can map the
+        # captured flow back to the exact replay (url+method+timestamp is
+        # ambiguous under concurrent replays to the same endpoint).
+        nonce = self._pop_internal_header(flow, "X-AgentProxy-Replay")
+        if nonce:
+            flow.metadata["replay_nonce"] = nonce
         if self.scope.is_allowed(flow):
-            try:
-                self.db.save_flow(flow, profile_label=flow.metadata.get("profile_label"))
-            except Exception as e:
-                logger.error("Failed to save request flow: %s", e)
+            self._record(flow, scan=False)
 
     def response(self, flow: http.HTTPFlow):
         if self.scope.is_allowed(flow):
-            try:
-                self.db.save_flow(flow, profile_label=flow.metadata.get("profile_label"))
-                self.scanner.scan(flow, self.db)
-            except Exception as e:
-                logger.error("Failed to save flow: %s", e)
+            self._record(flow, scan=True)
 
     def error(self, flow: http.HTTPFlow):
         if self.scope.is_allowed(flow):
-            try:
-                self.db.save_flow(flow, profile_label=flow.metadata.get("profile_label"))
-            except Exception as e:
-                logger.error("Failed to save flow error: %s", e)
+            self._record(flow, scan=False)
+
+    def _record(self, flow: http.HTTPFlow, scan: bool):
+        """Offload persistence + scan to the background writer when available,
+        otherwise fall back to a synchronous write (keeps tests/embedded use
+        working without a running writer)."""
+        if self.writer is not None:
+            self.writer.submit(flow, scan=scan)
+            return
+        try:
+            self.db.save_flow(flow, profile_label=flow.metadata.get("profile_label"))
+            if scan and flow.response is not None:
+                self.scanner.scan(flow, self.db)
+        except Exception as e:
+            logger.error("Failed to save flow: %s", e)
 
 
 class MitmController:
@@ -178,8 +201,11 @@ class MitmController:
         self.scope_manager = ScopeManager(self.scope_config)
         self.db = TrafficDB(db_path)
         self.rules = rules or load_rule_config()
+        self._scanner = PassiveScanner(rules=self.rules)
+        self.flow_writer = FlowWriter(self.db, self._scanner)
         self.recorder = TrafficRecorder(self.scope_manager, self.db,
-                                        scanner=PassiveScanner(rules=self.rules))
+                                        scanner=self._scanner,
+                                        writer=self.flow_writer)
         self.interceptor = TrafficInterceptor()
         self.running = False
         self.port = 8080
@@ -253,6 +279,7 @@ class MitmController:
             await asyncio.sleep(0.05)
 
         self.running = True
+        self.flow_writer.start()
         logger.info("proxy_started", host=host, port=port)
         return f"Started MITM proxy on {host}:{port}"
 
@@ -288,7 +315,12 @@ class MitmController:
                     pass
             self.proxy_task = None
         self.running = False
-        logger.info("proxy_stopped")
+        # Proxy has stopped accepting connections; drain any flows still queued
+        # in the background writer before returning so nothing is lost.
+        self.flow_writer.stop(timeout=5.0)
+        logger.info("proxy_stopped",
+                    dropped=self.flow_writer.dropped,
+                    write_errors=self.flow_writer.write_errors)
         return "Stopped MITM proxy"
 
     async def replay_request(
@@ -314,6 +346,13 @@ class MitmController:
 
         if headers:
             target_headers.update(headers)
+
+        # Unique replay-correlation nonce. The recorder strips this header
+        # before forwarding (target never sees it) and stores it on the flow,
+        # so we map the capture back unambiguously even under concurrent
+        # replays to the same endpoint.
+        replay_nonce = uuid.uuid4().hex
+        target_headers["X-AgentProxy-Replay"] = replay_nonce
 
         target_content = None
         if body is not None:
@@ -350,7 +389,8 @@ class MitmController:
             # look up the freshly captured flow id so the agent can chain into diff/evidence.
             new_flow_id = None
             for _ in range(10):
-                new_flow_id = self.db.find_replay_match(target_url, target_method, before_ts)
+                new_flow_id = (self.db.find_replay_match_by_nonce(replay_nonce)
+                               or self.db.find_replay_match(target_url, target_method, before_ts))
                 if new_flow_id:
                     break
                 await asyncio.sleep(0.1)
@@ -400,6 +440,9 @@ class MitmController:
         if headers:
             target_headers.update(headers)
 
+        replay_nonce = uuid.uuid4().hex
+        target_headers["X-AgentProxy-Replay"] = replay_nonce
+
         # Build cookie dict from storage_state for matching domain
         parsed = urlparse(target_url)
         target_host = parsed.hostname or ""
@@ -427,7 +470,8 @@ class MitmController:
 
             new_flow_id = None
             for _ in range(10):
-                new_flow_id = self.db.find_replay_match(target_url, target_method, before_ts)
+                new_flow_id = (self.db.find_replay_match_by_nonce(replay_nonce)
+                               or self.db.find_replay_match(target_url, target_method, before_ts))
                 if new_flow_id:
                     break
                 await asyncio.sleep(0.1)
@@ -575,11 +619,15 @@ class MitmController:
             "anomalies": anomalies,
         }, indent=2)
 
+    # Cap full-body analysis loads so a long capture session can't pull the
+    # entire flow table (with bodies) into memory in one shot.
+    MAX_ANALYSIS_FLOWS = 2000
+
     def detect_auth_patterns(self, flow_ids: Optional[List[str]] = None) -> Dict:
         if flow_ids:
             flows = self.db.get_by_ids(flow_ids)
         else:
-            flows = self.db.get_all_for_analysis()
+            flows = self.db.get_all_for_analysis(limit=self.MAX_ANALYSIS_FLOWS)
 
         auth_signals = {
             "oauth2": {"detected": False, "signals": [], "flows": []},
