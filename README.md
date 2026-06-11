@@ -20,7 +20,7 @@ AgentProxy can either launch its own Playwright Chromium browser or connect to a
 - **Layered traffic abstraction** — `traffic_list` returns compact summaries, `traffic_inspect` exposes `meta`/`preview`/`full` levels so the agent only loads what it needs.
 - **Site map** — one call gives a host-grouped attack-surface map with endpoint params, status distribution, auth requirements, and finding counts.
 - **Semantic parameter map** — `traffic_params` lists every mutable parameter (path/query/json/form/headers/cookies) tagged with categories like `identity_param`, `ssrf_candidate`, `sql_candidate`, `state_token`. The agent sees attack surface without reading the body.
-- **Dual-identity testing (cold/hot fusion)** — multiple named browser contexts (default + victim + admin + …) inside one Browser process. `session_create_context`/`session_use_context` for live use; saved `<name>_state.json` profiles auto-hydrate on demand. `traffic_replay_via_browser(context="victim")` reuses victim cookies for IDOR/privilege-escalation testing.
+- **Dual-identity testing (cold/hot fusion)** — multiple named browser contexts (default + victim + admin + …) inside one Browser process. `session_create_context`/`session_use_context` for live use; saved `<name>_state.json` profiles auto-hydrate on demand. `traffic_replay(context="victim")` reuses victim cookies for IDOR/privilege-escalation testing.
 - **Closed-loop replay** — every replay returns `new_flow_id` so the agent chains directly into `traffic_diff` and `evidence_bundle`. Browser-context replay reuses live cookies/tokens to avoid 401/403 noise.
 - **Multi-step trace (tag + link)** — name flows with `traffic_tag`, declare data-flow with `traffic_link`, walk the DAG with `traffic_chain`. Built for stored SSRF, OAuth flows, two-stage IDOR.
 - **Triage notes** — after researching a flow, the agent records a structured 4-section note (scenario / sensitive fields / test steps / conclusion) via `note_add`. Notes are embedded into evidence bundles automatically; the `triage_note` MCP prompt gives the agent the checklist on demand.
@@ -329,13 +329,13 @@ session_start(proxy_port=8081, profile_dir="/tmp/agentproxy/target1")
 browser_navigate(url="https://target.example.com")
 # ... drive the browser through the app ...
 
-traffic_findings_stats()                    # how dense is the attack surface?
+traffic_findings(stats=True)                    # how dense is the attack surface?
 site_map()                                  # host-grouped endpoint map
 traffic_findings(severity="high")           # what should I look at first?
 traffic_params(flow_id="<id>")              # which params are mutable + semantic tags
 traffic_inspect(flow_id="<id>", level="meta")     # confirm context cheaply
 traffic_inspect(flow_id="<id>", level="full")     # only when needed
-traffic_replay_via_browser(flow_id="<id>")        # retry with live cookies (auto returns new_flow_id)
+traffic_replay(flow_id="<id>", context="default")   # retry with live cookies (auto returns new_flow_id)
 traffic_diff(flow_a="<id1>", flow_b="<id2>")      # IDOR / privilege check
 note_add(flow_id="<id>", verdict="...", scenario="...", ...)   # ALWAYS record the verdict
 session_stop()
@@ -369,7 +369,7 @@ traffic_list(limit=20, with_findings=true)
 traffic_params(flow_id=flow_a)               # confirm it has identity_param tags
 
 # 5. Replay flow_a through the VICTIM context (the IDOR test)
-result = traffic_replay_via_browser(flow_id=flow_a, context="victim")
+result = traffic_replay(flow_id=flow_a, context="victim")
 # result includes new_flow_id
 
 # 6. Compare — if responses match, IDOR confirmed
@@ -392,7 +392,7 @@ After judging a flow, record the verdict — even when no vulnerability was foun
 # Researching a flow
 traffic_inspect(flow_id="<id>", level="full")
 traffic_params(flow_id="<id>")
-traffic_replay_via_browser(flow_id="<id>", context="victim")
+traffic_replay(flow_id="<id>", context="victim")
 traffic_diff(flow_a, flow_b)
 
 # Done — record what happened (verdict ∈ vulnerable | not_vulnerable | inconclusive)
@@ -500,7 +500,7 @@ What works in this mode:
 
 What doesn't work (returns an error):
 
-- `browser_*`, `browse_and_capture`, `traffic_replay_via_browser` — they need a live Playwright/CDP page. If you also need browser-driven replay later, stop the proxy-only session and switch to `session_start` or `session_connect_cdp`.
+- `browser_*`, `browse_and_capture`, and `traffic_replay(context=...)` — they need a live Playwright/CDP page. (`traffic_replay` with `context=None` uses `curl_cffi` and works without a browser.) If you also need browser-driven replay later, stop the proxy-only session and switch to `session_start` or `session_connect_cdp`.
 
 Stop the listener:
 
@@ -583,9 +583,9 @@ session_list_contexts()
 session_status()
 session_stop()
 cert_status(ca_path?, nickname?)
-cert_install_firefox(ca_path?, nickname?)
-cert_install_chrome(ca_path?, nickname?)
+cert_install(browser="both", ca_path?, nickname?)   # browser in firefox|chrome|both
 config_show(section?)
+config_add(kind, ...)   # kind in passive_rule|fuzz|semantic
 ```
 
 Browser:
@@ -615,13 +615,11 @@ traffic_list(limit=20, with_findings=false)
 traffic_inspect(flow_id, level="preview")    # meta | preview | full
 traffic_search(query?, domain?, method?, limit)
 traffic_clear()
-traffic_extract(flow_id, json_path?, css_selector?)
-traffic_replay(flow_id, method?, headers_json?, body?, timeout)
-traffic_replay_via_browser(flow_id, method?, headers_json?, body?, timeout_ms, context="default")
+traffic_extract(flow_id, json_path?, css_selector?, regex?, group_index=1, save_as?)
+traffic_replay(flow_id, method?, headers_json?, body?, timeout, context?)   # context=None → curl_cffi; context="victim" → browser identity
 traffic_diff(flow_a, flow_b, max_lines=50)
-traffic_fuzz(flow_id, target_param, param_type, payload_category)
-traffic_findings(severity?, category?, rule_id?, flow_id?, kind="finding", limit=50)   # kind in finding|signal|all
-traffic_findings_stats()
+traffic_fuzz(flow_id, target_param, param_type, payload_category)   # payload_category may be comma-separated for multi-category
+traffic_findings(severity?, category?, rule_id?, flow_id?, kind="finding", stats=false, limit=50)   # kind in finding|signal|all; stats=true → aggregate counts
 traffic_params(flow_id)                      # parameter map with semantic tags
 traffic_tag(flow_id, tag)                    # name a flow
 traffic_untag(flow_id, tag)
@@ -634,32 +632,24 @@ note_remove(flow_id)
 evidence_bundle(flow_id, depth=3)            # Markdown report (auto-includes notes)
 site_map(domain?)
 traffic_auth_detect(flow_ids?)
-traffic_api_patterns(domain?, limit?)
-traffic_openapi(domain?, limit?)
 traffic_generate_code(flow_ids, framework)
-traffic_set_session_variable(name, value)
-traffic_extract_session_variable(name, flow_id, regex_pattern, group_index=1)
+traffic_set_session_variable(name, value)    # to extract from a response, use traffic_extract(..., regex=, save_as=)
 ```
 
 Intercept and scope:
 
 ```text
-intercept_add_rule(...)
+intercept_add_rule(...)              # global header = inject_header with url_pattern=".*"
 intercept_list_rules()
 intercept_remove_rule(rule_id?)
-intercept_set_global_header(key, value)
-intercept_remove_global_header(key)
-scope_set(allowed_domains)
-scope_clear()
+scope_set(allowed_domains?)          # None/empty → capture everything
 ```
 
 Workflow:
 
 ```text
 browse_and_capture(url, wait_until, actions)
-api_discover(domain?)
-security_scan(flow_id, target_param, param_type, payload_categories)
-export_session(format, domain?)
+export_session(format, domain?)      # format in openapi|patterns|traffic ('patterns' = API discovery)
 ```
 
 ## Traffic Database
@@ -794,7 +784,7 @@ This gives you the same clean lock the built-in browser gets, without trusting t
 The fast path is the MCP tool — call it from the agent:
 
 ```text
-cert_install_chrome()
+cert_install(browser="chrome")
 # returns {"ok": true, "results": [...], "note": "Restart Chrome..."}
 ```
 
@@ -817,7 +807,7 @@ Use the MCP tool — it auto-discovers all profiles (including snap installs) an
 
 ```text
 cert_status()           # see which profiles are missing trust
-cert_install_firefox()  # install into all profiles, restart Firefox after
+cert_install(browser="firefox")  # install into all profiles, restart Firefox after
 ```
 
 Manual equivalent if you prefer:

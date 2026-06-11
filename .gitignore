@@ -26,3 +26,8 @@ Thumbs.db
 *.log
 tmp/
 temp/
+
+# local scratch screenshots / scratch assets
+_*.jpg
+_*.jpeg
+_*.png

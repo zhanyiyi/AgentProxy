@@ -11,10 +11,26 @@ from ..core.cert_installer import (
     install_firefox as cert_install_firefox_impl,
 )
 from ..core.session_manager import SessionManager
-from ..models import SessionConfig, InterceptionRule
+from ..models import InterceptionRule
 
 
 def register_all_tools(mcp: FastMCP, session: SessionManager):
+    def _subst_vars(body, headers):
+        """Substitute $name session variables into a request body and header values."""
+        sv = session.mitm.session_variables
+        if not sv:
+            return body, headers
+        if body:
+            for k, v in sv.items():
+                body = body.replace(f"${k}", str(v))
+        if headers:
+            for hk, hv in list(headers.items()):
+                if isinstance(hv, str):
+                    for k, v in sv.items():
+                        hv = hv.replace(f"${k}", str(v))
+                    headers[hk] = hv
+        return body, headers
+
     @mcp.tool()
     async def session_start(proxy_port: int = 8080, headless: bool = True, profile_dir: str = None, unsafe_disable_web_security: bool = False) -> str:
         """Start a complete AgentProxy session: MITM proxy + browser with proxy configured.
@@ -120,42 +136,28 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return json.dumps(cert_status_impl(ca_path=ca_path, nickname=nickname), indent=2)
 
     @mcp.tool()
-    async def cert_install_firefox(ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
-        """Install the mitmproxy CA into every detected Firefox profile.
-
-        Firefox does NOT use the OS or Chrome NSS store — it has its own
-        cert9.db per profile. This is the fix for
-        MOZILLA_PKIX_ERROR_MITM_DETECTED when capturing Firefox traffic
-        through AgentProxy.
+    async def cert_install(browser: str = "both", ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
+        """Install the mitmproxy CA into Firefox profiles and/or the Chrome
+        NSS DB so external browsers trust captured HTTPS. Fixes
+        MOZILLA_PKIX_ERROR_MITM_DETECTED (Firefox) and the 'Not Secure' lock
+        (Chrome). Not needed for AgentProxy's built-in Playwright Chromium.
 
         Requires `certutil` (Debian/Kali/Ubuntu: `sudo apt-get install -y
-        libnss3-tools`). Restart Firefox afterwards.
+        libnss3-tools`). Restart the browser afterwards.
 
         Args:
+            browser: 'firefox', 'chrome', or 'both' (default).
             ca_path: Path to the mitmproxy CA pem file.
             nickname: NSS nickname to register the CA under.
         """
-        return json.dumps(
-            cert_install_firefox_impl(ca_path=ca_path, nickname=nickname), indent=2,
-        )
-
-    @mcp.tool()
-    async def cert_install_chrome(ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
-        """Install the mitmproxy CA into the Chrome / Chromium NSS DB
-        (~/.pki/nssdb). The fix for the 'Not Secure' lock when capturing
-        Chrome traffic; not needed for AgentProxy's built-in Playwright
-        Chromium (that path uses --ignore-certificate-errors-spki-list
-        automatically).
-
-        Requires `certutil`. Restart Chrome afterwards.
-
-        Args:
-            ca_path: Path to the mitmproxy CA pem file.
-            nickname: NSS nickname to register the CA under.
-        """
-        return json.dumps(
-            cert_install_chrome_impl(ca_path=ca_path, nickname=nickname), indent=2,
-        )
+        if browser not in ("firefox", "chrome", "both"):
+            return json.dumps({"error": "browser must be 'firefox', 'chrome', or 'both'"})
+        out = {}
+        if browser in ("firefox", "both"):
+            out["firefox"] = cert_install_firefox_impl(ca_path=ca_path, nickname=nickname)
+        if browser in ("chrome", "both"):
+            out["chrome"] = cert_install_chrome_impl(ca_path=ca_path, nickname=nickname)
+        return json.dumps(out, indent=2)
 
     @mcp.tool()
     async def session_status() -> str:
@@ -230,104 +232,81 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return json.dumps(full, indent=2)
 
     @mcp.tool()
-    async def config_add_passive_rule(
-        rule_id: str,
-        regex: str,
+    async def config_add(
+        kind: str,
+        category: str = None,
+        rule_id: str = None,
+        regex: str = None,
         severity: str = "medium",
-        category: str = "custom",
-        kind: str = "finding",
+        confidence: str = "finding",
         flags: str = "i",
         rescan: bool = True,
+        payloads: List[str] = None,
+        words: List[str] = None,
     ) -> str:
-        """Add a passive body-scan regex rule to the LIVE rule pack.
+        """Adapt the LIVE rule pack in-band (in-memory only; not persisted to YAML).
 
-        Use this to adapt the scanner to the current target in-band — e.g. add
-        an internal access-key pattern the bundled pack misses (AKLT*, STS
-        triples, a company token prefix). The rule takes effect immediately for
-        new traffic; with rescan=True it is also applied to already-captured
-        flows so you see hits without re-driving the site. The edit is in-memory
-        only (not written to YAML) — it adapts the pack for this engagement.
+        Three kinds, selected by `kind`:
+          - kind='passive_rule': add a body-scan regex. Requires rule_id + regex.
+            Optional: severity (info|low|medium|high), category, flags (i/m/s/x),
+            confidence ('finding' high-confidence | 'signal' low-confidence),
+            rescan (also scan already-captured flows now).
+          - kind='fuzz': append target-specific payloads to a fuzz category.
+            Requires category + payloads. Available immediately to traffic_fuzz.
+          - kind='semantic': add param-name keywords to a semantic category so
+            traffic_params tags them. Requires category + words.
 
-        Args:
-            rule_id: Unique id (re-using an id replaces that rule).
-            regex: Python regex to search response bodies for.
-            severity: info | low | medium | high.
-            category: grouping label, e.g. 'secret_leak'.
-            kind: 'finding' (high-confidence) or 'signal' (lower-confidence).
-            flags: regex flags string, any of i/m/s/x (default 'i').
-            rescan: also scan already-captured flows now (default True).
+        Examples:
+          config_add(kind='passive_rule', rule_id='corp_token',
+                     regex='AKLT[0-9A-Za-z]{16}', severity='high', category='secret_leak')
+          config_add(kind='fuzz', category='ssti', payloads=['{{7*7}}','${7*7}'])
+          config_add(kind='semantic', category='identity_param', words=['larkAccountId'])
         """
-        import re as _re
-        from ..core.passive_scan import scan_existing_flows, PassiveScanner
-        try:
-            rule = session.rules.add_body_rule(
-                rule_id=rule_id, regex=regex, severity=severity,
-                category=category, kind=kind, flags=flags,
-            )
-        except _re.error as e:
-            return json.dumps({"status": "error", "error": f"invalid regex: {e}"})
-        new_hits = 0
-        if rescan:
-            new_hits = scan_existing_flows(
-                session.mitm.db, PassiveScanner(rules=session.rules)
-            )
-        return json.dumps({
-            "status": "ok",
-            "added": {"id": rule.id, "severity": rule.severity,
-                      "category": rule.category, "kind": rule.kind,
-                      "regex": rule.pattern.pattern},
-            "total_body_rules": len(session.rules.body_rules),
-            "rescan_findings_written": new_hits,
-            "note": "in-memory only; not persisted to YAML",
-        }, indent=2)
-
-    @mcp.tool()
-    async def config_add_fuzz_payloads(category: str, payloads: List[str]) -> str:
-        """Add payloads to a fuzz category in the LIVE rule pack (created if new).
-
-        Lets you bring target-specific payloads in-band — e.g. a ClickHouse
-        `url()`/`extractvalue` SSRF/SQLi probe, an SSTI marker, a custom OOB
-        token. Available immediately to `traffic_fuzz`/`security_scan`. In-memory
-        only.
-
-        Args:
-            category: fuzz category name (e.g. 'sqli', 'ssti', 'clickhouse_ssrf').
-            payloads: list of payload strings to append (de-duplicated).
-        """
-        if not payloads:
-            return json.dumps({"status": "error", "error": "payloads is empty"})
-        merged = session.rules.add_fuzz_payloads(category, payloads)
-        return json.dumps({
-            "status": "ok",
-            "category": category,
-            "payloads_in_category": merged,
-            "all_categories": sorted(session.rules.fuzz_payloads.keys()),
-            "note": "in-memory only; not persisted to YAML",
-        }, indent=2)
-
-    @mcp.tool()
-    async def config_add_semantic_params(category: str, words: List[str]) -> str:
-        """Add parameter-name keywords to a semantic category in the LIVE rule
-        pack so `traffic_params` tags them going forward.
-
-        Use it when a target names sensitive params unconventionally (e.g.
-        'larkAccountId' -> identity_param, 'inner_url' -> ssrf_candidate). Tags
-        apply to the next `traffic_params` call. In-memory only.
-
-        Args:
-            category: semantic tag (e.g. 'identity_param', 'ssrf_candidate').
-            words: param-name keywords to add to that category.
-        """
-        if not words:
-            return json.dumps({"status": "error", "error": "words is empty"})
-        bucket = session.rules.add_semantic_params(category, words)
-        return json.dumps({
-            "status": "ok",
-            "category": category,
-            "words_in_category": sorted(bucket),
-            "all_categories": sorted(session.rules.semantic_params.keys()),
-            "note": "in-memory only; not persisted to YAML",
-        }, indent=2)
+        if kind == "passive_rule":
+            if not rule_id or not regex:
+                return json.dumps({"status": "error", "error": "passive_rule needs rule_id and regex"})
+            import re as _re
+            from ..core.passive_scan import scan_existing_flows, PassiveScanner
+            try:
+                rule = session.rules.add_body_rule(
+                    rule_id=rule_id, regex=regex, severity=severity,
+                    category=category or "custom", kind=confidence, flags=flags,
+                )
+            except _re.error as e:
+                return json.dumps({"status": "error", "error": f"invalid regex: {e}"})
+            new_hits = 0
+            if rescan:
+                new_hits = scan_existing_flows(session.mitm.db, PassiveScanner(rules=session.rules))
+            return json.dumps({
+                "status": "ok", "kind": "passive_rule",
+                "added": {"id": rule.id, "severity": rule.severity, "confidence": rule.kind,
+                          "category": rule.category, "regex": rule.pattern.pattern},
+                "total_body_rules": len(session.rules.body_rules),
+                "rescan_findings_written": new_hits,
+                "note": "in-memory only; not persisted to YAML",
+            }, indent=2)
+        elif kind == "fuzz":
+            if not category or not payloads:
+                return json.dumps({"status": "error", "error": "fuzz needs category and payloads"})
+            merged = session.rules.add_fuzz_payloads(category, payloads)
+            return json.dumps({
+                "status": "ok", "kind": "fuzz", "category": category,
+                "payloads_in_category": merged,
+                "all_categories": sorted(session.rules.fuzz_payloads.keys()),
+                "note": "in-memory only; not persisted to YAML",
+            }, indent=2)
+        elif kind == "semantic":
+            if not category or not words:
+                return json.dumps({"status": "error", "error": "semantic needs category and words"})
+            bucket = session.rules.add_semantic_params(category, words)
+            return json.dumps({
+                "status": "ok", "kind": "semantic", "category": category,
+                "words_in_category": sorted(bucket),
+                "all_categories": sorted(session.rules.semantic_params.keys()),
+                "note": "in-memory only; not persisted to YAML",
+            }, indent=2)
+        return json.dumps({"status": "error",
+                           "error": f"unknown kind '{kind}'; use passive_rule | fuzz | semantic"})
 
     # ==================== Browser Tools ====================
 
@@ -576,14 +555,45 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return "Cleared all traffic history"
 
     @mcp.tool()
-    async def traffic_extract(flow_id: str, json_path: str = None, css_selector: str = None) -> str:
-        """Extract specific data from a flow's response body using JSONPath or CSS selectors.
+    async def traffic_extract(flow_id: str, json_path: str = None,
+                              css_selector: str = None, regex: str = None,
+                              group_index: int = 1, save_as: str = None) -> str:
+        """Extract data from a flow's response via JSONPath, CSS selector, or regex.
+        Optionally store the result as a $session variable for replay substitution.
+
         Args:
             flow_id: The ID of the flow
-            json_path: JSONPath expression to extract from JSON response
-            css_selector: CSS selector to extract from HTML/XML response
+            json_path: JSONPath expression to extract from a JSON response
+            css_selector: CSS selector to extract from an HTML/XML response
+            regex: Regex with capture group(s) to extract from the raw response body
+            group_index: Which regex capture group to return (default 1)
+            save_as: If set, store the extracted value as session variable $<save_as>
+                (referenced as $<save_as> in traffic_replay headers/body)
         """
-        return session.mitm.extract_from_flow(flow_id, json_path=json_path, css_selector=css_selector)
+        if regex is not None:
+            import re as _re
+            flow_data = session.mitm.db.get_detail(flow_id, level="full", body_preview_length=256 * 1024)
+            if not flow_data:
+                return "Flow not found"
+            response = flow_data.get("response")
+            body_content = response.get("body") if response else None
+            if not body_content:
+                return "Flow has no response body"
+            try:
+                match = _re.search(regex, body_content)
+            except _re.error as e:
+                return f"Regex error: {e}"
+            if not match:
+                return "Pattern not found in response body"
+            value = match.group(group_index)
+            if save_as:
+                session.mitm.session_variables[save_as] = value
+                return f"Extracted and set ${save_as} = {value}"
+            return value
+        result = session.mitm.extract_from_flow(flow_id, json_path=json_path, css_selector=css_selector)
+        if save_as and result:
+            session.mitm.session_variables[save_as] = result
+        return result
 
     @mcp.tool()
     async def traffic_replay(
@@ -592,14 +602,30 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         headers_json: str = None,
         body: str = None,
         timeout: float = 30.0,
+        context: str = None,
     ) -> str:
-        """Replay a captured flow with optional modifications. Uses curl_cffi for stealth (browser fingerprint impersonation).
+        """Replay a captured flow with optional modifications. Returns JSON with
+        `new_flow_id` so you can feed it straight into traffic_diff.
+
+        Two transports, selected by `context`:
+          - context=None (default): replay via curl_cffi with browser TLS
+            fingerprint impersonation (stealth). The default identity.
+          - context="victim" | "admin" | any name from session_create_context:
+            replay through that browser context, reusing its cookies / refreshed
+            tokens / CSRF state. Use this for dual-identity / IDOR testing.
+            Cold/hot resolution: live context → cold-hydrate from saved profile →
+            curl_cffi+cookies fallback → plain default replay.
+
+        $name session variables (see traffic_set_session_variable) are
+        substituted into `body` and header values before sending.
+
         Args:
             flow_id: The ID of the flow to replay
             method: Override HTTP method (optional)
             headers_json: JSON object of headers to override/add (optional)
-            body: Override request body (optional)
+            body: Override request body (optional; "__omit__" forces an empty body)
             timeout: Request timeout in seconds (default: 30)
+            context: Browser context name, or None for curl_cffi (default)
         """
         parsed_headers = None
         if headers_json:
@@ -608,27 +634,18 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             except json.JSONDecodeError:
                 return "headers_json must be valid JSON"
 
-        resolved_body = body
-        if resolved_body == "__omit__":
-            resolved_body = None
+        resolved_body = None if body == "__omit__" else body
+        resolved_body, parsed_headers = _subst_vars(resolved_body, parsed_headers)
 
-        if session.mitm.session_variables:
-            if resolved_body:
-                for k, v in session.mitm.session_variables.items():
-                    resolved_body = resolved_body.replace(f"${k}", str(v))
-            if parsed_headers:
-                for hk, hv in parsed_headers.items():
-                    if isinstance(hv, str):
-                        for k, v in session.mitm.session_variables.items():
-                            hv = hv.replace(f"${k}", str(v))
-                        parsed_headers[hk] = hv
-
+        if context is not None:
+            return await session.replay_via_browser(
+                flow_id=flow_id, method=method,
+                headers_override=parsed_headers, body=resolved_body,
+                timeout_ms=int(timeout * 1000), context=context,
+            )
         return await session.mitm.replay_request(
-            flow_id=flow_id,
-            method=method,
-            headers=parsed_headers,
-            body=resolved_body,
-            timeout=timeout,
+            flow_id=flow_id, method=method,
+            headers=parsed_headers, body=resolved_body, timeout=timeout,
         )
 
     @mcp.tool()
@@ -639,10 +656,11 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         payload_category: str = "sqli",
         timeout: float = 10.0,
     ) -> str:
-        """Fuzz an endpoint by substituting one parameter with a category of
-        security payloads, then flag responses that deviate from the baseline.
+        """Fuzz an endpoint by substituting one parameter with one or more
+        categories of security payloads, then flag responses that deviate from
+        the baseline.
 
-        Returns JSON:
+        For a single category returns JSON:
           {
             "baseline_status": int, "baseline_len": int,
             "anomalies": [
@@ -654,6 +672,9 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
                "reflected": bool (present when the payload echoed back)}
             ]
           }
+        For multiple categories (comma-separated payload_category, e.g.
+        "sqli,xss,ssrf") returns {category: <result>, ...}.
+
         An empty `anomalies` list means nothing deviated — NOT proof of safety.
         `"reflected": true` is the strongest signal (potential XSS/injection);
         confirm it by inspecting the captured flow. This tool does NOT return a
@@ -668,16 +689,25 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             flow_id: The flow to use as base request
             target_param: Name of the parameter to fuzz
             param_type: Parameter location: 'query' or 'json_body'
-            payload_category: Category of payloads: 'sqli', 'xss', 'path_traversal', 'ssrf', 'command_injection'
+            payload_category: One category, or comma-separated list. Available:
+                'sqli', 'xss', 'path_traversal', 'ssrf', 'command_injection'
             timeout: Request timeout in seconds (default: 10)
         """
-        return await session.mitm.fuzz_endpoint(
-            flow_id=flow_id,
-            target_param=target_param,
-            param_type=param_type,
-            payload_category=payload_category,
-            timeout=timeout,
-        )
+        cats = [c.strip() for c in payload_category.split(",") if c.strip()]
+        if len(cats) <= 1:
+            return await session.mitm.fuzz_endpoint(
+                flow_id=flow_id, target_param=target_param,
+                param_type=param_type,
+                payload_category=cats[0] if cats else payload_category,
+                timeout=timeout,
+            )
+        results = {}
+        for category in cats:
+            results[category] = await session.mitm.fuzz_endpoint(
+                flow_id=flow_id, target_param=target_param,
+                param_type=param_type, payload_category=category, timeout=timeout,
+            )
+        return json.dumps(results, indent=2)
 
     @mcp.tool()
     async def traffic_auth_detect(flow_ids: str = None) -> str:
@@ -690,24 +720,6 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             ids = [fid.strip() for fid in flow_ids.split(",") if fid.strip()]
         result = session.mitm.detect_auth_patterns(flow_ids=ids)
         return json.dumps(result, indent=2)
-
-    @mcp.tool()
-    async def traffic_api_patterns(domain: str = None, limit: int = None) -> str:
-        """Cluster captured traffic into API endpoint patterns. Useful for API discovery and documentation.
-        Args:
-            domain: Filter by domain (optional)
-            limit: Max flows to analyze (optional)
-        """
-        return session.mitm.get_api_patterns(domain=domain, limit=limit)
-
-    @mcp.tool()
-    async def traffic_openapi(domain: str = None, limit: int = None) -> str:
-        """Generate OpenAPI v3 specification from captured API traffic.
-        Args:
-            domain: Filter by domain (optional)
-            limit: Max flows to analyze (optional)
-        """
-        return session.mitm.export_openapi_spec(domain=domain, limit=limit)
 
     @mcp.tool()
     async def site_map(domain: str = None) -> str:
@@ -723,12 +735,13 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     async def traffic_findings(severity: str = None, category: str = None,
                                 rule_id: str = None, flow_id: str = None,
                                 kind: str = "finding",
+                                stats: bool = False,
                                 limit: int = 50) -> str:
         """List passive-scan results — high-confidence FINDINGS by default,
         lower-confidence SIGNALS via kind='signal' or kind='all'.
         One row per match: rule_id / severity / category / kind / flow_id / short evidence.
         Triage workflow: start here, then traffic_inspect / traffic_params /
-        traffic_replay_via_browser on the flows that look interesting.
+        traffic_replay on the flows that look interesting.
 
         Args:
             severity: Filter 'info' | 'low' | 'medium' | 'high'
@@ -737,71 +750,18 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             flow_id: Show entries for one flow only
             kind: 'finding' (default — high confidence), 'signal' (low confidence),
                 or 'all' to include both
+            stats: When True, return aggregate counts by severity/category instead
+                of individual rows — a quick attack-surface overview.
             limit: Max rows (default 50)
         """
+        if stats:
+            return json.dumps(session.mitm.db.findings_stats(), indent=2)
         rows = session.mitm.db.list_findings(
             severity=severity, category=category,
             rule_id=rule_id, flow_id=flow_id,
             kind=kind, limit=limit,
         )
         return json.dumps(rows, indent=2)
-
-    @mcp.tool()
-    async def traffic_findings_stats() -> str:
-        """Aggregate finding counts by severity and category — quick attack-surface overview."""
-        return json.dumps(session.mitm.db.findings_stats(), indent=2)
-
-    @mcp.tool()
-    async def traffic_replay_via_browser(
-        flow_id: str,
-        method: str = None,
-        headers_json: str = None,
-        body: str = None,
-        timeout_ms: int = 30000,
-        context: str = "default",
-    ) -> str:
-        """Replay a captured request through a named browser context — automatically
-        reuses that identity's cookies / refreshed tokens / CSRF state.
-        For dual-identity testing pass `context="victim"` (or any name you created
-        via session_create_context). Returns JSON with `new_flow_id` so you can
-        feed it directly into traffic_diff.
-
-        Cold/hot resolution:
-        - live context found → use it
-        - context absent but <profile_dir>/<context>_state.json exists → hydrate
-        - browser stopped but profile exists → curl_cffi+cookies fallback
-        - nothing matches → plain replay as default identity
-
-        Args:
-            flow_id: Flow to replay
-            method: Override HTTP method
-            headers_json: JSON object of headers to override/add
-            body: Override request body
-            timeout_ms: Request timeout in milliseconds (default 30000)
-            context: Browser context name to replay through (default 'default')
-        """
-        parsed_headers = None
-        if headers_json:
-            try:
-                parsed_headers = json.loads(headers_json)
-            except json.JSONDecodeError:
-                return "headers_json must be valid JSON"
-        if session.mitm.session_variables and parsed_headers:
-            for hk, hv in list(parsed_headers.items()):
-                if isinstance(hv, str):
-                    for k, v in session.mitm.session_variables.items():
-                        hv = hv.replace(f"${k}", str(v))
-                    parsed_headers[hk] = hv
-        resolved_body = body
-        if resolved_body and session.mitm.session_variables:
-            for k, v in session.mitm.session_variables.items():
-                resolved_body = resolved_body.replace(f"${k}", str(v))
-        return await session.replay_via_browser(
-            flow_id=flow_id, method=method,
-            headers_override=parsed_headers, body=resolved_body,
-            timeout_ms=timeout_ms,
-            context=context,
-        )
 
     @mcp.tool()
     async def traffic_diff(flow_a: str, flow_b: str, max_lines: int = 50) -> str:
@@ -863,6 +823,34 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             depth: BFS depth on each side (default 2, max 5)
         """
         return json.dumps(session.mitm.db.get_chain(flow_id, depth=depth), indent=2)
+
+    @mcp.tool()
+    async def traffic_correlate(freq_cap: int = 8, max_edges: int = 200) -> str:
+        """Auto-correlate data-flow across ALL captured flows: find values minted
+        in one flow's response that reappear in a later flow's request, and
+        secrets reused across identities. Run this ONCE after recon — it turns a
+        500-flow capture into a handful of highlighted chains so you know WHICH
+        flows to triage.
+
+        It writes the edges it finds into the same graph traffic_link uses, so
+        immediately afterwards:
+          - traffic_findings(category="dataflow") lists the passthrough signals
+          - traffic_findings(rule_id="cross_identity_secret_reuse") lists
+            cross-tenant / cross-account secret exposure (high)
+          - traffic_chain(flow_id=...) / evidence_bundle walk the auto-created
+            value_passthrough links
+
+        These are CANDIDATES (token reuse can be legitimate token-refresh) —
+        confirm the business meaning before reporting. Heart-of-the-bug for
+        OAuth code-leak, echoed SSRF (A stores → B echoes), param-passthrough,
+        and leaked-STS-credential reuse.
+
+        Args:
+            freq_cap: A value minted in more than this many flows is treated as
+                global (session cookie / static hash) and skipped (default 8).
+            max_edges: Cap on edges written in one pass (default 200).
+        """
+        return session.mitm.correlate_dataflow(freq_cap=freq_cap, max_edges=max_edges)
 
     @mcp.tool()
     async def traffic_params(flow_id: str) -> str:
@@ -984,42 +972,13 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     @mcp.tool()
     async def traffic_set_session_variable(name: str, value: str) -> str:
         """Set a session variable for use in replay (referenced as $name in headers/body).
+        To extract one from a response instead, use traffic_extract(..., regex=, save_as=).
         Args:
             name: Variable name
             value: Variable value
         """
         session.mitm.session_variables[name] = value
         return f"Set session variable ${name} = {value}"
-
-    @mcp.tool()
-    async def traffic_extract_session_variable(
-        name: str, flow_id: str, regex_pattern: str, group_index: int = 1
-    ) -> str:
-        """Extract a value from a flow's response using regex and store as session variable.
-        Args:
-            name: Variable name (referenced as $name in replay)
-            flow_id: Flow to extract from
-            regex_pattern: Regex pattern with capture groups
-            group_index: Which capture group to extract (default: 1)
-        """
-        import re
-        flow_data = session.mitm.db.get_detail(flow_id, level="full", body_preview_length=256 * 1024)
-        if not flow_data:
-            return "Flow not found"
-        response = flow_data.get("response")
-        body_content = response.get("body") if response else None
-        if not body_content:
-            return "Flow has no response body"
-        try:
-            match = re.search(regex_pattern, body_content)
-            if match:
-                value = match.group(group_index)
-                session.mitm.session_variables[name] = value
-                return f"Extracted and set ${name} = {value}"
-            else:
-                return "Pattern not found in response body"
-        except Exception as e:
-            return f"Regex error: {str(e)}"
 
     # ==================== Interception Tools ====================
 
@@ -1035,6 +994,11 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         phase: str = "request",
     ) -> str:
         """Add a traffic interception rule to modify requests/responses on the fly.
+
+        To inject a header into every request (a "global header"), use
+        action_type='inject_header' with url_pattern='.*' (the default) and a
+        stable rule_id; remove it later with intercept_remove_rule(rule_id).
+
         Args:
             rule_id: Unique identifier for this rule
             action_type: Action type: 'inject_header', 'replace_body', or 'block'
@@ -1090,52 +1054,20 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             session.mitm.interceptor.clear_rules()
             return "Cleared all interception rules"
 
-    @mcp.tool()
-    async def intercept_set_global_header(key: str, value: str) -> str:
-        """Set a global header that will be injected into all matching requests.
-        Args:
-            key: Header name
-            value: Header value
-        """
-        rule_id = f"global_{key.lower()}"
-        rule = InterceptionRule(
-            id=rule_id,
-            url_pattern=".*",
-            phase="request",
-            action_type="inject_header",
-            key=key,
-            value=value,
-        )
-        session.mitm.interceptor.add_rule(rule)
-        return f"Set global header: {key} = {value}"
-
-    @mcp.tool()
-    async def intercept_remove_global_header(key: str) -> str:
-        """Remove a global header injection rule.
-        Args:
-            key: Header name to remove
-        """
-        rule_id = f"global_{key.lower()}"
-        session.mitm.interceptor.remove_rule(rule_id)
-        return f"Removed global header: {key}"
-
     # ==================== Scope Tools ====================
 
     @mcp.tool()
-    async def scope_set(allowed_domains: str) -> str:
-        """Set the traffic scope - only capture traffic matching these domains.
+    async def scope_set(allowed_domains: str = None) -> str:
+        """Set or clear the traffic-capture scope.
+
         Args:
-            allowed_domains: Comma-separated list of domains to capture (e.g., 'api.example.com,cdn.example.com')
+            allowed_domains: Comma-separated domains to capture (e.g.
+                'api.example.com,cdn.example.com'). Pass None or an empty string
+                to clear the scope and capture all traffic.
         """
-        domains = [d.strip() for d in allowed_domains.split(",") if d.strip()]
+        domains = [d.strip() for d in (allowed_domains or "").split(",") if d.strip()]
         session.mitm.scope_manager.update_domains(domains)
         return f"Scope updated. Now tracking: {', '.join(domains) if domains else 'everything'}"
-
-    @mcp.tool()
-    async def scope_clear() -> str:
-        """Clear scope restrictions - capture all traffic."""
-        session.mitm.scope_manager.update_domains([])
-        return "Scope cleared. Now tracking all domains."
 
     # ==================== High-Level Workflow Tools ====================
 
@@ -1156,38 +1088,13 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return await session.browse_and_capture(url, wait_until=wait_until, actions=parsed_actions)
 
     @mcp.tool()
-    async def api_discover(domain: str = None) -> str:
-        """Discover all API endpoints from captured traffic. Clusters requests into endpoint patterns.
-        Args:
-            domain: Filter by domain (optional)
-        """
-        return await session.api_discover(domain=domain)
-
-    @mcp.tool()
-    async def security_scan(flow_id: str, target_param: str, param_type: str = "query", payload_categories: List[str] = None) -> str:
-        """Run a comprehensive security scan on a captured request. Tests multiple vulnerability categories.
-        Args:
-            flow_id: The flow to use as base request
-            target_param: Parameter name to test
-            param_type: Parameter location: 'query' or 'json_body'
-            payload_categories: List of categories. Defaults to ['sqli','xss','path_traversal'].
-                Available: sqli, xss, path_traversal, ssrf, command_injection
-        """
-        categories = payload_categories or ["sqli", "xss", "path_traversal"]
-        return await session.security_scan(
-            flow_id=flow_id,
-            target_param=target_param,
-            param_type=param_type,
-            payload_categories=categories,
-        )
-
-    @mcp.tool()
     async def export_session(format: str = "openapi", domain: str = None, limit: int = 200) -> str:
-        """Export session data in various formats.
+        """Export captured traffic in various formats.
 
         Args:
-            format: 'openapi' (OpenAPI spec), 'patterns' (API patterns),
-                'traffic' (raw flow JSON — WARNING: large; capped by `limit`).
+            format: 'openapi' (OpenAPI v3 spec), 'patterns' (clustered API
+                endpoint patterns — also the API-discovery view), or 'traffic'
+                (raw flow JSON — WARNING: large; capped by `limit`).
             domain: Filter by domain (optional).
             limit: For format='traffic' only — max most-recent flows to dump
                 (default 200). Raise deliberately; dumping the whole table with

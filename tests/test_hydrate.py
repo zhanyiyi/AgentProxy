@@ -6,6 +6,7 @@ right cookies + auth headers and respects host scoping."""
 import json
 import os
 import sqlite3
+import contextlib
 import sys
 import tempfile
 import time
@@ -21,7 +22,7 @@ def _insert(db_path: str, fid: str, url: str, ts: float,
             resp_headers: list[tuple[str, str]] | None = None,
             method: str = "GET", status: int = 200) -> None:
     """Insert a flow row using the real schema (matches save_flow's writes)."""
-    with sqlite3.connect(db_path) as conn:
+    with contextlib.closing(sqlite3.connect(db_path)) as conn, conn:
         conn.execute(
             """INSERT OR REPLACE INTO flows
                (id, url, method, status_code, request_headers, response_headers, timestamp, size)

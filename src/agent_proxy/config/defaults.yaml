@@ -108,6 +108,16 @@ semantic_params:
     - rest_api
     - image_url
     - avatar_url
+    # lowercase compounds that camelCase tokenizing wouldn't split (FileURL is
+    # already covered via the `url` token, but an all-lowercase `fileurl` param
+    # is not) — seen verbatim in Tencent DMS/DMC import-SSRF reports.
+    - fileurl
+    - sourceurl
+    - source_url
+    - targeturl
+    - target_url
+    - remoteurl
+    - remote_url
 
   object_storage:
     - bucket
@@ -118,6 +128,14 @@ semantic_params:
     - s3
     - oss
     - cos
+    # COS STS-credential carriers — when these appear in a RESPONSE the agent is
+    # one signed request away from bucket takeover / arbitrary overwrite.
+    - cos_credential
+    - credentials
+    - sts
+    - tmpsecretid
+    - tmpsecretkey
+    - sessiontoken
 
   redirect_candidate:
     - redirect
@@ -132,6 +150,11 @@ semantic_params:
     - goto
     - dest
     - destination
+    # reflected-XSS / open-redirect sinks named `link` / `jumpurl` — the exact
+    # param Tencent 问卷/文档 1click reports injected `javascript:` into.
+    - link
+    - jumpurl
+    - jump_url
 
   file_param:
     - file
@@ -206,6 +229,13 @@ interesting_headers:
   - x-real-ip
   - x-forwarded-host
   - x-original-url
+  # COS object-ACL / response-rewrite headers — the levers in the QQ小店 /
+  # 群管理 stored-XSS and bucket-overwrite reports (set public-read, grant
+  # full-control to attacker uin, or rewrite content-type to text/html).
+  - x-cos-acl
+  - x-cos-grant-full-control
+  - x-cos-grant-read
+  - response-content-type
 
 
 # Passive-scan rules.
@@ -255,6 +285,9 @@ passive_scan:
     - command
     - template
     - tpl
+    - sourceurl
+    - fileurl
+    - response-content-type
 
   # Response-body regex rules.
   # severity: info | low | medium | high
@@ -266,6 +299,47 @@ passive_scan:
       category: secret_leak
       kind: finding
       regex: 'AKIA[0-9A-Z]{16}'
+
+    # Tencent Cloud permanent access key. Distinct prefix from AWS (AKID vs
+    # AKIA). Heart of the COS bucket-takeover reports: leaks in upload-flow
+    # responses / signed URLs.
+    - id: tencent_access_key
+      severity: high
+      category: secret_leak
+      kind: finding
+      regex: 'AKID[0-9A-Za-z]{13,40}'
+
+    # Tencent STS *temporary* credential triple. The upload endpoint hands these
+    # back in its response; the attacker re-signs COS requests with them. Match
+    # the field names (in JSON or query) — the values vary in shape.
+    - id: tencent_sts_credential
+      severity: high
+      category: secret_leak
+      kind: finding
+      flags: i
+      regex: '"?(?:tmpsecretid|tmpsecretkey|sessiontoken|cos_credential|credentials)"?\s*[:=]'
+
+    # A COS pre-signed URL. Its mere presence in a response means a signed
+    # capability is reachable; if it signs `/` (root) the bucket is listable.
+    - id: cos_presigned_url
+      severity: medium
+      category: secret_leak
+      kind: finding
+      flags: i
+      regex: 'q-sign-algorithm=sha1&[^"''\s]*q-signature=[0-9a-f]{40}'
+
+    # Other major-cloud AKs seen in CN bug-bounty scope (Aliyun / Volc-BytePlus).
+    - id: aliyun_access_key
+      severity: high
+      category: secret_leak
+      kind: finding
+      regex: 'LTAI[0-9A-Za-z]{12,30}'
+
+    - id: volc_access_key
+      severity: high
+      category: secret_leak
+      kind: finding
+      regex: 'AKLT[0-9A-Za-z]{16,}'
 
     - id: private_key_block
       severity: high
@@ -310,6 +384,24 @@ fuzz_payloads:
     - '<script>alert(1)</script>'
     - '"><script>alert(1)</script>'
     - '<img src=x onerror=alert(1)>'
+    # Pseudo-protocol + CRLF + multi-encoding variants for js-redirect / iframe
+    # src / href sinks (Tencent 问卷·文档·手游助手 reflected-XSS reports). The
+    # %0a / %250a / %25250a ladder defeats one and two layers of URL-decoding;
+    # atob() hides the alert payload from naive keyword filters.
+    - 'javascript:alert(1)'
+    - 'javascript://%0aalert(1)'
+    - 'javascript://%250aalert(1)'
+    - 'javascript://%25250aeval(atob(''YWxlcnQoMSk=''))'
+    - 'data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='
+
+  # Open-redirect / OAuth-redirect_uri abuse — pair with redirect_candidate
+  # tags. Confirmation is a 30x Location: to the foreign origin.
+  open_redirect:
+    - 'https://evil.example'
+    - '//evil.example'
+    - '/\evil.example'
+    - 'https://evil.example%2f%2e%2e'
+    - 'javascript:alert(document.domain)'
 
   path_traversal:
     - '../../../etc/passwd'

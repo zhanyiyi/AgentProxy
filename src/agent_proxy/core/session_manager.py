@@ -285,29 +285,6 @@ class SessionManager:
             "recent_traffic": traffic[:10],
         })
 
-    async def api_discover(self, domain: Optional[str] = None) -> str:
-        if not self._session_active:
-            return "No active session"
-        return self.mitm.get_api_patterns(domain=domain)
-
-    async def security_scan(self, flow_id: str, target_param: str, param_type: str = "query", payload_categories: Optional[List[str]] = None) -> str:
-        if not self._session_active:
-            return "No active session"
-
-        categories = payload_categories or ["sqli", "xss", "path_traversal"]
-        all_results = {}
-
-        for category in categories:
-            result = await self.mitm.fuzz_endpoint(
-                flow_id=flow_id,
-                target_param=target_param,
-                param_type=param_type,
-                payload_category=category,
-            )
-            all_results[category] = result
-
-        return json.dumps(all_results, indent=2)
-
     def _proxy_listening(self) -> bool:
         """TCP probe the proxy port. Distinguishes 'we think it's running'
         from 'it's actually accepting connections' — surfaces the case where

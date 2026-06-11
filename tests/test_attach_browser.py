@@ -121,7 +121,8 @@ async def _all_tests():
     sm.browser = _StubBrowser()  # type: ignore[assignment]
     # seed db with a flow carrying a cookie before attaching
     import sqlite3
-    with sqlite3.connect(sm.mitm.db.db_path) as conn:
+    import contextlib
+    with contextlib.closing(sqlite3.connect(sm.mitm.db.db_path)) as conn, conn:
         conn.execute(
             """INSERT OR REPLACE INTO flows
                (id, url, method, status_code, request_headers, response_headers, timestamp, size)
