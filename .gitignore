@@ -31,3 +31,6 @@ temp/
 _*.jpg
 _*.jpeg
 _*.png
+
+# local design/research docs and target reports — keep off the remote
+docs/
