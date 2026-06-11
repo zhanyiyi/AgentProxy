@@ -50,7 +50,9 @@ AgentProxy can either launch its own Playwright Chromium browser or connect to a
 
 ## Requirements
 
-Use a Linux machine with Python 3.10 or newer.
+Use a Linux machine with Python 3.10 or newer. Windows 11 (PowerShell) works
+too for the core install and MCP wiring — see
+[Install From Source (Windows)](#install-from-source-windows) below.
 
 Required system tools:
 
@@ -103,6 +105,46 @@ Expected output:
 ```text
 FastMCP
 ```
+
+## Install From Source (Windows)
+
+The steps mirror the Linux flow; only the paths and shell differ. On Windows the
+venv interpreter lives at `.venv\Scripts\python.exe` (not `.venv/bin/python`),
+and the Python launcher is `python` / `py` (there is no `python3`). All commands
+below are PowerShell.
+
+```powershell
+cd G:\path\to\AgentProxy
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -e ".[dev]"
+```
+
+Install Playwright's Chromium browser:
+
+```powershell
+.\.venv\Scripts\python.exe -m playwright install chromium
+```
+
+Verify the package:
+
+```powershell
+.\.venv\Scripts\python.exe -c "from agent_proxy.main import create_server; print(type(create_server()).__name__)"
+```
+
+Expected output (the lines above it are normal startup logging on stderr):
+
+```text
+FastMCP
+```
+
+Notes for Windows:
+
+- `pip` automatically pulls the platform wheels `mitmproxy-windows` and
+  `mitmproxy-rs` instead of the Linux build — no extra steps needed.
+- Headed browser mode works without X11/DISPLAY; just pass `headless=false`.
+- mitmproxy writes its CA to `%USERPROFILE%\.mitmproxy\` rather than
+  `~/.mitmproxy/`.
 
 ## Optional: Install Google Chrome
 
@@ -162,6 +204,43 @@ The JSON equivalent, useful for other MCP clients, is:
   }
 }
 ```
+
+### Configure Claude Code MCP (Windows)
+
+On Windows, register the server with the `claude` CLI instead of hand-editing
+config. Use the venv interpreter's full path, and pass absolute paths for the
+traffic DB and prompts dir so they resolve no matter which directory Claude Code
+launches the server from. PowerShell, user scope (available in all projects):
+
+```powershell
+claude mcp add agent-proxy -s user `
+  -e AGENT_PROXY_PROMPTS_DIR="G:\path\to\AgentProxy\prompts" `
+  -- "G:\path\to\AgentProxy\.venv\Scripts\python.exe" -m agent_proxy.main `
+     --db-path "G:\path\to\AgentProxy\agent_proxy_traffic.db"
+```
+
+Verify it connected:
+
+```powershell
+claude mcp get agent-proxy
+```
+
+You should see `Status: ✔ Connected`. The equivalent entry in
+`%USERPROFILE%\.claude.json` is:
+
+```json
+{
+  "mcpServers": {
+    "agent-proxy": {
+      "command": "G:\\path\\to\\AgentProxy\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "agent_proxy.main", "--db-path", "G:\\path\\to\\AgentProxy\\agent_proxy_traffic.db"],
+      "env": { "AGENT_PROXY_PROMPTS_DIR": "G:\\path\\to\\AgentProxy\\prompts" }
+    }
+  }
+}
+```
+
+Restart Claude Code, then run `/mcp` to confirm `agent-proxy` is loaded.
 
 ### Loading a Custom Rule Pack From an MCP Client
 
