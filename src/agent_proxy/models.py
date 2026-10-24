@@ -22,10 +22,10 @@ class ScopeConfig(BaseModel):
         default_factory=lambda: [
             ".jpg", ".jpeg", ".png", ".gif", ".css", ".woff",
             ".ico", ".svg", ".webp", ".mp4", ".mp3", ".ts",
-            ".m3u8", ".pdf", ".woff2",
+            ".m3u8", ".woff2",
         ]
     )
-    ignore_methods: List[str] = Field(default_factory=lambda: ["OPTIONS"])
+    ignore_methods: List[str] = Field(default_factory=list)
 
 
 class SessionConfig(BaseModel):
@@ -34,12 +34,16 @@ class SessionConfig(BaseModel):
     headless: bool = True
     ignore_https_errors: bool = True
     browser_timeout: int = 30000
+    startup_timeout: float = 60.0
+    shutdown_timeout: float = 15.0
     max_traffic_display: int = 50
     body_preview_length: int = 2000
     detail_body_limit: int = 51200
     profile_dir: Optional[str] = None
     unsafe_disable_web_security: bool = False
-    db_path: str = "agent_proxy_traffic.db"
+    # None gives each MCP instance its own capture directory. An explicit path
+    # intentionally reopens a previous capture, including its notes and history.
+    db_path: Optional[str] = None
 
 
 class FlowSummary(BaseModel):

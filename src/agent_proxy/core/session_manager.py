@@ -1,8 +1,11 @@
+import asyncio
 import json
 import logging
 import os
 import socket
 import time
+import uuid
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .mitm_controller import MitmController
@@ -18,6 +21,15 @@ class SessionManager:
                  rule_config: Optional[RuleConfig] = None,
                  user_config_path: Optional[str] = None):
         self.config = config or SessionConfig()
+        self.session_id = uuid.uuid4().hex
+        if self.config.db_path is None:
+            db_path = Path.cwd() / ".agentproxy" / "sessions" / self.session_id / "traffic.db"
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+            self.config = self.config.model_copy(update={"db_path": str(db_path)})
+        elif self.config.db_path != ":memory:":
+            db_path = Path(self.config.db_path).expanduser().resolve()
+            db_path.parent.mkdir(parents=True, exist_ok=True)
+            self.config = self.config.model_copy(update={"db_path": str(db_path)})
         # Rule pack: explicit > path-loaded > bundled defaults.
         if rule_config is not None:
             self.rules = rule_config
@@ -35,6 +47,90 @@ class SessionManager:
         )
         self._session_active = False
         self._last_mitm_error: Optional[str] = None
+        self._lifecycle_lock = asyncio.Lock()
+        self.state = "idle"
+        self._cleanup_error: Optional[str] = None
+        self.browser.download_dir = str(Path(self.config.db_path).parent / "downloads")
+        self.browser.shutdown_timeout = self.config.shutdown_timeout
+
+    async def _stop_resources(self, stop_proxy: bool) -> Dict[str, str]:
+        # Both cleanup branches run even if one resource refuses to close.
+        operations = [self.browser.stop()]
+        if stop_proxy:
+            operations.append(self.mitm.stop(timeout=self.config.shutdown_timeout))
+        results = await asyncio.gather(*operations, return_exceptions=True)
+        errors = []
+        for result in results:
+            if isinstance(result, BaseException):
+                errors.append(str(result) or type(result).__name__)
+                logger.error("session cleanup failed", exc_info=(type(result), result, result.__traceback__))
+        if errors:
+            raise RuntimeError("; ".join(errors))
+        return {"browser": results[0], "proxy": results[1] if stop_proxy else "Proxy retained"}
+
+    async def _cleanup(self, stop_proxy: bool = True) -> Dict[str, str]:
+        """Give cleanup its own deadline and finish it before releasing the lock.
+
+        Shielding keeps a cancelled MCP call from abandoning acquired handles.
+        The original cancellation still reaches the caller after cleanup.
+        """
+        self._cleanup_error = None
+        task = asyncio.create_task(asyncio.wait_for(
+            self._stop_resources(stop_proxy), timeout=self.config.shutdown_timeout))
+        cancelled = False
+        try:
+            while not task.done():
+                try:
+                    await asyncio.shield(task)
+                except asyncio.CancelledError:
+                    # More than one cancellation can arrive while cleanup is
+                    # running. Keep the lifecycle lock until the bounded task
+                    # finishes, then propagate cancellation to the caller.
+                    cancelled = True
+            result = task.result()
+        except Exception as e:
+            self._cleanup_error = str(e) or type(e).__name__
+            logger.exception("session cleanup failed")
+            if cancelled:
+                raise asyncio.CancelledError() from e
+            raise
+        if cancelled:
+            raise asyncio.CancelledError()
+        return result
+
+    async def _run_start(self, operation, *, keep_proxy: bool = False) -> str:
+        async with self._lifecycle_lock:
+            if self.state == "active" and not self.mitm.running:
+                self.state = "failed"
+                self._session_active = False
+            if self.state == "failed" and not keep_proxy and not self._cleanup_error:
+                # A background proxy failure can leave a live browser and
+                # writer behind. Reconcile them before allocating replacements.
+                await self._cleanup()
+            if not keep_proxy and self._session_active:
+                return "Session already active. Use session_stop first."
+            if self._cleanup_error:
+                raise RuntimeError("Previous cleanup failed; call session_stop before restarting: " + self._cleanup_error)
+            self.state = "starting"
+            logger.info("session_starting id=%s keep_proxy=%s", self.session_id, keep_proxy)
+            try:
+                result = await asyncio.wait_for(operation(), timeout=self.config.startup_timeout)
+            except BaseException:
+                try:
+                    await self._cleanup(stop_proxy=not keep_proxy)
+                except asyncio.CancelledError:
+                    # _cleanup finishes its bounded task before propagating a
+                    # later cancellation. Preserve the original startup error.
+                    pass
+                except Exception:
+                    # _cleanup records its failure; preserve the startup error.
+                    logger.exception("cleanup after startup failure did not complete")
+                finally:
+                    self.state = "failed" if self._cleanup_error else ("active" if keep_proxy and self.mitm.running else "idle")
+                    self._session_active = bool(keep_proxy and self.mitm.running)
+                raise
+            self.state = "active" if self._session_active else "idle"
+            return result
 
     async def _safe_mitm_start(self, port: int) -> Optional[str]:
         """Try to start the mitm proxy. Returns the success string on bind,
@@ -62,6 +158,10 @@ class SessionManager:
         })
 
     async def start_session(self, proxy_port: Optional[int] = None, headless: Optional[bool] = None, profile_dir: Optional[str] = None, unsafe_disable_web_security: Optional[bool] = None) -> str:
+        return await self._run_start(lambda: self._start_session(
+            proxy_port, headless, profile_dir, unsafe_disable_web_security))
+
+    async def _start_session(self, proxy_port, headless, profile_dir, unsafe_disable_web_security) -> str:
         if self._session_active:
             return "Session already active. Use session_stop first."
 
@@ -81,13 +181,8 @@ class SessionManager:
             return self._mitm_start_error_payload(port, mode="full")
         logger.info("Proxy started: %s", proxy_result)
 
-        try:
-            browser_result = await self.browser.start()
-            logger.info("Browser started: %s", browser_result)
-        except Exception:
-            await self.browser.stop()
-            await self.mitm.stop()
-            raise
+        browser_result = await self.browser.start()
+        logger.info("Browser started: %s", browser_result)
 
         self._session_active = True
         return json.dumps({
@@ -103,6 +198,9 @@ class SessionManager:
         })
 
     async def connect_cdp_session(self, endpoint_url: str = "http://127.0.0.1:9222", proxy_port: Optional[int] = None) -> str:
+        return await self._run_start(lambda: self._connect_cdp_session(endpoint_url, proxy_port))
+
+    async def _connect_cdp_session(self, endpoint_url, proxy_port) -> str:
         if self._session_active:
             return "Session already active. Use session_stop first."
 
@@ -115,13 +213,8 @@ class SessionManager:
             return self._mitm_start_error_payload(port, mode="cdp")
         logger.info("Proxy started: %s", proxy_result)
 
-        try:
-            browser_result = await self.browser.connect_cdp(endpoint_url=endpoint_url)
-            logger.info("Browser connected over CDP: %s", browser_result)
-        except Exception:
-            await self.browser.stop()
-            await self.mitm.stop()
-            raise
+        browser_result = await self.browser.connect_cdp(endpoint_url=endpoint_url)
+        logger.info("Browser connected over CDP: %s", browser_result)
 
         self._session_active = True
         return json.dumps({
@@ -141,6 +234,9 @@ class SessionManager:
 
         browser_*/browse_and_capture/traffic_replay_via_browser will fail (no
         live page); traffic_replay (curl_cffi) still works."""
+        return await self._run_start(lambda: self._start_mitm_only(proxy_port))
+
+    async def _start_mitm_only(self, proxy_port) -> str:
         if self._session_active:
             return "Session already active. Use session_stop first."
 
@@ -191,6 +287,10 @@ class SessionManager:
                 hydrate the default context with cookies + auth headers
                 from the traffic DB for this host. Equivalent to calling
                 browser_hydrate_from_traffic afterwards."""
+        return await self._run_start(lambda: self._attach_browser(
+            headless, profile_dir, unsafe_disable_web_security, hydrate_host), keep_proxy=True)
+
+    async def _attach_browser(self, headless, profile_dir, unsafe_disable_web_security, hydrate_host) -> str:
         if not self._session_active or not self.mitm.running:
             return json.dumps({
                 "status": "error",
@@ -223,7 +323,7 @@ class SessionManager:
             logger.info("Browser attached: %s", browser_result)
         except Exception as e:
             # Don't drop the mitm — caller can still use it passively.
-            await self.browser.stop()
+            await self._cleanup(stop_proxy=False)
             return json.dumps({
                 "status": "error",
                 "error": f"browser failed to start: {e}",
@@ -245,18 +345,18 @@ class SessionManager:
         return json.dumps(result, indent=2)
 
     async def stop_session(self) -> str:
-        if not self._session_active and not self.browser.running and not self.mitm.running:
-            return "No active session"
-
-        browser_result = await self.browser.stop()
-        proxy_result = await self.mitm.stop()
-        self._session_active = False
-
-        return json.dumps({
-            "status": "session_stopped",
-            "proxy": proxy_result,
-            "browser": browser_result,
-        })
+        async with self._lifecycle_lock:
+            self.state = "stopping"
+            logger.info("session_stopping id=%s", self.session_id)
+            try:
+                results = await self._cleanup()
+            except BaseException:
+                self.state = "failed" if self._cleanup_error else "idle"
+                self._session_active = False
+                raise
+            self._session_active = False
+            self.state = "idle"
+            return json.dumps({"status": "session_stopped", **results})
 
     async def browse_and_capture(self, url: str, wait_until: str = "domcontentloaded", actions: Optional[List[Dict]] = None) -> str:
         if not self._session_active:
@@ -298,7 +398,16 @@ class SessionManager:
             return False
 
     def get_status(self) -> Dict[str, Any]:
+        if self.state == "active" and not self.mitm.running:
+            self.state = "failed"
+            self._session_active = False
         return {
+            "session_id": self.session_id,
+            "state": self.state,
+            "db_path": self.config.db_path,
+            "writer": self.mitm.flow_writer.get_status(),
+            "proxy_error": self.mitm.last_error,
+            "cleanup_error": self._cleanup_error,
             "session_active": self._session_active,
             "proxy_running": self.mitm.running,
             "proxy_listening": self._proxy_listening(),

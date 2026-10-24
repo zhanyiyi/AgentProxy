@@ -31,8 +31,6 @@ structlog.configure(
     logger_factory=structlog.stdlib.LoggerFactory(),
 )
 
-logging.basicConfig(format="%(message)s", level=logging.INFO)
-
 logger = structlog.get_logger()
 
 
@@ -218,6 +216,9 @@ class MitmController:
         self.port = 8080
         self.host = "127.0.0.1"
         self.session_variables: Dict[str, str] = {}
+        self.last_error: Optional[str] = None
+        self._lifecycle_lock = asyncio.Lock()
+        self._stopping = False
 
     def _get_verify_param(self, verify_override: Optional[bool] = None) -> Any:
         if verify_override is not None:
@@ -228,8 +229,37 @@ class MitmController:
         return True
 
     async def start(self, port: int = 8080, host: str = "127.0.0.1") -> str:
+        async with self._lifecycle_lock:
+            try:
+                return await self._start_locked(port, host)
+            except BaseException:
+                # stop() must also work before running=True. The SessionManager
+                # applies its own overall startup and cleanup budgets.
+                try:
+                    await asyncio.shield(self._stop_locked(timeout=5.0))
+                except Exception:
+                    logger.exception("proxy_start_cleanup_failed")
+                raise
+
+    def _proxy_exited(self, task: asyncio.Task) -> None:
+        if task is not self.proxy_task:
+            return
+        self.running = False
+        if task.cancelled():
+            if not self._stopping:
+                self.last_error = "MITM task was cancelled unexpectedly"
+            return
+        exc = task.exception()  # Observe background exceptions immediately.
+        if not self._stopping:
+            self.last_error = str(exc) if exc else "MITM task exited unexpectedly"
+            logger.error("proxy_exited", error=self.last_error)
+
+    async def _start_locked(self, port: int, host: str) -> str:
         if self.running:
             return f"MITM proxy already running on port {self.port}"
+        if self.proxy_task is not None and not self.proxy_task.done():
+            raise RuntimeError("Previous MITM task is still stopping")
+        self.last_error = None
 
         # Pre-flight: try to bind the port ourselves and immediately release.
         # mitmproxy's DumpMaster handles bind errors via SystemExit on a
@@ -238,8 +268,12 @@ class MitmController:
         # this check and DumpMaster's own bind, but for the realistic case
         # ("agent already has a server on 8080") it gives a clean error.
         try:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
-                probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            family = socket.AF_INET6 if ":" in host else socket.AF_INET
+            with socket.socket(family, socket.SOCK_STREAM) as probe:
+                # Windows SO_REUSEADDR can allow binding an occupied listener,
+                # defeating this conflict check. Reuse is only needed on POSIX.
+                if os.name == "posix":
+                    probe.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 probe.bind((host, port))
         except OSError as e:
             raise RuntimeError(
@@ -254,7 +288,9 @@ class MitmController:
         self.master.addons.add(self.recorder)
         self.master.addons.add(self.interceptor)
 
+        self.flow_writer.start()
         self.proxy_task = asyncio.create_task(self.master.run())
+        self.proxy_task.add_done_callback(self._proxy_exited)
 
         # Wait until the proxy is actually accepting connections. mitmproxy's
         # bind happens inside an addon coroutine after master.run() starts,
@@ -265,70 +301,74 @@ class MitmController:
         while True:
             if self.proxy_task.done():
                 exc = self.proxy_task.exception()
-                self.master = None
-                self.proxy_task = None
                 if exc is not None:
                     raise RuntimeError(f"mitmproxy failed to start on {host}:{port}: {exc}") from exc
                 raise RuntimeError(f"mitmproxy exited immediately on {host}:{port}")
             if ps_addon and ps_addon.listen_addrs():
                 break
             if asyncio.get_event_loop().time() > deadline:
-                self.master.shutdown()
-                try:
-                    await asyncio.wait_for(self.proxy_task, timeout=2.0)
-                except (asyncio.TimeoutError, Exception):
-                    self.proxy_task.cancel()
-                self.master = None
-                self.proxy_task = None
                 raise RuntimeError(
                     f"mitmproxy did not bind {host}:{port} within 5s"
                 )
             await asyncio.sleep(0.05)
 
         self.running = True
-        self.flow_writer.start()
         logger.info("proxy_started", host=host, port=port)
         return f"Started MITM proxy on {host}:{port}"
 
-    async def stop(self) -> str:
-        if not self.running or not self.master:
-            return "Proxy is not running"
-        try:
-            ps_addon = self.master.addons.get("proxyserver")
-            if ps_addon:
-                for handler in list(ps_addon.connections.values()):
-                    try:
-                        for transport_io in list(handler.transports.values()):
-                            if transport_io.writer and not transport_io.writer.is_closing():
-                                transport_io.writer.close()
-                    except Exception:
-                        pass
-                for instance in list(ps_addon.servers._instances.values()):
-                    try:
-                        await instance.stop()
-                    except Exception:
-                        pass
-                ps_addon.servers._instances.clear()
-        except Exception:
-            pass
-        self.master.shutdown()
-        if self.proxy_task:
-            done, _ = await asyncio.wait({self.proxy_task}, timeout=5.0)
-            if not done:
-                self.proxy_task.cancel()
-                try:
-                    await self.proxy_task
-                except (asyncio.CancelledError, Exception):
-                    pass
-            self.proxy_task = None
+    async def stop(self, timeout: float = 5.0) -> str:
+        async with self._lifecycle_lock:
+            return await self._stop_locked(timeout)
+
+    async def _stop_locked(self, timeout: float) -> str:
+        deadline = asyncio.get_running_loop().time() + max(0.0, timeout)
+        had_resources = bool(self.master or self.proxy_task or self.flow_writer.get_status()["thread_alive"])
         self.running = False
-        # Proxy has stopped accepting connections; drain any flows still queued
-        # in the background writer before returning so nothing is lost.
-        self.flow_writer.stop(timeout=5.0)
-        logger.info("proxy_stopped",
-                    dropped=self.flow_writer.dropped,
-                    write_errors=self.flow_writer.write_errors)
-        return "Stopped MITM proxy"
+        self._stopping = True
+        try:
+            if self.master:
+                # Closing active transports lets DumpMaster's own shutdown
+                # finish without waiting for persistent client connections.
+                ps_addon = self.master.addons.get("proxyserver")
+                if ps_addon:
+                    for handler in list(ps_addon.connections.values()):
+                        try:
+                            for transport_io in list(handler.transports.values()):
+                                writer = transport_io.writer
+                                if writer and not writer.is_closing():
+                                    writer.close()
+                        except Exception:
+                            # This eager close is only an optimization;
+                            # DumpMaster still owns the actual teardown.
+                            logger.warning("proxy_transport_close_failed", exc_info=True)
+                self.master.shutdown()
+            task = self.proxy_task
+            if task is not None and not task.done():
+                remaining = max(0.0, deadline - asyncio.get_running_loop().time())
+                done, _ = await asyncio.wait({task}, timeout=remaining / 2)
+                if not done:
+                    task.cancel()
+                    remaining = max(0.0, deadline - asyncio.get_running_loop().time())
+                    done, _ = await asyncio.wait({task}, timeout=remaining / 2)
+                    if not done:
+                        raise TimeoutError("MITM task did not finish during shutdown")
+            if task is not None and task.done() and not task.cancelled():
+                exc = task.exception()
+                if exc is not None:
+                    self.last_error = str(exc)
+                    logger.error("proxy_task_failed", error=str(exc))
+            self.proxy_task = None
+            self.master = None
+            remaining = max(0.0, deadline - asyncio.get_running_loop().time())
+            if not await asyncio.to_thread(self.flow_writer.stop, timeout=remaining):
+                raise TimeoutError("Flow writer did not finish during shutdown; pending writes remain")
+            logger.info("proxy_stopped", **self.flow_writer.get_status())
+            return "Stopped MITM proxy" if had_resources else "Proxy is not running"
+        except BaseException as e:
+            self.last_error = str(e) or type(e).__name__
+            raise
+        finally:
+            self._stopping = False
 
     @staticmethod
     def _strip_hop_headers(headers: Dict[str, str], drop_cookie: bool = False) -> Dict[str, str]:

@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import queue
 import threading
+import time
 from typing import Optional
 
 import structlog
@@ -96,91 +97,131 @@ class FlowWriter:
         self.scanner = scanner
         self._queue: "queue.Queue[Optional[tuple]]" = queue.Queue(maxsize=_MAX_QUEUE)
         self._thread: Optional[threading.Thread] = None
+        self._state_lock = threading.Lock()
+        self._stop_requested = threading.Event()
         self._running = False
         self.dropped = 0
         self.write_errors = 0
+        self.scan_errors = 0
+        self.persisted = 0
+        self.last_error: Optional[str] = None
 
     def start(self) -> None:
-        if self._running:
-            return
-        self._running = True
-        self._thread = threading.Thread(
-            target=self._run, name="agentproxy-flow-writer", daemon=True
-        )
-        self._thread.start()
+        with self._state_lock:
+            if self._running:
+                return
+            if self._thread is not None and self._thread.is_alive():
+                raise RuntimeError("Previous flow writer is still stopping")
+            self._stop_requested.clear()
+            self._running = True
+            self._thread = threading.Thread(
+                target=self._run, name="agentproxy-flow-writer", daemon=True
+            )
+            self._thread.start()
+
+    def get_status(self) -> dict:
+        with self._state_lock:
+            return {
+                "accepting": self._running,
+                "thread_alive": bool(self._thread and self._thread.is_alive()),
+                "queued": self._queue.qsize(),
+                "pending": self._queue.unfinished_tasks,
+                "persisted": self.persisted,
+                "dropped": self.dropped,
+                "write_errors": self.write_errors,
+                "scan_errors": self.scan_errors,
+                "last_error": self.last_error,
+            }
 
     def submit(self, flow: http.HTTPFlow, scan: bool) -> None:
         """Snapshot the flow on the hook thread and enqueue it. Never blocks."""
         try:
             snap = FlowSnapshot(flow)
         except Exception as e:  # snapshotting must never break the proxy path
+            self.dropped += 1
+            self.last_error = str(e)
             logger.error("flow_snapshot_failed", error=str(e))
             return
         label = snap.metadata.get("profile_label")
-        try:
-            self._queue.put_nowait((snap, label, scan))
-        except queue.Full:
-            # Drop the oldest pending item to make room, then retry once.
-            try:
-                self._queue.get_nowait()
+        # Serialize acceptance with stop(): no snapshot can appear after the
+        # worker has decided that its final queue is empty.
+        with self._state_lock:
+            if not self._running:
                 self.dropped += 1
+                return
+            try:
                 self._queue.put_nowait((snap, label, scan))
-            except queue.Empty:
+            except queue.Full:
+                try:
+                    self._queue.get_nowait()
+                except queue.Empty:
+                    pass  # The consumer made room between the two operations.
+                else:
+                    self._queue.task_done()
+                    self.dropped += 1
                 self._queue.put_nowait((snap, label, scan))
 
     def _run(self) -> None:
-        while True:
-            item = self._queue.get()
-            if item is None:  # shutdown sentinel
-                self._queue.task_done()
-                break
-            snap, label, scan = item
-            try:
-                self.db.save_flow(snap, profile_label=label)
-                if scan and snap.response is not None:
-                    self.scanner.scan(snap, self.db)
-            except Exception as e:
-                self.write_errors += 1
-                logger.error("flow_write_failed", flow_id=getattr(snap, "id", "?"), error=str(e))
-            finally:
-                self._queue.task_done()
+        try:
+            while True:
+                try:
+                    snap, label, scan = self._queue.get(timeout=0.05)
+                except queue.Empty:
+                    if self._stop_requested.is_set():
+                        return
+                    continue
+                try:
+                    self.db.save_flow(snap, profile_label=label)
+                    self.persisted += 1
+                except Exception as e:
+                    self.write_errors += 1
+                    self.last_error = str(e)
+                    logger.exception("flow_write_failed", flow_id=snap.id, error=str(e))
+                else:
+                    if scan and snap.response is not None:
+                        try:
+                            self.scanner.scan(snap, self.db)
+                        except Exception as e:
+                            self.scan_errors += 1
+                            self.last_error = str(e)
+                            logger.exception("flow_scan_failed", flow_id=snap.id, error=str(e))
+                finally:
+                    self._queue.task_done()
+        finally:
+            with self._state_lock:
+                self._running = False
 
     def drain(self, timeout: float = 5.0) -> bool:
-        """Block until the queue is empty or timeout. Returns True if drained.
+        """Wait until every accepted snapshot finishes persistence and scanning.
 
-        Does NOT gate on self._running: stop() flips _running False before
-        draining, and we still want the pending backlog flushed."""
-        if self._thread is None:
-            return True
-        try:
-            # queue.join() has no timeout; emulate one with a short poll loop.
-            import time as _time
-            deadline = _time.monotonic() + timeout
-            while not self._queue.empty():
-                if _time.monotonic() > deadline:
+        A processed write can still fail; callers inspect write_errors. Queue
+        emptiness alone excludes the item currently being written.
+        """
+        deadline = time.monotonic() + max(0.0, timeout)
+        with self._queue.all_tasks_done:
+            while self._queue.unfinished_tasks:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
                     return False
-                _time.sleep(0.02)
+                self._queue.all_tasks_done.wait(remaining)
             return True
-        except Exception:
-            return False
 
-    def stop(self, timeout: float = 5.0) -> None:
-        if not self._running:
-            return
-        self._running = False
-        self.drain(timeout=timeout)
-        try:
-            self._queue.put_nowait(None)  # sentinel
-        except queue.Full:
-            # Force room for the sentinel.
-            try:
-                self._queue.get_nowait()
-            except queue.Empty:
-                pass
-            try:
-                self._queue.put_nowait(None)
-            except queue.Full:
-                pass
-        if self._thread is not None:
-            self._thread.join(timeout=timeout)
-            self._thread = None
+    def stop(self, timeout: float = 5.0) -> bool:
+        """Stop accepting, finish the backlog, then join within one budget.
+
+        A timeout retains the thread handle and prevents a second consumer from
+        being started. Async callers must offload this blocking method.
+        """
+        with self._state_lock:
+            self._running = False
+            self._stop_requested.set()
+            thread = self._thread
+        if thread is None:
+            return True
+        thread.join(timeout=max(0.0, timeout))
+        if thread.is_alive():
+            return False
+        with self._state_lock:
+            if self._thread is thread:
+                self._thread = None
+        return True

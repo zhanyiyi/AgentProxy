@@ -6,9 +6,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
 dependencies = [
-    "mcp[cli]>=1.0.0",
+    "mcp[cli]>=1.27.0,<2",
     "mitmproxy>=10.0.0",
-    "playwright>=1.40.0",
+    "playwright>=1.60.0",
     "curl-cffi>=0.6.0",
     "pydantic>=2.0.0",
     "structlog>=23.0.0",
