@@ -13,7 +13,7 @@ from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse, parse_qs
 from collections import Counter
 
-from .traffic_db import TrafficDB
+from .traffic_db import TrafficDB, hostname_matches
 
 
 # ── Cross-flow data-flow correlation ───────────────────────────────────────
@@ -175,7 +175,7 @@ class TrafficAnalyzer:
     def get_api_patterns(self, domain: Optional[str] = None, limit: Optional[int] = None) -> str:
         flows = self.db.get_all_for_analysis(lightweight=True)
         if domain:
-            flows = [f for f in flows if domain in f["request"]["url"]]
+            flows = [f for f in flows if hostname_matches(f["request"]["url"], domain)]
         if limit is not None:
             flows = flows[:limit]
 
@@ -426,7 +426,7 @@ class TrafficAnalyzer:
         import sqlite3
         flows = self.db.get_all_for_analysis(lightweight=True)
         if domain:
-            flows = [f for f in flows if domain in f["request"]["url"]]
+            flows = [f for f in flows if hostname_matches(f["request"]["url"], domain)]
 
         with self.db._get_conn() as conn:
             conn.row_factory = sqlite3.Row

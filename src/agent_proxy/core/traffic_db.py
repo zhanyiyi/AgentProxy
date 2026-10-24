@@ -1,14 +1,19 @@
 import json
+import codecs
 import logging
 import shlex
 import sqlite3
 import os
 import time
+import uuid
 from contextlib import contextmanager
+from email.message import Message
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse, parse_qs
 
 from mitmproxy import http
+
+from .artifact_store import ArtifactStore, is_artifact
 
 
 logger = logging.getLogger(__name__)
@@ -16,6 +21,29 @@ logger = logging.getLogger(__name__)
 MAX_BODY_BYTES = 256 * 1024
 BINARY_CT_PREFIXES = ("image/", "video/", "audio/", "font/")
 BINARY_CT_EXACT = {"application/octet-stream", "application/pdf", "application/zip"}
+
+
+def hostname_matches(url: str, domain: str) -> bool:
+    """Match the requested host and its subdomains, never URL path/query text."""
+    try:
+        host = (urlparse(url).hostname or "").lower().rstrip(".")
+        requested = domain.strip().lstrip(".")
+        requested = (urlparse(requested if "://" in requested else "//" + requested).hostname or "").lower().rstrip(".")
+        return bool(host and requested and (host == requested or host.endswith("." + requested)))
+    except (AttributeError, ValueError):
+        return False
+
+
+def _response_charset(message) -> tuple:
+    """Snapshots expose bytes/headers but intentionally have no get_text API."""
+    header = Message()
+    header["content-type"] = message.headers.get("content-type", "") or ""
+    charset = header.get_content_charset() or "utf-8"
+    try:
+        b"".decode(charset)  # Exclude non-text codecs such as base64.
+        return codecs.lookup(charset).name, None
+    except (LookupError, TypeError):
+        return "utf-8", "unknown_charset_fallback_utf8"
 
 
 def _is_binary_content_type(ct: str) -> bool:
@@ -62,7 +90,8 @@ class SimpleResponse:
 
 class TrafficDB:
     def __init__(self, db_path: str = "agent_proxy_traffic.db"):
-        self.db_path = db_path
+        self.db_path = os.fspath(db_path)
+        self.artifact_store = ArtifactStore(self.db_path)
         self._init_db()
 
     def _restrict_db_permissions(self) -> None:
@@ -95,6 +124,7 @@ class TrafficDB:
         no leaked handles on the long-lived MCP process.
         """
         conn = sqlite3.connect(self.db_path, check_same_thread=False)
+        conn.create_function("hostname_matches", 2, hostname_matches, deterministic=True)
         conn.execute("PRAGMA synchronous=NORMAL")
         # The background flow-writer thread and event-loop tool calls (tags,
         # notes, manual findings) can both write concurrently. WAL allows one
@@ -140,6 +170,9 @@ class TrafficDB:
                 ("response_body_omitted", "TEXT"),
                 ("profile_label", "TEXT"),
                 ("replay_nonce", "TEXT"),
+                ("response_body_charset", "TEXT"),
+                ("response_body_decode_note", "TEXT"),
+                ("response_artifact", "TEXT"),
             ]:
                 try:
                     conn.execute(f"ALTER TABLE flows ADD COLUMN {col} {ddl}")
@@ -217,6 +250,17 @@ class TrafficDB:
             conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_notes_verdict ON flow_notes(verdict)")
             conn.execute("CREATE INDEX IF NOT EXISTS idx_flow_notes_updated ON flow_notes(updated_at)")
 
+            # Generic browser-action facts are stored separately from HTTP
+            # flows. A time window is correlation, never proof of causation.
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS actions (
+                    id TEXT PRIMARY KEY,
+                    timestamp REAL NOT NULL,
+                    entry TEXT NOT NULL
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_actions_timestamp ON actions(timestamp)")
+
         # Enabling WAL above created the -wal/-shm sidecars; re-assert 0600 on
         # them now (they didn't exist during the first call). The -wal file
         # holds the freshest, not-yet-checkpointed captured secrets.
@@ -265,10 +309,23 @@ class TrafficDB:
     def save_flow(self, flow, profile_label: Optional[str] = None):
         req_body, req_truncated = self._extract_body(flow.request)
         resp_body, resp_truncated, resp_omitted = (None, 0, None)
+        resp_charset, decode_note, artifact = (None, None, None)
         if flow.response:
-            resp_body, resp_truncated = self._extract_body(flow.response)
+            media_type = (flow.response.headers.get("content-type", "") or "").split(";", 1)[0].strip().lower()
+            office_binary = (
+                media_type in {"application/msword", "application/rtf", "application/vnd.ms-excel", "application/vnd.ms-powerpoint", "application/x-zip-compressed"}
+                or media_type.startswith("application/vnd.openxmlformats-officedocument.")
+                or media_type.startswith("application/vnd.oasis.opendocument.")
+            )
+            if not office_binary:
+                resp_charset, decode_note = _response_charset(flow.response)
+                resp_body, resp_truncated = self._extract_body(flow.response, charset=resp_charset)
             if resp_body is None and flow.response.content:
                 resp_omitted = "binary"
+                resp_charset = None
+                decode_note = None
+            if is_artifact(flow.response.headers):
+                artifact = self.artifact_store.save(flow.id, flow.response.content, flow.response.headers)
         status_code = flow.response.status_code if flow.response else None
         size = len(flow.response.content) if flow.response and flow.response.content else 0
         replay_nonce = None
@@ -286,8 +343,9 @@ class TrafficDB:
                     response_headers, response_body,
                     timestamp, size,
                     request_body_truncated, response_body_truncated, response_body_omitted,
-                    profile_label, replay_nonce
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    profile_label, replay_nonce,
+                    response_body_charset, response_body_decode_note, response_artifact
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(id) DO UPDATE SET
                     url=excluded.url,
                     method=excluded.method,
@@ -301,7 +359,10 @@ class TrafficDB:
                     response_body_truncated=excluded.response_body_truncated,
                     response_body_omitted=excluded.response_body_omitted,
                     profile_label=COALESCE(excluded.profile_label, flows.profile_label),
-                    replay_nonce=COALESCE(excluded.replay_nonce, flows.replay_nonce)
+                    replay_nonce=COALESCE(excluded.replay_nonce, flows.replay_nonce),
+                    response_body_charset=excluded.response_body_charset,
+                    response_body_decode_note=excluded.response_body_decode_note,
+                    response_artifact=excluded.response_artifact
             """,
                 (
                     flow.id,
@@ -323,11 +384,14 @@ class TrafficDB:
                     resp_omitted,
                     profile_label,
                     replay_nonce,
+                    resp_charset,
+                    decode_note,
+                    json.dumps(artifact) if artifact is not None else None,
                 ),
             )
 
     @staticmethod
-    def _extract_body(message) -> tuple:
+    def _extract_body(message, charset: str = "utf-8") -> tuple:
         """Returns (text_body_or_None, truncated_flag).
         Skips binary content types entirely, truncates large bodies."""
         if message is None:
@@ -348,7 +412,7 @@ class TrafficDB:
                 if len(content) > MAX_BODY_BYTES:
                     content = content[:MAX_BODY_BYTES]
                     truncated = 1
-                return content.decode("utf-8", errors="replace"), truncated
+                return content.decode(charset, errors="replace"), truncated
             text = str(content)
             if len(text) > MAX_BODY_BYTES:
                 return text[:MAX_BODY_BYTES], 1
@@ -448,48 +512,73 @@ class TrafficDB:
                 "method": row["method"],
                 "url": row["url"],
                 "headers": req_headers,
+                "headers_raw": _parse_headers_ordered(row["request_headers"]),
+                "body_truncated": bool(row["request_body_truncated"]),
+                "body_storage_limit_bytes": MAX_BODY_BYTES,
             }
             if level != "meta":
                 request_obj["body"] = req_body
                 request_obj["body_preview"] = req_body  # legacy alias
                 if req_note:
                     request_obj["body_note"] = req_note
+            request_obj["body_notes"] = self._body_notes(req_note, row["request_body_truncated"])
 
             response_obj = None
             if row["status_code"] is not None:
                 response_obj = {
                     "status_code": row["status_code"],
                     "headers": resp_headers,
+                    "headers_raw": _parse_headers_ordered(row["response_headers"]),
+                    "body_truncated": bool(row["response_body_truncated"]),
+                    "body_storage_limit_bytes": MAX_BODY_BYTES,
+                    "body_omitted": row["response_body_omitted"],
+                    "body_charset": row["response_body_charset"],
+                    "body_decode_note": row["response_body_decode_note"],
+                    "artifact": json.loads(row["response_artifact"]) if row["response_artifact"] else None,
                 }
                 if level != "meta":
                     response_obj["body"] = resp_body
                     response_obj["body_preview"] = resp_body  # legacy alias
                     if resp_note:
                         response_obj["body_note"] = resp_note
+                response_obj["body_notes"] = self._body_notes(resp_note, row["response_body_truncated"])
 
             simple_request = SimpleRequest(
                 method=row["method"], url=row["url"],
                 headers=req_headers, body=row["request_body"],
             )
-            return {
+            result = {
                 "id": row["id"],
                 "request": request_obj,
                 "response": response_obj,
                 "curl_command": self._generate_curl(simple_request),
             }
+            if row["request_body_truncated"]:
+                result["curl_note"] = "request_body_truncated_at_storage; curl_command_contains_partial_body"
+            return result
+
+    @staticmethod
+    def _body_notes(note, stored_truncated) -> List[str]:
+        notes = [note] if note else []
+        if stored_truncated and "stored_truncated_256kb" not in notes:
+            notes.append("stored_truncated_256kb")
+        return notes
 
     def search(self, query: str = None, domain: str = None, method: str = None, limit: int = 50) -> List[Dict[str, Any]]:
         sql = "SELECT id, url, method, status_code, timestamp FROM flows WHERE 1=1"
         params = []
         if domain:
-            sql += " AND url LIKE ?"
-            params.append(f"%{domain}%")
+            # Apply the true-host filter before LIMIT; post-filtering can
+            # hide valid results behind newer unrelated URL substrings.
+            sql += " AND hostname_matches(url, ?) = 1"
+            params.append(domain)
         if method:
             sql += " AND method = ?"
             params.append(method.upper())
         if query:
-            sql += " AND (url LIKE ? OR request_body LIKE ? OR response_body LIKE ?)"
-            wildcard = f"%{query}%"
+            sql += " AND (url LIKE ? ESCAPE '\\' OR request_body LIKE ? ESCAPE '\\' OR response_body LIKE ? ESCAPE '\\')"
+            escaped = query.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+            wildcard = f"%{escaped}%"
             params.extend([wildcard, wildcard, wildcard])
         sql += " ORDER BY timestamp DESC LIMIT ?"
         params.append(limit)
@@ -662,6 +751,37 @@ class TrafficDB:
             conn.execute("DELETE FROM flow_tags")
             conn.execute("DELETE FROM flow_links")
             conn.execute("DELETE FROM flow_notes")
+            conn.execute("DELETE FROM actions")
+
+    def save_action(self, entry: Dict[str, Any]) -> Dict[str, Any]:
+        """Persist a generic action receipt without inferring flow causation.
+
+        Existing id/action_id and timestamp facts are retained. Reusing an id
+        replaces that receipt, allowing pending state to be updated later.
+        """
+        if not isinstance(entry, dict):
+            raise TypeError("action entry must be a dict")
+        saved = dict(entry)
+        saved["id"] = str(saved.get("id") or saved.get("action_id") or uuid.uuid4().hex)
+        saved.setdefault("timestamp", time.time())
+        encoded = json.dumps(saved, ensure_ascii=False)
+        timestamp = float(saved["timestamp"])
+        with self._get_conn() as conn:
+            conn.execute(
+                "INSERT INTO actions (id, timestamp, entry) VALUES (?, ?, ?) "
+                "ON CONFLICT(id) DO UPDATE SET timestamp=excluded.timestamp, entry=excluded.entry",
+                (saved["id"], timestamp, encoded),
+            )
+        return saved
+
+    def list_actions(self, limit: int = 50) -> List[Dict[str, Any]]:
+        """Return most recent saved action facts; no network or flow matching."""
+        limit = max(0, min(int(limit), 1000))
+        with self._get_conn() as conn:
+            rows = conn.execute(
+                "SELECT entry FROM actions ORDER BY timestamp DESC, rowid DESC LIMIT ?", (limit,)
+            ).fetchall()
+        return [json.loads(row[0]) for row in rows]
 
     def add_finding(self, flow_id: str, rule_id: str, severity: str, category: str, evidence: str = "", kind: str = "finding") -> bool:
         try:
@@ -860,10 +980,6 @@ class TrafficDB:
         conclusion = self._trim_note_field(conclusion)
         now = time.time()
         with self._get_conn() as conn:
-            existing = conn.execute(
-                "SELECT created_at FROM flow_notes WHERE flow_id = ?", (flow_id,)
-            ).fetchone()
-            created_at = existing[0] if existing else now
             conn.execute(
                 """
                 INSERT INTO flow_notes
@@ -879,7 +995,7 @@ class TrafficDB:
                     updated_at=excluded.updated_at
                 """,
                 (flow_id, verdict, scenario, sensitive_fields, test_steps,
-                 conclusion, created_at, now),
+                 conclusion, now, now),
             )
         return self.get_note(flow_id)
 
