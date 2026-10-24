@@ -1,4 +1,6 @@
 .venv/
+.agentproxy/
+*.db.artifacts/
 __pycache__/
 *.py[cod]
 *$py.class
