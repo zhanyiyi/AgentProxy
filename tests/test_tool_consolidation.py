@@ -24,6 +24,10 @@ MERGED = {
     "traffic_replay", "traffic_findings", "config_add", "traffic_extract",
     "scope_set", "export_session", "cert_install", "traffic_fuzz",
 }
+BROWSER_WORKFLOW = {
+    "browser_snapshot", "browser_act", "browser_tabs", "browser_dialog",
+    "browser_downloads", "session_timeline",
+}
 
 
 async def _tool_names(mcp):
@@ -44,8 +48,9 @@ async def test_consolidated_surface_has_no_removed_tools():
     names = await _tool_names(mcp)
     assert REMOVED & names == set(), f"removed tools reappeared: {REMOVED & names}"
     assert MERGED <= names
-    # Budget guard: keep the surface lean. 64 today; alert if it creeps back up.
-    assert len(names) <= 66, f"tool surface grew to {len(names)}"
+    assert BROWSER_WORKFLOW <= names
+    # Preserve the legacy budget, allowing only the six explicit workflow tools.
+    assert len(names - BROWSER_WORKFLOW) <= 66, f"legacy tool surface grew to {len(names)}"
 
 
 @pytest.mark.asyncio

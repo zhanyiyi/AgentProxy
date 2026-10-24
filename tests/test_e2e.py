@@ -127,6 +127,7 @@ async def run_tests():
         await asyncio.sleep(1)
         traffic = session.mitm.db.get_summary(limit=10)
         print(f"Captured {len(traffic)} traffic flows")
+        assert traffic, "Navigation must persist at least one captured flow"
         if len(traffic) > 0:
             print(f"First flow: {json.dumps(traffic[0], indent=2)}")
         print("[OK] Traffic capture works")
@@ -251,6 +252,7 @@ async def run_tests():
         print(f"\n[FAIL] Test failed: {e}")
         import traceback
         traceback.print_exc()
+        raise
     finally:
         # Cleanup
         print("\n=== Cleanup ===")

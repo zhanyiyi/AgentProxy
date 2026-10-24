@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
@@ -101,9 +102,8 @@ def test_install_when_no_certutil():
 
 
 def test_install_when_no_profiles_found():
-    if not shutil.which("certutil"):
-        print("  [skip] no certutil installed — skipping no-profile case")
-        return
+    if not ci._certutil():
+        pytest.skip("NSS certutil is not installed")
     with tempfile.TemporaryDirectory() as tmp:
         home = Path(tmp)
         r = ci.install_firefox(ca_path="/dev/null", home=home)
@@ -113,9 +113,9 @@ def test_install_when_no_profiles_found():
 
 
 def test_real_install_round_trip():
-    if not shutil.which("certutil"):
-        print("  [skip] no certutil — skipping real round-trip test")
-        return
+    certutil = ci._certutil()
+    if not certutil:
+        pytest.skip("NSS certutil is not installed")
     with tempfile.TemporaryDirectory() as tmp:
         home = Path(tmp)
         ca = home / "ca.pem"
@@ -125,7 +125,7 @@ def test_real_install_round_trip():
         prof.mkdir(parents=True)
         # certutil -N initialises the empty DB without a password.
         subprocess.run(
-            ["certutil", "-N", "-d", f"sql:{prof}", "--empty-password"],
+            [certutil, "-N", "-d", f"sql:{prof}", "--empty-password"],
             check=True, capture_output=True,
         )
         # Now there's a real cert9.db so list_firefox_profiles picks it up.

@@ -42,6 +42,9 @@ AgentProxy operates normally with whatever in-code prompts are defined.
 from __future__ import annotations
 
 import importlib.util
+import asyncio
+import inspect
+import keyword
 import logging
 import re
 import sys
@@ -130,9 +133,13 @@ def _build_prompt_callable(
     context_fn: Optional[Callable[..., Dict[str, Any]]],
     session,
 ) -> Callable[..., Any]:
-    """Synthesise an async function with a real signature matching arg_specs,
-    so FastMCP's introspection produces the right MCP prompt schema."""
+    """Expose the declared prompt signature without generating Python source."""
     arg_names = [str(a["name"]) for a in arg_specs]
+    if len(set(arg_names)) != len(arg_names):
+        raise ValueError("Prompt argument names must be unique")
+    for argument in arg_names:
+        if not argument.isidentifier() or keyword.iskeyword(argument):
+            raise ValueError(f"Invalid prompt argument name: {argument!r}")
     required = {a["name"] for a in arg_specs if a.get("required", False)}
 
     async def _runner(**kwargs):
@@ -143,7 +150,12 @@ def _build_prompt_callable(
         ctx: Dict[str, Any] = dict(kwargs)
         if context_fn is not None:
             try:
-                supplied = context_fn(session=session, **kwargs)
+                if inspect.iscoroutinefunction(context_fn):
+                    supplied = await context_fn(session=session, **kwargs)
+                else:
+                    # Context providers may query SQLite or probe the proxy;
+                    # these synchronous operations must not stall browser I/O.
+                    supplied = await asyncio.to_thread(context_fn, session=session, **kwargs)
                 if supplied:
                     ctx.update(supplied)
             except Exception as e:
@@ -160,23 +172,19 @@ def _build_prompt_callable(
         _noarg.__doc__ = description
         return _noarg
 
-    # Build a real signature matching arg_names so MCP schema reflects it.
-    # Required args have no default; optional args default to None.
-    sig_parts = []
-    for spec in arg_specs:
-        n = str(spec["name"])
-        if spec.get("required", False):
-            sig_parts.append(f"{n}: str")
-        else:
-            sig_parts.append(f"{n}: str = None")
-    sig_params = ", ".join(sig_parts)
-    src = (
-        f"async def _wrapper({sig_params}):\n"
-        f"    return await _runner({', '.join(f'{n}={n}' for n in arg_names)})\n"
-    )
-    local_ns: Dict[str, Any] = {"_runner": _runner}
-    exec(src, local_ns)
-    fn = local_ns["_wrapper"]
+    async def fn(**kwargs):
+        return await _runner(**kwargs)
+
+    fn.__signature__ = inspect.Signature([
+        inspect.Parameter(
+            str(spec["name"]), inspect.Parameter.KEYWORD_ONLY, annotation=str,
+            default=inspect.Parameter.empty if spec.get("required", False) else None,
+        )
+        for spec in arg_specs
+    ])
+    # Pydantic reads annotations independently from inspect.signature when
+    # validating a callable, so both describe the same declared arguments.
+    fn.__annotations__ = {argument: str for argument in arg_names}
     fn.__name__ = name
     fn.__doc__ = description
     return fn

@@ -1,7 +1,12 @@
+import asyncio
 import json
+import time
+import uuid
 from typing import Any, Dict, List, Optional
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Image
+from mcp.server.fastmcp.exceptions import ToolError
+from mcp.types import ToolAnnotations
 
 from ..core.cert_installer import (
     DEFAULT_CA_PATH,
@@ -12,6 +17,10 @@ from ..core.cert_installer import (
 )
 from ..core.session_manager import SessionManager
 from ..models import InterceptionRule
+
+READ_ONLY = ToolAnnotations(readOnlyHint=True, destructiveHint=False, idempotentHint=True)
+STATE_CHANGE = ToolAnnotations(readOnlyHint=False, destructiveHint=False)
+DESTRUCTIVE = ToolAnnotations(readOnlyHint=False, destructiveHint=True)
 
 
 def register_all_tools(mcp: FastMCP, session: SessionManager):
@@ -31,7 +40,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
                     headers[hk] = hv
         return body, headers
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def session_start(proxy_port: int = 8080, headless: bool = True, profile_dir: str = None, unsafe_disable_web_security: bool = False) -> str:
         """Start a complete AgentProxy session: MITM proxy + browser with proxy configured.
         All browser traffic will automatically go through the MITM proxy for capture.
@@ -49,7 +58,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             unsafe_disable_web_security=unsafe_disable_web_security,
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def session_connect_cdp(endpoint_url: str = "http://127.0.0.1:9222", proxy_port: int = 8080) -> str:
         """Start MITM proxy and connect to an already-running Chrome/Chromium via CDP.
         Launch the browser separately with flags such as:
@@ -60,7 +69,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.connect_cdp_session(endpoint_url=endpoint_url, proxy_port=proxy_port)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def session_start_proxy_only(proxy_port: int = 8080) -> str:
         """Start only the MITM proxy — no Playwright browser, no CDP attach.
 
@@ -84,7 +93,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.start_mitm_only(proxy_port=proxy_port)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def session_attach_browser(
         headless: bool = True,
         profile_dir: str = None,
@@ -116,12 +125,12 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             hydrate_host=hydrate_host,
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def session_stop() -> str:
         """Stop the AgentProxy session: close browser and MITM proxy."""
         return await session.stop_session()
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def cert_status(ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
         """Report whether the mitmproxy CA is installed in each Firefox
         profile and the Chrome NSS DB on this machine. Read-only — call it
@@ -133,9 +142,9 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
                 ~/.mitmproxy/mitmproxy-ca-cert.pem).
             nickname: NSS nickname to look up (defaults to 'mitmproxy').
         """
-        return json.dumps(cert_status_impl(ca_path=ca_path, nickname=nickname), indent=2)
+        return json.dumps(await asyncio.to_thread(cert_status_impl, ca_path=ca_path, nickname=nickname), indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def cert_install(browser: str = "both", ca_path: str = DEFAULT_CA_PATH, nickname: str = DEFAULT_NICKNAME) -> str:
         """Install the mitmproxy CA into Firefox profiles and/or the Chrome
         NSS DB so external browsers trust captured HTTPS. Fixes
@@ -154,17 +163,17 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return json.dumps({"error": "browser must be 'firefox', 'chrome', or 'both'"})
         out = {}
         if browser in ("firefox", "both"):
-            out["firefox"] = cert_install_firefox_impl(ca_path=ca_path, nickname=nickname)
+            out["firefox"] = await asyncio.to_thread(cert_install_firefox_impl, ca_path=ca_path, nickname=nickname)
         if browser in ("chrome", "both"):
-            out["chrome"] = cert_install_chrome_impl(ca_path=ca_path, nickname=nickname)
+            out["chrome"] = await asyncio.to_thread(cert_install_chrome_impl, ca_path=ca_path, nickname=nickname)
         return json.dumps(out, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def session_status() -> str:
         """Get current session status including proxy, browser, and traffic info."""
-        return json.dumps(session.get_status(), indent=2)
+        return json.dumps(await asyncio.to_thread(session.get_status), indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def session_save_profile(name: str = None, path: str = None) -> str:
         """Snapshot the current browser storage state (cookies + localStorage) to disk.
         Useful right after a manual login so the session can be restored next time.
@@ -175,7 +184,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.browser.save_storage_state(name=name, path=path)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def session_create_context(name: str, from_profile: bool = True) -> str:
         """Create an isolated browser context (separate cookies/localStorage) within
         the same browser process. The context is auto-tagged with X-AgentProxy-Context
@@ -188,7 +197,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.browser.create_context(name, from_profile=from_profile)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def session_use_context(name: str) -> str:
         """Switch the active browser context. All subsequent browser_* calls
         operate on this context (its page / cookies / localStorage).
@@ -197,7 +206,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return session.browser.use_context(name)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def session_list_contexts() -> str:
         """List all browser contexts currently live in the session, plus the active one."""
         return json.dumps({
@@ -205,7 +214,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             "active": session.browser.active,
         }, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def config_show(section: str = None) -> str:
         """Inspect the active rule pack — semantic_params dictionaries, passive
         scan rules, fuzz payload categories, etc.
@@ -231,7 +240,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return json.dumps({section: full[section]}, indent=2)
         return json.dumps(full, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def config_add(
         kind: str,
         category: str = None,
@@ -276,7 +285,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
                 return json.dumps({"status": "error", "error": f"invalid regex: {e}"})
             new_hits = 0
             if rescan:
-                new_hits = scan_existing_flows(session.mitm.db, PassiveScanner(rules=session.rules))
+                new_hits = await asyncio.to_thread(scan_existing_flows, session.mitm.db, PassiveScanner(rules=session.rules))
             return json.dumps({
                 "status": "ok", "kind": "passive_rule",
                 "added": {"id": rule.id, "severity": rule.severity, "confidence": rule.kind,
@@ -310,33 +319,47 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
 
     # ==================== Browser Tools ====================
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_navigate(url: str, wait_until: str = "domcontentloaded") -> str:
         """Navigate browser to a URL. All traffic is automatically captured by the MITM proxy.
         Args:
             url: URL to navigate to
             wait_until: When to consider navigation complete ('domcontentloaded', 'load', 'networkidle')
         """
-        return await session.browser.navigate(url, wait_until=wait_until)
+        started = time.monotonic()
+        result = await session.browser.navigate(url, wait_until=wait_until)
+        try:
+            navigation = json.loads(result)
+        except json.JSONDecodeError:
+            raise ToolError(result) from None
+        entry = {
+            "id": "action_" + uuid.uuid4().hex,
+            "timestamp": time.time(), "context": session.browser.active,
+            "action": "navigate", "target": url,
+            "elapsed_ms": round((time.monotonic() - started) * 1000),
+            "status": navigation["status"], "result": navigation,
+        }
+        await asyncio.to_thread(session.mitm.db.save_action, entry)
+        return result
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_click(selector: str) -> str:
         """Click an element on the page.
         Args:
             selector: CSS/XPath selector for the element to click
         """
-        return await session.browser.click(selector)
+        return json.dumps(await browser_act("click", selector=selector))
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_fill(selector: str, value: str) -> str:
         """Fill a form field with a value.
         Args:
             selector: CSS selector for the input field
             value: Value to fill in
         """
-        return await session.browser.fill(selector, value)
+        return json.dumps(await browser_act("fill", selector=selector, value=value))
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_type(selector: str, value: str, delay: int = 50) -> str:
         """Type text into a field character by character (simulates real typing).
         Args:
@@ -344,31 +367,34 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             value: Text to type
             delay: Delay between keystrokes in ms (default: 50)
         """
-        return await session.browser.type_text(selector, value, delay=delay)
+        return json.dumps(await browser_act("type", selector=selector, value=value, delay=delay))
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_select_option(selector: str, value: str) -> str:
         """Select an option in a dropdown.
         Args:
             selector: CSS selector for the select element
             value: Value of the option to select
         """
-        return await session.browser.select_option(selector, value)
+        return json.dumps(await browser_act("select", selector=selector, value=value))
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_press_key(key: str) -> str:
         """Press a keyboard key (e.g., 'Enter', 'Tab', 'Escape').
         Args:
             key: Key to press
         """
-        return await session.browser.press_key(key)
+        return json.dumps(await browser_act("press", value=key))
 
-    @mcp.tool()
-    async def browser_screenshot() -> str:
-        """Take a screenshot of the current page. Returns base64-encoded image."""
-        return await session.browser.screenshot()
+    @mcp.tool(annotations=READ_ONLY)
+    async def browser_screenshot() -> Image:
+        """Return a native MCP image of the current viewport."""
+        if session.browser.page is None:
+            raise ToolError("Browser not started. Use session_start first.")
+        data = await session.browser.page.screenshot(type="jpeg", quality=70)
+        return Image(data=data, format="jpeg")
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def browser_get_text(selector: str = None, max_chars: int = 40000) -> str:
         """Get text content from the page or a specific element.
 
@@ -382,7 +408,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.browser.get_text(selector, max_chars=max_chars)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def browser_get_html(selector: str = None, max_chars: int = 40000) -> str:
         """Get HTML content from the page or a specific element.
 
@@ -395,7 +421,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.browser.get_html(selector, max_chars=max_chars)
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_execute_js(script: str) -> str:
         """Execute JavaScript in the browser page context.
         Args:
@@ -403,7 +429,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.browser.execute_js(script)
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_wait_for(selector: str, timeout: int = 30000) -> str:
         """Wait for an element to appear on the page.
         Args:
@@ -412,27 +438,27 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.browser.wait_for_selector(selector, timeout=timeout)
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_go_back() -> str:
         """Navigate back in browser history."""
         return await session.browser.go_back()
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_go_forward() -> str:
         """Navigate forward in browser history."""
         return await session.browser.go_forward()
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_reload() -> str:
         """Reload the current page."""
         return await session.browser.reload()
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def browser_get_cookies() -> str:
         """Get all cookies from the browser context."""
         return await session.browser.get_cookies()
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_set_cookies(cookies: str) -> str:
         """Set cookies in the browser context.
         Args:
@@ -444,7 +470,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         except json.JSONDecodeError:
             return "Invalid JSON for cookies"
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_set_headers(headers: str) -> str:
         """Set extra HTTP headers for all browser requests.
         Args:
@@ -456,7 +482,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         except json.JSONDecodeError:
             return "Invalid JSON for headers"
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_set_offline(offline: bool = True) -> str:
         """Set browser to offline/online mode.
         Args:
@@ -464,12 +490,75 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.browser.set_offline(offline)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def browser_accessibility_tree() -> str:
         """Get the accessibility tree of the current page (useful for understanding page structure)."""
         return await session.browser.get_accessibility_tree()
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
+    async def browser_snapshot(frame: str = None) -> dict:
+        """Observe the active page as an ARIA snapshot, including pending dialogs.
+
+        frame: Optional iframe CSS selector. Omit it for the main frame.
+        """
+        return await session.browser.snapshot(frame=frame)
+
+    @mcp.tool(annotations=DESTRUCTIVE)
+    async def browser_act(action: str, selector: str = None,
+                          value: str = None, frame: str = None, delay: int = 50) -> dict:
+        """Perform one browser action and return its observed completion state.
+
+        action: click, fill, type, select, press, hover, or scroll.
+        selector: Element CSS selector; frame optionally selects its iframe.
+        value: Text, option value, key, or scroll amount for the action.
+        delay: Milliseconds between typed characters (only for action='type').
+        A pending dialog needs browser_dialog; downloads may still be pending.
+        The receipt records observed events, without claiming network causality.
+        """
+        receipt = await session.browser.act(action, selector=selector, value=value, frame=frame, delay=delay)
+        await asyncio.to_thread(session.mitm.db.save_action, receipt)
+        return receipt
+
+    @mcp.tool(annotations=DESTRUCTIVE)
+    async def browser_tabs(operation: str = "list", tab_id: str = None) -> dict:
+        """List, select, or close a tab. Borrowed external-browser tabs cannot be closed."""
+        if operation == "list":
+            return {"tabs": session.browser.list_tabs()}
+        if operation not in ("select", "close") or not tab_id:
+            raise ToolError("Use operation='list', or 'select'/'close' with tab_id.")
+        if operation == "select":
+            result = await session.browser.select_tab(tab_id)
+        else:
+            result = await session.browser.close_tab(tab_id)
+        await asyncio.to_thread(session.mitm.db.save_action, {
+            "action": "tab_" + operation, "target": tab_id,
+            "context": session.browser.active, "result": result,
+        })
+        return result
+
+    @mcp.tool(annotations=DESTRUCTIVE)
+    async def browser_dialog(accept: bool, prompt_text: str = None) -> dict:
+        """Explicitly accept or dismiss the active tab's pending native dialog."""
+        result = await session.browser.handle_dialog(accept, prompt_text=prompt_text)
+        await asyncio.to_thread(session.mitm.db.save_action, {
+            "action": "dialog_accept" if accept else "dialog_dismiss",
+            "context": session.browser.active, "result": result,
+        })
+        return result
+
+    @mcp.tool(annotations=READ_ONLY)
+    async def browser_downloads() -> dict:
+        """List browser downloads with pending/completed/failed state and saved-file metadata."""
+        return {"downloads": session.browser.get_downloads()}
+
+    @mcp.tool(annotations=READ_ONLY)
+    async def session_timeline(limit: int = 50) -> dict:
+        """Read persisted browser action receipts in time order. Typed form values are omitted."""
+        if not 1 <= limit <= 500:
+            raise ToolError("limit must be between 1 and 500")
+        return {"actions": await asyncio.to_thread(session.mitm.db.list_actions, limit=limit)}
+
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_hydrate_from_traffic(host: str, context: str = "default", limit: int = 200) -> str:
         """Seed the internal browser context with cookies and auth headers
         already captured in the traffic DB for `host`.
@@ -494,7 +583,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return await session.hydrate_browser_from_traffic(host=host, context=context, limit=limit)
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_get_console_logs(clear: bool = False) -> str:
         """Return JS console logs collected since session start.
         Useful for XSS debugging, OAuth/CSRF flow failures, frontend auth issues,
@@ -506,7 +595,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
 
     # ==================== MITM / Traffic Tools ====================
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_list(limit: int = 20, with_findings: bool = False) -> str:
         """List captured HTTP/HTTPS traffic flows. Returns a compact summary by default.
         Each row is just id/method/url/status/size — call traffic_inspect for details.
@@ -517,7 +606,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         flows = session.mitm.db.get_summary(limit=limit, with_findings=with_findings)
         return json.dumps(flows, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_inspect(flow_id: str, level: str = "preview", full_body: bool = False) -> str:
         """Inspect a captured flow at one of three detail levels.
         Args:
@@ -529,14 +618,14 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         if full_body:
             level = "full"
         if level not in ("meta", "preview", "full"):
-            return f"Invalid level '{level}'. Use 'meta', 'preview', or 'full'."
+            raise ToolError(f"Invalid level '{level}'. Use 'meta', 'preview', or 'full'.")
         body_len = 2000 if level == "preview" else (256 * 1024 if level == "full" else 0)
         data = session.mitm.db.get_detail(flow_id, level=level, body_preview_length=body_len)
         if not data:
-            return "Flow not found"
+            raise ToolError("Flow not found")
         return json.dumps(data, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_search(query: str = None, domain: str = None, method: str = None, limit: int = 50) -> str:
         """Search captured traffic with filters.
         Args:
@@ -548,13 +637,13 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         results = session.mitm.db.search(query=query, domain=domain, method=method, limit=limit)
         return json.dumps(results, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def traffic_clear() -> str:
         """Clear all captured traffic from the database."""
         session.mitm.db.clear()
         return "Cleared all traffic history"
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def traffic_extract(flow_id: str, json_path: str = None,
                               css_selector: str = None, regex: str = None,
                               group_index: int = 1, save_as: str = None) -> str:
@@ -595,7 +684,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             session.mitm.session_variables[save_as] = result
         return result
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def traffic_replay(
         flow_id: str,
         method: str = None,
@@ -648,7 +737,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             headers=parsed_headers, body=resolved_body, timeout=timeout,
         )
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def traffic_fuzz(
         flow_id: str,
         target_param: str,
@@ -709,7 +798,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             )
         return json.dumps(results, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_auth_detect(flow_ids: str = None) -> str:
         """Detect authentication patterns in captured traffic (Bearer, JWT, API keys, OAuth2, CSRF, session cookies, Basic auth).
         Args:
@@ -721,17 +810,17 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         result = session.mitm.detect_auth_patterns(flow_ids=ids)
         return json.dumps(result, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def site_map(domain: str = None) -> str:
         """Build a site map: hosts → endpoints → (method, path, params, status_dist,
         auth_required, finding count, sample_flow_id). One call gives the agent the
         target's attack surface in a flat, scannable structure.
         Args:
-            domain: Optional substring filter on URL
+            domain: Optional hostname filter (includes its subdomains)
         """
-        return session.mitm.site_map(domain=domain)
+        return await asyncio.to_thread(session.mitm.site_map, domain=domain)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_findings(severity: str = None, category: str = None,
                                 rule_id: str = None, flow_id: str = None,
                                 kind: str = "finding",
@@ -763,7 +852,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         )
         return json.dumps(rows, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_diff(flow_a: str, flow_b: str, max_lines: int = 50) -> str:
         """Compare two captured flows. Outputs status/size deltas plus a JSON field-level diff
         (added/removed/changed paths) for JSON responses, or a unified text diff otherwise.
@@ -780,7 +869,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
 
     # ==================== Tag / Link / Chain (multi-step trace) ====================
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def traffic_tag(flow_id: str, tag: str) -> str:
         """Tag a flow with a semantic alias (e.g. 'login', 'ssrf_config_create',
         'idor_target_alice'). Tags persist in SQLite and survive session restarts.
@@ -789,13 +878,13 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         ok = session.mitm.db.add_tag(flow_id, tag)
         return f"Tagged: {tag}" if ok else "Failed to tag (empty tag or db error)"
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def traffic_untag(flow_id: str, tag: str) -> str:
         """Remove a tag from a flow."""
         ok = session.mitm.db.remove_tag(flow_id, tag)
         return f"Untagged: {tag}" if ok else "Tag not present"
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_find_by_tag(tag: str) -> str:
         """List all flow_ids that carry this tag. Use it as a stable index for
         recurring entry points (login, upload, admin endpoints) instead of
@@ -803,7 +892,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         ids = session.mitm.db.find_by_tag(tag)
         return json.dumps({"tag": tag, "flow_ids": ids, "count": len(ids)}, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def traffic_link(source_id: str, target_id: str, relation: str = "") -> str:
         """Record that source_id's output influences target_id's input.
         Examples of relation strings: 'stored_input_trigger' (stored XSS/SSRF),
@@ -813,7 +902,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         ok = session.mitm.db.add_link(source_id, target_id, relation)
         return f"Linked: {source_id} -> {target_id} ({relation})" if ok else "Failed to link"
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_chain(flow_id: str, depth: int = 2) -> str:
         """Return the local subgraph around `flow_id`: tags + upstream/downstream
         flows reached within `depth` hops via traffic_link relations. The agent
@@ -824,7 +913,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return json.dumps(session.mitm.db.get_chain(flow_id, depth=depth), indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def traffic_correlate(freq_cap: int = 8, max_edges: int = 200) -> str:
         """Auto-correlate data-flow across ALL captured flows: find values minted
         in one flow's response that reappear in a later flow's request, and
@@ -850,9 +939,9 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
                 global (session cookie / static hash) and skipped (default 8).
             max_edges: Cap on edges written in one pass (default 200).
         """
-        return session.mitm.correlate_dataflow(freq_cap=freq_cap, max_edges=max_edges)
+        return await asyncio.to_thread(session.mitm.correlate_dataflow, freq_cap=freq_cap, max_edges=max_edges)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_params(flow_id: str) -> str:
         """Extract all mutable parameters of a flow (path / query / json body /
         form / interesting headers / cookies) and tag each with semantic
@@ -872,7 +961,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return "Flow not found"
         return json.dumps(extract_params(flow_data, rules=session.rules), indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def evidence_bundle(flow_id: str, depth: int = 3) -> str:
         """Generate a Markdown evidence bundle for a vulnerability — walks the
         flow_links DAG `depth` hops on each side, emits each related flow's
@@ -885,7 +974,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         """
         return session.mitm.evidence_bundle(flow_id, depth=depth)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def note_add(
         flow_id: str,
         verdict: str,
@@ -933,7 +1022,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         except ValueError as e:
             return json.dumps({"error": str(e)})
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def note_get(
         flow_id: str = None,
         verdict: str = None,
@@ -953,13 +1042,13 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         stats = session.mitm.db.notes_stats()
         return json.dumps({"stats": stats, "notes": notes}, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def note_remove(flow_id: str) -> str:
         """Delete the triage note for a flow."""
         ok = session.mitm.db.remove_note(flow_id)
         return "deleted" if ok else "no note for this flow"
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_generate_code(flow_ids: str, framework: str = "curl_cffi") -> str:
         """Generate executable scraper/automation code from captured flows.
         Args:
@@ -969,7 +1058,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         ids = [fid.strip() for fid in flow_ids.split(",") if fid.strip()]
         return session.mitm.generate_scraper_code(flow_ids=ids, target_framework=framework)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def traffic_set_session_variable(name: str, value: str) -> str:
         """Set a session variable for use in replay (referenced as $name in headers/body).
         To extract one from a response instead, use traffic_extract(..., regex=, save_as=).
@@ -982,7 +1071,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
 
     # ==================== Interception Tools ====================
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def intercept_add_rule(
         rule_id: str,
         action_type: str,
@@ -1027,7 +1116,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return f"Invalid regex for rule '{rule_id}'"
         return f"Added interception rule '{rule_id}'"
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def intercept_list_rules() -> str:
         """List all active traffic interception rules."""
         rules_dict = {
@@ -1041,7 +1130,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         }
         return json.dumps(rules_dict, indent=2)
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def intercept_remove_rule(rule_id: str = None) -> str:
         """Remove an interception rule by ID, or all rules if no ID specified.
         Args:
@@ -1056,7 +1145,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
 
     # ==================== Scope Tools ====================
 
-    @mcp.tool()
+    @mcp.tool(annotations=STATE_CHANGE)
     async def scope_set(allowed_domains: str = None) -> str:
         """Set or clear the traffic-capture scope.
 
@@ -1071,7 +1160,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
 
     # ==================== High-Level Workflow Tools ====================
 
-    @mcp.tool()
+    @mcp.tool(annotations=DESTRUCTIVE)
     async def browse_and_capture(url: str, wait_until: str = "domcontentloaded", actions: str = None) -> str:
         """Navigate to a URL and capture all resulting traffic. High-level workflow combining browser navigation + traffic capture.
         Args:
@@ -1087,7 +1176,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
                 return "Invalid JSON for actions"
         return await session.browse_and_capture(url, wait_until=wait_until, actions=parsed_actions)
 
-    @mcp.tool()
+    @mcp.tool(annotations=READ_ONLY)
     async def export_session(format: str = "openapi", domain: str = None, limit: int = 200) -> str:
         """Export captured traffic in various formats.
 
@@ -1101,11 +1190,11 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
                 bodies can blow the agent's context window.
         """
         if format == "openapi":
-            return session.mitm.export_openapi_spec(domain=domain)
+            return await asyncio.to_thread(session.mitm.export_openapi_spec, domain=domain)
         elif format == "patterns":
-            return session.mitm.get_api_patterns(domain=domain)
+            return await asyncio.to_thread(session.mitm.get_api_patterns, domain=domain)
         elif format == "traffic":
-            flows = session.mitm.db.get_all_for_analysis(limit=limit)
+            flows = await asyncio.to_thread(session.mitm.db.get_all_for_analysis, limit=limit)
             return json.dumps({"count": len(flows), "limit": limit, "flows": flows}, indent=2)
         else:
             return f"Unknown format: {format}. Use 'openapi', 'patterns', or 'traffic'"

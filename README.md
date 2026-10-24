@@ -14,6 +14,12 @@ AgentProxy can either launch its own Playwright Chromium browser or connect to a
 
 ## Features
 
+- **Observable browser workflows** — ARIA snapshots, explicit iframe selection,
+  tracked tabs, pending native dialogs, saved downloads, and action receipts.
+- **Owned resource cleanup** — startup cancellation releases acquired resources;
+  disconnecting from CDP preserves the user's browser contexts and tabs.
+- **Isolated captures** — each MCP instance gets its own database by default.
+  `session_status` reports its path and pending/failed background writes.
 - Start and stop a complete browser + MITM session from MCP.
 - Capture HTTP and HTTPS traffic into a local SQLite database.
 - **Passive scanner with finding/signal split** — every captured response is auto-checked against 10 rules; high-confidence findings are surfaced separately from low-confidence signals so the agent's context isn't drowned by noise.
@@ -208,15 +214,14 @@ The JSON equivalent, useful for other MCP clients, is:
 ### Configure Claude Code MCP (Windows)
 
 On Windows, register the server with the `claude` CLI instead of hand-editing
-config. Use the venv interpreter's full path, and pass absolute paths for the
-traffic DB and prompts dir so they resolve no matter which directory Claude Code
-launches the server from. PowerShell, user scope (available in all projects):
+config. Use the venv interpreter's full path and an absolute prompts directory.
+Leave `--db-path` unset for the default isolated capture directory. PowerShell,
+user scope (available in all projects):
 
 ```powershell
 claude mcp add agent-proxy -s user `
   -e AGENT_PROXY_PROMPTS_DIR="G:\path\to\AgentProxy\prompts" `
-  -- "G:\path\to\AgentProxy\.venv\Scripts\python.exe" -m agent_proxy.main `
-     --db-path "G:\path\to\AgentProxy\agent_proxy_traffic.db"
+  -- "G:\path\to\AgentProxy\.venv\Scripts\python.exe" -m agent_proxy.main
 ```
 
 Verify it connected:
@@ -233,7 +238,7 @@ You should see `Status: ✔ Connected`. The equivalent entry in
   "mcpServers": {
     "agent-proxy": {
       "command": "G:\\path\\to\\AgentProxy\\.venv\\Scripts\\python.exe",
-      "args": ["-m", "agent_proxy.main", "--db-path", "G:\\path\\to\\AgentProxy\\agent_proxy_traffic.db"],
+      "args": ["-m", "agent_proxy.main"],
       "env": { "AGENT_PROXY_PROMPTS_DIR": "G:\\path\\to\\AgentProxy\\prompts" }
     }
   }
@@ -684,6 +689,12 @@ browser_set_cookies(cookies_json)
 browser_set_headers(headers_json)
 browser_set_offline(offline)
 browser_accessibility_tree()
+browser_snapshot(frame?)
+browser_act(action, selector?, value?, frame?, delay=50)
+browser_tabs(operation="list", tab_id?)   # list | select | close
+browser_dialog(accept, prompt_text?)
+browser_downloads()
+session_timeline(limit=50)
 browser_hydrate_from_traffic(host, context="default", limit=200)
 ```
 
@@ -733,11 +744,30 @@ export_session(format, domain?)      # format in openapi|patterns|traffic ('patt
 
 ## Traffic Database
 
-Captured traffic is stored in a local SQLite database:
+By default each MCP server instance writes to a separate capture directory:
 
 ```text
-agent_proxy_traffic.db
+.agentproxy/sessions/<instance-id>/traffic.db
+.agentproxy/sessions/<instance-id>/traffic.db.artifacts/
+.agentproxy/sessions/<instance-id>/downloads/
 ```
+
+The instance directory survives stop/start within the same process. A new process
+gets a new directory. `session_status()` reports the exact database path, lifecycle
+state, and writer counters (`pending`, `persisted`, `dropped`, `write_errors`).
+Queue acceptance is separate from persistence; `pending=0` means all accepted
+snapshots have finished processing, and error counters show unsuccessful writes.
+
+To reopen an existing capture, pass `--db-path /absolute/path/traffic.db` to the
+server command. This intentionally shares that database if supplied to several
+instances; use distinct paths when isolation is required.
+
+PDF, Office, ZIP, CSV and attachment responses up to 32 MiB are saved beside the
+database, with path, size and SHA-256 exposed in `traffic_inspect`. Larger files
+report an explicit omission reason. Text remains capped at 256 KiB, with charset,
+truncation and ordered header metadata. `headers` retains its legacy dictionary
+view; `headers_raw` preserves duplicate fields such as `Set-Cookie`. PDF and
+OPTIONS requests are no longer excluded by the default scope.
 
 This database is generated at runtime and is intentionally ignored by Git. It may contain complete request headers, cookies, request bodies, response bodies, login flows, tokens, and other sensitive data from your browser session. Keep it local, delete it when no longer needed, and do not commit it.
 
@@ -747,11 +777,47 @@ Clear captured traffic from MCP:
 traffic_clear()
 ```
 
-Or delete the database when AgentProxy is stopped:
+To remove a capture completely, stop AgentProxy and delete that instance directory
+(or the explicitly selected database and its attachment/download directories).
+`traffic_clear()` clears database history; it does not delete saved files.
 
-```bash
-rm -f agent_proxy_traffic.db
+## Multi-step Browser Workflows
+
+Use `browser_snapshot()` to observe the active page, then call `browser_act` for
+one operation. `frame="iframe#report"` selects an iframe for observation or action.
+Locators may use Playwright selector syntax, for example
+`selector='role=button[name="Export"]'`.
+
+```text
+browser_snapshot(frame="iframe#report")
+browser_act(action="click", selector="#export", frame="iframe#report")
+browser_dialog(accept=true)  # only after reviewing the pending dialog
+browser_tabs(operation="list")
+browser_tabs(operation="select", tab_id="tab_2")
+browser_downloads()
+session_timeline(limit=20)
 ```
+
+Receipts describe the browser primitive, not application-level success. A pending
+dialog is returned immediately and needs an explicit decision. A download is
+`completed` only after saving and hashing finish; its status can also be pending,
+failed or cancelled. Events observed during an action are temporal associations,
+not proof of HTTP causality. The timeline preserves action-time observations;
+query downloads for their current completion state. Typed form values and prompt
+answers are omitted from action history. Legacy click/fill/type/select/key tools
+also return action receipts. Screenshots use native MCP image content.
+
+CDP tabs are borrowed and cannot be closed through `browser_tabs`. Session cleanup
+only closes resources AgentProxy owns. The server uses one active tab per named
+context; explicitly select the page you intend to operate.
+
+Server logs rotate under `~/.agentproxy/logs/`. Use `--log-dir` to override this,
+`--startup-timeout` and `--shutdown-timeout` for lifecycle budgets in seconds,
+and `--timeout` for browser operation timeout in milliseconds. The MCP transport
+may be `stdio` (default), `sse`, or `streamable-http` (localhost port 8000).
+The server cleans up its resources when the MCP transport closes. On Windows,
+Microsoft's `certutil.exe` is not the NSS utility; certificate tools report this
+distinction instead of passing NSS arguments to it.
 
 ## Troubleshooting
 

@@ -14,6 +14,7 @@ import logging
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -23,13 +24,23 @@ DEFAULT_CA_PATH = os.path.expanduser("~/.mitmproxy/mitmproxy-ca-cert.pem")
 DEFAULT_NICKNAME = "mitmproxy"
 
 CERTUTIL_HINT = (
-    "certutil not found. Install it with `sudo apt-get install -y "
-    "libnss3-tools` (Debian/Kali/Ubuntu) or the equivalent for your distro."
+    "NSS certutil not found. On Debian/Kali/Ubuntu install libnss3-tools. "
+    "Windows System32/certutil.exe uses a different command format; it cannot "
+    "manage NSS databases. On Windows import the CA through the browser's "
+    "certificate settings; AgentProxy's built-in Chromium already trusts its proxy CA."
 )
 
 
 def _certutil() -> Optional[str]:
-    return shutil.which("certutil")
+    executable = shutil.which("certutil")
+    if not executable:
+        return None
+    # Only reject Microsoft's utility. A separately installed NSS certutil
+    # remains usable for Firefox profiles on Windows.
+    system_root = Path(os.environ.get("SystemRoot", "C:/Windows"))
+    if sys.platform == "win32" and Path(executable).resolve().is_relative_to(system_root.resolve()):
+        return None
+    return executable
 
 
 def list_firefox_profiles(home: Optional[Path] = None) -> List[Path]:

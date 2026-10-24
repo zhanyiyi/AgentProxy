@@ -82,6 +82,7 @@ def test_flow_writer_persists_and_scans(db_path):
 
 # ----------------------------- B -----------------------------
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX mode bits do not describe Windows ACLs")
 def test_db_file_is_owner_only(db_path):
     TrafficDB(db_path)
     mode = stat.S_IMODE(os.stat(db_path).st_mode)

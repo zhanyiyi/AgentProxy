@@ -376,6 +376,7 @@ async def run_security_tests():
         print(f"\n[FAIL] Test failed: {e}")
         import traceback
         traceback.print_exc()
+        raise
     finally:
         await session.stop_session()
         vuln_server.stop()
