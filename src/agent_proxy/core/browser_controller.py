@@ -4,10 +4,14 @@ import hashlib
 import json
 import logging
 import os
+import time
+import uuid
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlsplit
 
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
+
+from .browser_events import BrowserEvents
 
 logger = logging.getLogger("agent_proxy.browser")
 
@@ -68,6 +72,24 @@ class BrowserController:
         self._scoped_routes: set = set()
         self._console_logs: List[str] = []
         self._console_max = 500
+        # CDP connections borrow the browser and its pre-existing contexts.
+        # Ownership is recorded as soon as a resource is acquired, before any
+        # subsequent initialization can fail.
+        self._owns_browser = False
+        self._owned_contexts = set()
+        self._owned_pages = set()
+        self._tabs: Dict[str, Dict[str, Any]] = {}
+        self._page_ids = {}
+        self._tab_counter = 0
+        self._context_handlers = {}
+        self._scoped_route_handlers = {}
+        self._action_tasks = set()
+        self._driver_stop_task = None
+        self._action_lock = asyncio.Lock()
+        self.download_dir: Optional[str] = None
+        self.cleanup_timeout = 5.0
+        self.shutdown_timeout = 15.0
+        self._events = BrowserEvents(lambda: self.download_dir)
         self.running = False
 
     @property
@@ -94,11 +116,22 @@ class BrowserController:
         page.on("console", _on_console)
 
     async def start(self) -> str:
+        try:
+            return await self._start()
+        except BaseException:
+            try:
+                await self.stop()
+            except Exception as exc:
+                logger.warning("browser_start_cleanup_incomplete error=%s", exc)
+            raise
+
+    async def _start(self) -> str:
         if self.running:
             return "Browser already running"
 
         self._playwright = await async_playwright().start()
-        proxy_url = f"http://{self.proxy_host}:{self.proxy_port}"
+        host_display = f"[{self.proxy_host}]" if ":" in self.proxy_host and not self.proxy_host.startswith("[") else self.proxy_host
+        proxy_url = f"http://{host_display}:{self.proxy_port}"
 
         launch_args = [
             "--disable-features=IsolateOrigins,site-per-process",
@@ -128,11 +161,21 @@ class BrowserController:
             proxy={"server": proxy_url},
             args=launch_args,
         )
+        self._owns_browser = True
+        self._track_browser_connection()
 
         await self._create_named_context("default")
         self.running = True
         logger.info("browser_started proxy=%s headless=%s", proxy_url, self.headless)
         return f"Browser started with proxy {proxy_url} (headless={self.headless})"
+
+    def _track_browser_connection(self):
+        browser = self._browser
+        def on_disconnected(*_):
+            if self._browser is browser:
+                self.running = False
+                self._events.record("browser_disconnected", owned=self._owns_browser)
+        browser.on("disconnected", on_disconnected)
 
     async def _create_named_context(self, name: str, from_profile: bool = True) -> BrowserContext:
         """Create a new isolated browser context tagged with X-AgentProxy-Context.
@@ -148,14 +191,58 @@ class BrowserController:
             logger.info("storage_state_loaded context=%s path=%s", name, state_path)
 
         ctx = await self._browser.new_context(**ctx_kwargs)
+        self.contexts[name] = ctx
+        self._owned_contexts.add(ctx)
+        self._track_context(name, ctx)
         ctx.set_default_timeout(self.timeout)
         # Tag every request from this context so the MITM layer can label flows.
         await ctx.set_extra_http_headers({"X-AgentProxy-Context": name})
         page = await ctx.new_page()
-        self._attach_console(page)
-        self.contexts[name] = ctx
+        self._register_page(name, page, owned=True)
         self.pages[name] = page
         return ctx
+
+    def _track_context(self, name: str, ctx: BrowserContext):
+        if name in self._context_handlers:
+            return
+        def on_page(page):
+            self._register_page(name, page, owned=ctx in self._owned_contexts)
+        ctx.on("page", on_page)
+        self._context_handlers[name] = on_page
+
+    def _register_page(self, context: str, page: Page, owned: bool = False) -> str:
+        existing = self._page_ids.get(page)
+        if existing:
+            if owned:
+                self._owned_pages.add(page)
+                self._tabs[existing]["owned"] = True
+            return existing
+        self._tab_counter += 1
+        tab_id = f"tab_{self._tab_counter}"
+        self._page_ids[page] = tab_id
+        self._tabs[tab_id] = {"page": page, "context": context, "owned": owned}
+        if owned:
+            self._owned_pages.add(page)
+        self._attach_console(page)
+        page.on("dialog", lambda dialog: self._events.on_dialog(dialog, tab_id))
+        page.on("download", lambda download: self._events.on_download(download, tab_id))
+        def on_close(*_):
+            self._tabs.pop(tab_id, None)
+            self._page_ids.pop(page, None)
+            self._owned_pages.discard(page)
+            self._events.drop_tab_dialogs(tab_id)
+            if self.pages.get(context) is page:
+                replacement = next((tab["page"] for tab in self._tabs.values()
+                                    if tab["context"] == context), None)
+                if replacement is None:
+                    self.pages.pop(context, None)
+                else:
+                    self.pages[context] = replacement
+            self._events.record("tab_closed", tab_id=tab_id, context=context)
+        page.on("close", on_close)
+        self._events.record("tab_opened", tab_id=tab_id, context=context,
+                            url=page.url, owned=owned)
+        return tab_id
 
     async def create_context(self, name: str, from_profile: bool = True) -> str:
         if not self.running or not self._browser:
@@ -215,6 +302,7 @@ class BrowserController:
 
             await ctx.route("**/*", _handler)
             self._scoped_routes.add(context)
+            self._scoped_route_handlers[context] = _handler
         return len(headers)
 
     def use_context(self, name: str) -> str:
@@ -227,28 +315,43 @@ class BrowserController:
         return list(self.contexts.keys())
 
     async def connect_cdp(self, endpoint_url: str = "http://127.0.0.1:9222") -> str:
+        try:
+            return await self._connect_cdp(endpoint_url)
+        except BaseException:
+            try:
+                await self.stop()
+            except Exception as exc:
+                logger.warning("browser_cdp_cleanup_incomplete error=%s", exc)
+            raise
+
+    async def _connect_cdp(self, endpoint_url: str) -> str:
         if self.running:
             return "Browser already running"
 
         self._playwright = await async_playwright().start()
-        self._browser = await self._playwright.chromium.connect_over_cdp(endpoint_url)
+        self._browser = await self._playwright.chromium.connect_over_cdp(endpoint_url, no_defaults=True)
+        self._track_browser_connection()
 
         if self._browser.contexts:
             ctx = self._browser.contexts[0]
         else:
             ctx = await self._browser.new_context(ignore_https_errors=self.ignore_https_errors)
+            self._owned_contexts.add(ctx)
 
-        ctx.set_default_timeout(self.timeout)
-        # CDP mode: user manages their own profile via --user-data-dir; we still
-        # tag the context so flow labelling stays consistent.
-        try:
-            await ctx.set_extra_http_headers({"X-AgentProxy-Context": "default"})
-        except Exception:
-            pass
-        pages = ctx.pages
-        page = pages[0] if pages else await ctx.new_page()
-        self._attach_console(page)
         self.contexts["default"] = ctx
+        self._track_context("default", ctx)
+        ctx.set_default_timeout(self.timeout)
+        # Do not overwrite headers of a context borrowed from the user.
+        if ctx in self._owned_contexts:
+            await ctx.set_extra_http_headers({"X-AgentProxy-Context": "default"})
+        pages = ctx.pages
+        for existing in pages:
+            self._register_page("default", existing, owned=ctx in self._owned_contexts)
+        if pages:
+            page = pages[0]
+        else:
+            page = await ctx.new_page()
+            self._register_page("default", page, owned=True)
         self.pages["default"] = page
         self.running = True
         logger.info("browser_connected_cdp endpoint=%s", endpoint_url)
@@ -273,37 +376,112 @@ class BrowserController:
         return f"Saved storage state for '{target_name}' to {target}"
 
     async def stop(self) -> str:
-        if not self.running:
-            return "Browser is not running"
-        try:
-            # Best-effort dump of every named context's storage_state
-            if self.profile_dir:
-                for name, ctx in self.contexts.items():
-                    try:
-                        path = self._storage_state_path(name)
-                        if path:
-                            os.makedirs(os.path.dirname(path), exist_ok=True)
-                            await ctx.storage_state(path=path)
-                    except Exception as e:
-                        logger.warning("storage_state save failed for '%s': %s", name, e)
-            for ctx in list(self.contexts.values()):
+        # A failed/cancelled start can hold live resources while running=False.
+        # Attempt independent releases even when an earlier release fails.
+        cancelled = False
+        deadline = time.monotonic() + self.shutdown_timeout
+        async def release(label, awaitable, *, driver=False):
+            nonlocal cancelled
+            remaining = deadline - time.monotonic()
+            # Reserve a little of the total budget for stopping the driver,
+            # even if an owned context refuses to close.
+            if not driver:
+                remaining -= min(1.0, self.shutdown_timeout / 4)
+            if remaining <= 0:
+                if hasattr(awaitable, "close"):
+                    awaitable.close()
+                elif hasattr(awaitable, "cancel"):
+                    awaitable.cancel()
+                logger.warning("browser_cleanup_budget_exhausted resource=%s", label)
+                return False
+            try:
+                await asyncio.wait_for(awaitable, timeout=min(self.cleanup_timeout, remaining))
+                return True
+            except asyncio.CancelledError:
+                cancelled = True
+            except Exception as exc:
+                logger.warning("browser_cleanup_failed resource=%s error=%s", label, exc)
+            return False
+
+        self.running = False
+        for task in tuple(self._action_tasks):
+            task.cancel()
+        if self._action_tasks:
+            await release("actions", asyncio.gather(*self._action_tasks, return_exceptions=True))
+        await release("downloads", self._events.stop())
+        if self.profile_dir:
+            for name, ctx in list(self.contexts.items()):
+                if ctx not in self._owned_contexts:
+                    continue
+                path = self._storage_state_path(name)
+                if path:
+                    async def save(ctx=ctx, path=path):
+                        os.makedirs(os.path.dirname(path), exist_ok=True)
+                        await ctx.storage_state(path=path)
+                    await release(f"storage_state:{name}", save())
+        for name, ctx in list(self.contexts.items()):
+            handler = self._scoped_route_handlers.get(name)
+            if handler:
+                await release(f"route:{name}", ctx.unroute("**/*", handler))
+            page_handler = self._context_handlers.get(name)
+            if page_handler:
                 try:
-                    await ctx.close()
-                except Exception:
-                    pass
-            if self._browser:
-                await self._browser.close()
-            if self._playwright:
-                await self._playwright.stop()
-        except Exception as e:
-            logger.error("Error stopping browser: %s", e)
-        finally:
-            self.contexts.clear()
-            self.pages.clear()
-            self.active = "default"
-            self._browser = None
-            self._playwright = None
-            self.running = False
+                    ctx.remove_listener("page", page_handler)
+                except Exception as exc:
+                    logger.warning("context_listener_cleanup_failed context=%s error=%s", name, exc)
+        remote_resources_released = True
+        for page in list(self._owned_pages):
+            if not any(tab["page"] is page and self.contexts.get(tab["context"]) in self._owned_contexts
+                       for tab in self._tabs.values()):
+                closed = await release("owned_page", page.close())
+                remote_resources_released = closed and remote_resources_released
+        for ctx in list(self._owned_contexts):
+            closed = await release("owned_context", ctx.close())
+            remote_resources_released = closed and remote_resources_released
+            if closed:
+                self._owned_contexts.discard(ctx)
+        if not self._owns_browser and not remote_resources_released:
+            # A borrowed browser survives driver shutdown. Keep the connection
+            # so a failed close of our own remote resources can be retried.
+            if cancelled:
+                raise asyncio.CancelledError()
+            raise RuntimeError("Owned CDP resources could not be closed; connection retained for retry")
+        if self._browser and self._owns_browser:
+            await release("owned_browser", self._browser.close())
+        driver_stopped = True
+        if self._playwright:
+            # In CDP mode this disconnects the driver; it does not close the
+            # browser or borrowed contexts/pages. Playwright.stop sets its own
+            # exit flag before finishing; cancelling it would make a retry look
+            # successful without actually waiting for the original cleanup.
+            if self._driver_stop_task is None:
+                self._driver_stop_task = asyncio.create_task(self._playwright.stop())
+                self._driver_stop_task.add_done_callback(
+                    lambda task: None if task.cancelled() else task.exception())
+            driver_stopped = await release("playwright_driver", asyncio.shield(self._driver_stop_task), driver=True)
+        if not driver_stopped:
+            # Retain handles so SessionManager can retry a timed-out cleanup.
+            if cancelled:
+                raise asyncio.CancelledError()
+            raise RuntimeError("Browser driver cleanup incomplete; resources retained for retry")
+        self.contexts.clear()
+        self.pages.clear()
+        self._owned_contexts.clear()
+        self._owned_pages.clear()
+        self._tabs.clear()
+        self._page_ids.clear()
+        self._context_handlers.clear()
+        self._scoped_routes.clear()
+        self._scoped_auth.clear()
+        self._scoped_route_handlers.clear()
+        self._action_tasks.clear()
+        self._owns_browser = False
+        self.active = "default"
+        self._browser = None
+        self._playwright = None
+        self._driver_stop_task = None
+        if cancelled:
+            raise asyncio.CancelledError()
         return "Browser stopped"
 
     @property
@@ -327,38 +505,26 @@ class BrowserController:
             return f"Navigation failed: {str(e)}"
 
     async def click(self, selector: str) -> str:
-        if not self._page:
-            return "Browser not started"
         try:
-            await self._page.click(selector, timeout=self.timeout)
-            return f"Clicked: {selector}"
+            return json.dumps(await self.act("click", selector=selector))
         except Exception as e:
             return f"Click failed: {str(e)}"
 
     async def fill(self, selector: str, value: str) -> str:
-        if not self._page:
-            return "Browser not started"
         try:
-            await self._page.fill(selector, value, timeout=self.timeout)
-            return f"Filled: {selector} = {value[:50]}"
+            return json.dumps(await self.act("fill", selector=selector, value=value))
         except Exception as e:
             return f"Fill failed: {str(e)}"
 
     async def type_text(self, selector: str, value: str, delay: int = 50) -> str:
-        if not self._page:
-            return "Browser not started"
         try:
-            await self._page.type(selector, value, delay=delay, timeout=self.timeout)
-            return f"Typed into: {selector}"
+            return json.dumps(await self.act("type", selector=selector, value=value, delay=delay))
         except Exception as e:
             return f"Type failed: {str(e)}"
 
     async def select_option(self, selector: str, value: str) -> str:
-        if not self._page:
-            return "Browser not started"
         try:
-            await self._page.select_option(selector, value, timeout=self.timeout)
-            return f"Selected: {selector} = {value}"
+            return json.dumps(await self.act("select", selector=selector, value=value))
         except Exception as e:
             return f"Select failed: {str(e)}"
 
@@ -419,11 +585,8 @@ class BrowserController:
             return f"JS execution failed: {str(e)}"
 
     async def press_key(self, key: str) -> str:
-        if not self._page:
-            return "Browser not started"
         try:
-            await self._page.keyboard.press(key)
-            return f"Pressed: {key}"
+            return json.dumps(await self.act("press", value=key))
         except Exception as e:
             return f"Key press failed: {str(e)}"
 
@@ -495,13 +658,189 @@ class BrowserController:
             return f"Reload failed: {str(e)}"
 
     async def get_accessibility_tree(self) -> str:
-        if not self._page:
-            return "Browser not started"
         try:
-            snapshot = await self._page.accessibility.snapshot()
-            return json.dumps(snapshot, indent=2, default=str)
+            return json.dumps(await self.snapshot(), indent=2, default=str)
         except Exception as e:
             return f"Accessibility tree failed: {str(e)}"
+
+    def _require_page(self) -> Page:
+        if not self.running or not self._page:
+            raise RuntimeError("Browser not started or active context has no open tab")
+        return self._page
+
+    def _tab_info(self, tab_id: str) -> Dict[str, Any]:
+        tab = self._tabs.get(tab_id)
+        if tab is None:
+            raise ValueError(f"Unknown tab: {tab_id}")
+        return {"tab_id": tab_id, "context": tab["context"], "url": tab["page"].url,
+                "owned": tab["owned"], "active": self._page is tab["page"]}
+
+    def list_tabs(self) -> List[Dict[str, Any]]:
+        return [self._tab_info(tab_id) for tab_id in self._tabs]
+
+    async def select_tab(self, tab_id: str) -> Dict[str, Any]:
+        self._tab_info(tab_id)  # Validate before changing the active context.
+        tab = self._tabs[tab_id]
+        self.active = tab["context"]
+        self.pages[self.active] = tab["page"]
+        self._events.record("tab_selected", tab_id=tab_id, context=self.active)
+        return self._tab_info(tab_id)
+
+    async def close_tab(self, tab_id: str) -> Dict[str, Any]:
+        info = self._tab_info(tab_id)
+        if not info["owned"]:
+            raise ValueError("Cannot close a tab borrowed from the user's browser")
+        await self._tabs[tab_id]["page"].close()
+        return {**info, "status": "closed"}
+
+    async def snapshot(self, frame: Optional[str] = None) -> Dict[str, Any]:
+        page = self._require_page()
+        tab_id = self._page_ids[page]
+        pending = self._events.pending_dialogs(tab_id)
+        if pending:
+            return {"status": "dialog_pending", "page": self._tab_info(tab_id), "dialogs": pending}
+        scope = page.frame_locator(frame) if frame else page
+        waiter = self._events.dialog_waiter(tab_id)
+        capture = asyncio.create_task(scope.locator("body").aria_snapshot(timeout=self.timeout))
+        try:
+            await asyncio.wait({capture, waiter}, return_when=asyncio.FIRST_COMPLETED)
+            pending = self._events.pending_dialogs(tab_id)
+            if pending:
+                return {"status": "dialog_pending", "page": self._tab_info(tab_id), "dialogs": pending}
+            if not capture.done():
+                raise RuntimeError("Browser snapshot interrupted before capture completed")
+            aria = await capture
+        except Exception as exc:
+            raise RuntimeError(f"Browser snapshot failed: {exc}") from exc
+        finally:
+            waiter.cancel()
+            if not capture.done():
+                capture.cancel()
+            await asyncio.gather(capture, return_exceptions=True)
+        return {"status": "ok", "page": self._tab_info(tab_id), "frame": frame,
+                "snapshot": self._truncate_content(aria, self.MAX_CONTENT_CHARS),
+                "truncated": len(aria) > self.MAX_CONTENT_CHARS}
+
+    async def handle_dialog(self, accept: bool, prompt_text: Optional[str] = None) -> Dict[str, Any]:
+        page = self._require_page()
+        try:
+            return await self._events.handle_dialog(accept, prompt_text, self._page_ids[page])
+        except ValueError:
+            raise
+        except Exception as exc:
+            raise RuntimeError(f"Dialog handling failed: {exc}") from exc
+
+    def get_downloads(self) -> List[Dict[str, Any]]:
+        return self._events.get_downloads()
+
+    def get_timeline(self, limit: int = 50) -> List[Dict[str, Any]]:
+        return self._events.timeline(limit)
+
+    async def act(self, action: str, selector: Optional[str] = None,
+                  value: Optional[str] = None, frame: Optional[str] = None,
+                  delay: int = 50) -> Dict[str, Any]:
+        """Complete a browser primitive or return an explicit pending dialog.
+
+        No wait-for-network heuristic claims that application work has completed.
+        Downloads may remain pending and can be queried independently. Values
+        entered into controls are deliberately excluded from receipts/events.
+        """
+        action = action.lower()
+        supported = {"click", "fill", "type", "select", "press", "hover", "scroll", "upload"}
+        if action not in supported:
+            raise ValueError(f"Unsupported browser action: {action}")
+        if action in {"click", "fill", "type", "select", "hover", "upload"} and not selector:
+            raise ValueError(f"selector is required for {action}")
+        if action in {"fill", "type", "select", "press", "upload"} and value is None:
+            raise ValueError(f"value is required for {action}")
+        async with self._action_lock:
+            page = self._require_page()
+            tab_id = self._page_ids[page]
+            scope = page.frame_locator(frame) if frame else page
+            target = scope.locator(selector) if selector else None
+            action_id = "action_" + uuid.uuid4().hex[:12]
+            timestamp = time.time()
+            started = time.monotonic()
+            sequence = self._events._sequence
+            pending = self._events.pending_dialogs(tab_id)
+            status = "dialog_pending" if pending else "completed"
+            action_status = "not_started" if pending else "completed"
+
+            async def perform():
+                if action == "click":
+                    await target.click(timeout=self.timeout)
+                elif action == "fill":
+                    await target.fill(value, timeout=self.timeout)
+                elif action == "type":
+                    await target.press_sequentially(value, delay=delay, timeout=self.timeout)
+                elif action == "select":
+                    await target.select_option(value, timeout=self.timeout)
+                elif action == "hover":
+                    await target.hover(timeout=self.timeout)
+                elif action == "upload":
+                    await target.set_input_files(value, timeout=self.timeout)
+                elif action == "press":
+                    if target:
+                        await target.press(value, timeout=self.timeout)
+                    else:
+                        await page.keyboard.press(value)
+                elif target:
+                    await target.scroll_into_view_if_needed(timeout=self.timeout)
+                else:
+                    try:
+                        delta = float(value or "600")
+                    except ValueError as exc:
+                        raise ValueError("scroll value must be a numeric vertical distance") from exc
+                    await page.mouse.wheel(0, delta)
+
+            if not pending:
+                self._events.action_id = action_id
+                self._events.record("action_started", action_id=action_id,
+                                    context=self.active, action=action, target=selector, frame=frame)
+                waiter = self._events.dialog_waiter(tab_id)
+                task = asyncio.create_task(perform())
+                self._action_tasks.add(task)
+                context_name = self.active
+                def on_done(completed):
+                    self._action_tasks.discard(completed)
+                    if completed.cancelled():
+                        completion = "cancelled"
+                    else:
+                        completion = "failed" if completed.exception() else "completed"
+                    # Do not include exception strings: Playwright call logs can
+                    # echo values typed into a password or other private field.
+                    self._events.record("action_finished", action_id=action_id,
+                                        context=context_name, action=action, target=selector,
+                                        status=completion)
+                task.add_done_callback(on_done)
+                try:
+                    await asyncio.wait({task, waiter}, return_when=asyncio.FIRST_COMPLETED)
+                    if task.done():
+                        try:
+                            await task
+                        except Exception as exc:
+                            raise RuntimeError(f"Browser {action} failed ({type(exc).__name__})") from exc
+                    else:
+                        action_status = "pending"
+                    pending = self._events.pending_dialogs(tab_id)
+                    if pending:
+                        status = "dialog_pending"
+                    await asyncio.sleep(0)  # Let already emitted page/download callbacks register.
+                except BaseException:
+                    task.cancel()
+                    await asyncio.gather(task, return_exceptions=True)
+                    raise
+                finally:
+                    waiter.cancel()
+                    self._events.action_id = None
+            observed = [dict(event) for event in self._events.events if event["sequence"] > sequence]
+            return {"id": action_id, "action_id": action_id, "timestamp": timestamp,
+                    "context": self.active, "action": action, "target": selector,
+                    "status": status, "action_status": action_status,
+                    "completion_scope": "browser_primitive", "elapsed_ms": int((time.monotonic() - started) * 1000),
+                    "page": self._tab_info(tab_id) if tab_id in self._tabs else {"tab_id": tab_id, "closed": True},
+                    "dialogs": pending, "downloads": self.get_downloads(),
+                    "events": observed, "correlation": "events_observed_during_action_only"}
 
     async def get_console_logs(self, clear: bool = False) -> str:
         if not self.running:
@@ -586,12 +925,13 @@ class BrowserController:
         if not self.running or not self._page:
             return {"running": False, "url": "", "title": ""}
         try:
+            host_display = f"[{self.proxy_host}]" if ":" in self.proxy_host and not self.proxy_host.startswith("[") else self.proxy_host
             return {
                 "running": True,
                 "url": self._page.url,
                 "title": await self._page.title(),
                 "headless": self.headless,
-                "proxy": f"http://{self.proxy_host}:{self.proxy_port}",
+                "proxy": f"http://{host_display}:{self.proxy_port}",
             }
         except Exception:
             return {"running": False, "url": "", "title": ""}
