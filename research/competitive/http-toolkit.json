@@ -1,0 +1,2257 @@
+{
+  "project": "HTTP Toolkit",
+  "repo": "https://github.com/httptoolkit/httptoolkit",
+  "revision": "bb579a8ceadfe86b98160843c0447a5b9eec554f",
+  "version": "桌面最新 v1.27.3（2026-10-20）；元仓库无独立 release。UI/server/desktop 是独立更新组件，见 notes 固定 HEAD。",
+  "license": "产品专属组件主要 AGPL-3.0；通用库采用 Apache-2.0/MIT。元仓库未声明单一 license；免费与 Pro 是产品功能分层，源码公开不等于全部预构建功能免费。",
+  "sources": [
+    {
+      "id": "htk-meta",
+      "title": "元仓库 HEAD 元数据",
+      "url": "https://api.github.com/repos/httptoolkit/httptoolkit/commits/main"
+    },
+    {
+      "id": "htk-repo",
+      "title": "定位、组件拆分和授权说明",
+      "url": "https://github.com/httptoolkit/httptoolkit/blob/bb579a8ceadfe86b98160843c0447a5b9eec554f/README.md"
+    },
+    {
+      "id": "htk-release",
+      "title": "Desktop v1.27.3",
+      "url": "https://github.com/httptoolkit/httptoolkit-desktop/releases/tag/v1.27.3"
+    },
+    {
+      "id": "htk-ui-license",
+      "title": "UI AGPL 许可证",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/LICENSE"
+    },
+    {
+      "id": "htk-server-readme",
+      "title": "Server API、CLI、运行与权限",
+      "url": "https://github.com/httptoolkit/httptoolkit-server/blob/3973d10b7ae8d67632dd6105ee9c70c867baf0ac/README.md"
+    },
+    {
+      "id": "htk-intercept",
+      "title": "全部产品接入入口",
+      "url": "https://httptoolkit.com/docs/reference/intercept-page/"
+    },
+    {
+      "id": "htk-view",
+      "title": "查看、过滤、解码、消息与导出",
+      "url": "https://httptoolkit.com/docs/reference/view-page/"
+    },
+    {
+      "id": "htk-modify",
+      "title": "规则、匹配、断点及付费边界",
+      "url": "https://httptoolkit.com/docs/reference/modify-page/"
+    },
+    {
+      "id": "htk-send",
+      "title": "请求客户端及重发付费边界",
+      "url": "https://httptoolkit.com/docs/reference/send-page/"
+    },
+    {
+      "id": "htk-settings",
+      "title": "设置、TLS、上游代理与 OpenAPI",
+      "url": "https://httptoolkit.com/docs/reference/settings-page/"
+    },
+    {
+      "id": "htk-pricing",
+      "title": "免费、Pro、Team 功能边界",
+      "url": "https://httptoolkit.com/pricing/"
+    },
+    {
+      "id": "htk-mcp",
+      "title": "官方 MCP stdio 实现",
+      "url": "https://github.com/httptoolkit/httptoolkit-server/blob/3973d10b7ae8d67632dd6105ee9c70c867baf0ac/src/commands/mcp.ts"
+    },
+    {
+      "id": "htk-mcp-ui",
+      "title": "官方 MCP 配置与免费额度说明",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/components/mcp/mcp-modal.tsx"
+    },
+    {
+      "id": "htk-ctl",
+      "title": "官方任务操作 CLI",
+      "url": "https://github.com/httptoolkit/httptoolkit-server/blob/3973d10b7ae8d67632dd6105ee9c70c867baf0ac/src/commands/ctl.ts"
+    },
+    {
+      "id": "htk-operations",
+      "title": "全部注册的机器操作组",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/services/ui-api/operations/index.ts"
+    },
+    {
+      "id": "htk-event-ops",
+      "title": "请求列表/概要/分页正文/清理及免费限额",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/services/ui-api/operations/event-operations.ts"
+    },
+    {
+      "id": "htk-rule-ops",
+      "title": "规则列出和开关；Pro tier",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/services/ui-api/operations/rule-operations.ts"
+    },
+    {
+      "id": "htk-interceptor-ops",
+      "title": "接入列表与可自动激活范围",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/services/ui-api/operations/interceptor-operations.ts"
+    },
+    {
+      "id": "htk-proxy-ops",
+      "title": "代理端口/CA/地址配置读取",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/services/ui-api/operations/proxy-operations.ts"
+    },
+    {
+      "id": "htk-account-ops",
+      "title": "账号升级入口",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/services/ui-api/operations/account-operations.ts"
+    },
+    {
+      "id": "htk-rest-api",
+      "title": "后端 REST 路由",
+      "url": "https://github.com/httptoolkit/httptoolkit-server/blob/3973d10b7ae8d67632dd6105ee9c70c867baf0ac/src/api/rest-api.ts"
+    },
+    {
+      "id": "htk-bridge",
+      "title": "本地操作桥接与状态",
+      "url": "https://github.com/httptoolkit/httptoolkit-server/blob/3973d10b7ae8d67632dd6105ee9c70c867baf0ac/src/api/ui-operation-bridge.ts"
+    },
+    {
+      "id": "htk-interceptors-src",
+      "title": "所有后端 interceptor 注册及清理",
+      "url": "https://github.com/httptoolkit/httptoolkit-server/blob/3973d10b7ae8d67632dd6105ee9c70c867baf0ac/src/interceptors/index.ts"
+    },
+    {
+      "id": "htk-sse-parser",
+      "title": "SSE 文本解析与 JSON 展示",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/util/event-stream.ts"
+    },
+    {
+      "id": "htk-ws-rules",
+      "title": "WebSocket 规则与扩展步骤",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/model/rules/definitions/websocket-rule-definitions.ts"
+    },
+    {
+      "id": "htk-ws-model",
+      "title": "实时 WebSocket 消息模型",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/model/websockets/websocket-stream.ts"
+    },
+    {
+      "id": "htk-http-model",
+      "title": "HTTP 请求响应数据模型",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/model/http/http-exchange.ts"
+    },
+    {
+      "id": "htk-mockttp",
+      "title": "可独立使用的代理 SDK",
+      "url": "https://github.com/httptoolkit/mockttp/blob/cfe8cb046996390723433c67830602d0cd2dd8bc/README.md"
+    },
+    {
+      "id": "htk-install",
+      "title": "官方平台安装",
+      "url": "https://httptoolkit.com/docs/getting-started/"
+    },
+    {
+      "id": "htk-body-pipeline",
+      "title": "HTTP正文在stream终止后统一解码",
+      "url": "https://github.com/httptoolkit/httptoolkit-ui/blob/46b45fda825d60773b9c4c1d31ef493170786bce/src/model/http/http-body.ts"
+    }
+  ],
+  "features": [
+    {
+      "id": "htk-http",
+      "category": "协议",
+      "name": "HTTP(S)、HTTP/2 与透明 HTTP 接入",
+      "availability": "原生",
+      "detail": "单端口处理 HTTP、TLS/HTTPS、代理请求或直接路由的 HTTP；不推断全协议 TCP/UDP 分析。",
+      "sources": [
+        "htk-repo",
+        "htk-settings"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-h2",
+      "category": "协议",
+      "name": "HTTP/2 协商与兼容设置",
+      "availability": "部分",
+      "detail": "正常提供 HTTP/2；高级设置可选 HTTP1/2 优先级或关闭 H2；h2c 检测规则在设置文档说明。",
+      "sources": [
+        "htk-settings"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-ws",
+      "category": "实时消息",
+      "name": "WebSocket 全双工与二进制消息",
+      "availability": "原生",
+      "detail": "UI 查看方向、大小、text/binary 消息、握手、结束信息，连接打开时持续更新。",
+      "sources": [
+        "htk-view",
+        "htk-ws-model"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-sse",
+      "category": "实时消息",
+      "name": "SSE 文本事件展示",
+      "availability": "部分",
+      "detail": "当前UI解析comments/fields/multiline data并格式化JSON；HttpBody先等待stream终止再统一解压，不能在此UI/MCP正文管线中增量读取开放的压缩SSE。",
+      "sources": [
+        "htk-sse-parser",
+        "htk-body-pipeline"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-browser",
+      "category": "接入",
+      "name": "多浏览器隔离窗口接入",
+      "availability": "原生",
+      "detail": "Chrome/Chromium/Edge/Brave/Opera/Firefox 与部分渠道，创建独立 profile；不是页面自动化接口。",
+      "sources": [
+        "htk-intercept"
+      ],
+      "interfaces": [
+        "Fresh Chrome / Beta / Dev / Canary",
+        "Fresh Firefox / Developer / Nightly"
+      ]
+    },
+    {
+      "id": "htk-existing-browser",
+      "category": "接入",
+      "name": "复用正常浏览器 profile",
+      "availability": "部分",
+      "detail": "全局接入 Chrome/Chromium 需重启，配置对其普通窗口生效；非 CDP 无扰附加。",
+      "sources": [
+        "htk-intercept"
+      ],
+      "interfaces": [
+        "Existing Chrome / Chromium"
+      ]
+    },
+    {
+      "id": "htk-language",
+      "category": "接入",
+      "name": "终端与多语言运行时",
+      "availability": "原生",
+      "detail": "新/已有终端接入 curl/git/包管理器和 Node/Python/JVM/Ruby/PHP/Perl 等；可支持性依赖客户端尊重配置。",
+      "sources": [
+        "htk-intercept"
+      ],
+      "interfaces": [
+        "Fresh Terminal",
+        "Existing Terminal"
+      ]
+    },
+    {
+      "id": "htk-jvm",
+      "category": "接入",
+      "name": "运行中 JVM",
+      "availability": "部分",
+      "detail": "可附加 JVM 8+，操作端有 JDK 9+ 等发现要求。",
+      "sources": [
+        "htk-intercept"
+      ],
+      "interfaces": [
+        "Attach to JVM"
+      ]
+    },
+    {
+      "id": "htk-electron",
+      "category": "接入",
+      "name": "Electron 应用",
+      "availability": "部分",
+      "detail": "启动选定 Electron 应用并设置代理；native 网络扩展不保证全部捕获。",
+      "sources": [
+        "htk-intercept"
+      ],
+      "interfaces": [
+        "Electron App"
+      ]
+    },
+    {
+      "id": "htk-container",
+      "category": "接入",
+      "name": "运行中 Docker 容器",
+      "availability": "部分",
+      "detail": "重新创建/启动容器以注入接入配置；需 UI 选择与许可。",
+      "sources": [
+        "htk-intercept"
+      ],
+      "interfaces": [
+        "Docker Container"
+      ]
+    },
+    {
+      "id": "htk-mobile",
+      "category": "接入",
+      "name": "Android 与 iOS",
+      "availability": "部分",
+      "detail": "Android ADB/辅助 App、iOS 手动配置；可选实验接入有设备条件。",
+      "sources": [
+        "htk-intercept"
+      ],
+      "interfaces": [
+        "Android ADB",
+        "Android manual",
+        "iOS manual"
+      ]
+    },
+    {
+      "id": "htk-client-identification",
+      "category": "观察",
+      "name": "按来源和类型识别流量",
+      "availability": "原生",
+      "detail": "Connected Sources、客户端图标、内容类型、错误等类别标签。",
+      "sources": [
+        "htk-intercept",
+        "htk-view"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-view",
+      "category": "观察",
+      "name": "头体、TLS、状态和时序",
+      "availability": "原生",
+      "detail": "请求响应卡片、TLS 元数据、trailer、字节大小和网络时间；展示压缩后/解码后大小需区分。",
+      "sources": [
+        "htk-view"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-content",
+      "category": "观察",
+      "name": "压缩解码与格式化正文",
+      "availability": "原生",
+      "detail": "文本/JSON/XML/HTML/JS/CSS/图片/hex/表单/JSON records/Protobuf/gRPC 等，支持高亮、折叠与查找。",
+      "sources": [
+        "htk-view"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-search",
+      "category": "观察",
+      "name": "自由文本和结构化过滤",
+      "availability": "原生",
+      "detail": "method/hostname/path/query/headers/body/status/protocol/WS 等，支持 not/or 和 pin。",
+      "sources": [
+        "htk-view"
+      ],
+      "interfaces": [
+        "Desktop / Web UI",
+        "events_list"
+      ]
+    },
+    {
+      "id": "htk-filter-alias",
+      "category": "观察",
+      "name": "自定义过滤别名",
+      "availability": "付费",
+      "detail": "持久命名过滤组合属于 Pro。",
+      "sources": [
+        "htk-view",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-breakpoints",
+      "category": "改写",
+      "name": "请求/响应手工断点",
+      "availability": "原生",
+      "detail": "匹配规则暂停请求/响应，手工改状态、URL、头体、回应或继续；免费。",
+      "sources": [
+        "htk-modify",
+        "htk-view",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Modify HTTP matchers / steps"
+      ]
+    },
+    {
+      "id": "htk-mock",
+      "category": "改写",
+      "name": "自动 mock 与本地文件响应",
+      "availability": "付费",
+      "detail": "固定响应、本地文件、自动内容变换和替换为真实已抓流量等自动规则属于 Pro。",
+      "sources": [
+        "htk-modify",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Modify HTTP matchers / steps"
+      ]
+    },
+    {
+      "id": "htk-network-fault",
+      "category": "改写",
+      "name": "延迟、超时、关闭和重置连接",
+      "availability": "付费",
+      "detail": "产品公开的网络错误模拟步骤；仅描述调试能力。",
+      "sources": [
+        "htk-modify"
+      ],
+      "interfaces": [
+        "Modify HTTP matchers / steps"
+      ]
+    },
+    {
+      "id": "htk-forward",
+      "category": "改写",
+      "name": "透明重定向与请求响应转换",
+      "availability": "付费",
+      "detail": "改目的主机、URL/头体转换；保留前后视角卡片。",
+      "sources": [
+        "htk-modify",
+        "htk-view"
+      ],
+      "interfaces": [
+        "Modify HTTP matchers / steps"
+      ]
+    },
+    {
+      "id": "htk-webhook",
+      "category": "集成",
+      "name": "实时请求/响应 webhook",
+      "availability": "付费",
+      "detail": "规则可复制请求/响应给配置端点，原流量不受影响；不是任务完成通知。",
+      "sources": [
+        "htk-modify"
+      ],
+      "interfaces": [
+        "Modify HTTP matchers / steps"
+      ]
+    },
+    {
+      "id": "htk-ws-rules",
+      "category": "实时消息",
+      "name": "WebSocket 路由与模拟规则",
+      "availability": "部分",
+      "detail": "官方 UI 有 WS matcher、透传/转发及 echo/reject/listen 等；不能据此声称通用任意消息编辑器和所有步骤免费。",
+      "sources": [
+        "htk-ws-rules",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Modify WebSocket rules"
+      ]
+    },
+    {
+      "id": "htk-send",
+      "category": "重发",
+      "name": "内置 HTTP 客户端",
+      "availability": "原生",
+      "detail": "多请求标签页，构造头体并按 Content-Encoding 编码；请求直达服务器，不走本产品 modify 规则。",
+      "sources": [
+        "htk-send"
+      ],
+      "interfaces": [
+        "Desktop / Web UI",
+        "本地 REST API"
+      ]
+    },
+    {
+      "id": "htk-resend",
+      "category": "重发",
+      "name": "编辑与重发捕获请求",
+      "availability": "付费",
+      "detail": "从 View 送到 Send 重发；不同于免费新建手工 HTTP 请求。",
+      "sources": [
+        "htk-send",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-saved-rules",
+      "category": "存储",
+      "name": "持久规则与请求配置",
+      "availability": "付费",
+      "detail": "Modify/Send 跨重启保留和导入导出为 Pro，免费重启重置。",
+      "sources": [
+        "htk-modify",
+        "htk-send"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-har",
+      "category": "导出",
+      "name": "HAR 流量导入导出",
+      "availability": "付费",
+      "detail": "完整会话或选定条目 HAR 导入导出，属于 Pro。",
+      "sources": [
+        "htk-view",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-code",
+      "category": "导出",
+      "name": "多语言客户端代码",
+      "availability": "付费",
+      "detail": "20+ 客户端工具表示与请求代码片段，产品预构建界面 Pro。",
+      "sources": [
+        "htk-view",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-body-save",
+      "category": "导出",
+      "name": "正文/附件字节保存",
+      "availability": "付费",
+      "detail": "保存解码正文到文件和单独响应附件；不是原始压缩报文的逐字镜像。",
+      "sources": [
+        "htk-view",
+        "htk-send"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-analysis",
+      "category": "诊断",
+      "name": "压缩与缓存分析",
+      "availability": "付费",
+      "detail": "比较压缩方式和大小，解释缓存语义；不是未经实测的浏览器 CPU 诊断。",
+      "sources": [
+        "htk-view",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-openapi",
+      "category": "诊断",
+      "name": "OpenAPI 文档和验证",
+      "availability": "付费",
+      "detail": "内建 API 文档和用户 OpenAPI 导入，用于流量解释/校验；不声称从流量生成 OpenAPI。",
+      "sources": [
+        "htk-settings",
+        "htk-pricing",
+        "htk-view"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-settings",
+      "category": "配置",
+      "name": "端口和 HTTP 版本设置",
+      "availability": "付费",
+      "detail": "可设代理端口范围和 HTTP 版本；部分配置需重启。",
+      "sources": [
+        "htk-settings"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-tls-config",
+      "category": "证书",
+      "name": "TLS 透传、私有 CA 和客户端证书",
+      "availability": "付费",
+      "detail": "选定主机 TLS 透传、可信私有 CA、例外主机验证和 mTLS 客户端证书；高级设置 Pro。",
+      "sources": [
+        "htk-settings",
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-tls-keys",
+      "category": "诊断",
+      "name": "TLS key log",
+      "availability": "付费",
+      "detail": "配置 TLS 密钥日志文件用于其他诊断工具解析已观测连接。",
+      "sources": [
+        "htk-settings"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-upstream",
+      "category": "接入",
+      "name": "上游 HTTP(S)/SOCKS/系统代理",
+      "availability": "付费",
+      "detail": "直接/系统/HTTP/HTTPS/SOCKS4/4a/5/5h，例外域名和上游凭据。",
+      "sources": [
+        "htk-settings"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-mcp",
+      "category": "机器接口",
+      "name": "官方 MCP stdio",
+      "availability": "部分",
+      "detail": "官方stdio动态映射操作，带注解和list_changed；12个operation定义按tier筛选，ready免费8/Pro11，2个启动/诊断工具仅在无operation时按条件出现。",
+      "sources": [
+        "htk-mcp",
+        "htk-mcp-ui",
+        "htk-operations"
+      ],
+      "interfaces": [
+        "httptoolkit-mcp / server mcp"
+      ]
+    },
+    {
+      "id": "htk-ctl",
+      "category": "机器接口",
+      "name": "官方远程操作 CLI",
+      "availability": "原生",
+      "detail": "httptoolkit-ctl 动态帮助/发现和 status，调用与 MCP 相同的操作；实际操作仍受 tier 分层。",
+      "sources": [
+        "htk-ctl",
+        "htk-operations"
+      ],
+      "interfaces": [
+        "httptoolkit-ctl"
+      ]
+    },
+    {
+      "id": "htk-machine-read",
+      "category": "机器接口",
+      "name": "分层和分页 HTTP 读取",
+      "availability": "部分",
+      "detail": "events.list/get-outline/get-request-body/get-response-body；正文截断元数据，免费有会话限制。",
+      "sources": [
+        "htk-event-ops"
+      ],
+      "interfaces": [
+        "events_list",
+        "events_get-outline",
+        "events_get-request-body",
+        "events_get-response-body"
+      ]
+    },
+    {
+      "id": "htk-machine-rules",
+      "category": "机器接口",
+      "name": "规则摘要和分组开关",
+      "availability": "付费",
+      "detail": "MCP/ctl 可列规则并启停规则/组；不是完整规则编辑 API。",
+      "sources": [
+        "htk-rule-ops"
+      ],
+      "interfaces": [
+        "rules_list",
+        "rules_activate",
+        "rules_deactivate"
+      ]
+    },
+    {
+      "id": "htk-machine-intercept",
+      "category": "机器接口",
+      "name": "接入发现与简单接入激活",
+      "availability": "部分",
+      "detail": "列表基础可用；自动激活 Pro，且仅无需 UI 的接入。",
+      "sources": [
+        "htk-interceptor-ops"
+      ],
+      "interfaces": [
+        "interceptors_list",
+        "interceptors_activate"
+      ]
+    },
+    {
+      "id": "htk-machine-diagnose",
+      "category": "诊断",
+      "name": "启动 readiness 与桥接诊断",
+      "availability": "原生",
+      "detail": "条件 MCP 工具可启动桌面和解释本地连接故障，ctl status 查 ready。",
+      "sources": [
+        "htk-mcp",
+        "htk-ctl"
+      ],
+      "interfaces": [
+        "start_httptoolkit",
+        "diagnose_httptoolkit_connection",
+        "httptoolkit-ctl"
+      ]
+    },
+    {
+      "id": "htk-rest",
+      "category": "机器接口",
+      "name": "本地 REST 和 Node 嵌入",
+      "availability": "原生",
+      "detail": "server 可独立 CLI/模块运行，配置和接入 HTTP API；默认 localhost 并有 token/CORS 合同。",
+      "sources": [
+        "htk-server-readme",
+        "htk-rest-api"
+      ],
+      "interfaces": [
+        "本地 REST API"
+      ]
+    },
+    {
+      "id": "htk-sdk",
+      "category": "扩展",
+      "name": "Mockttp 独立代理 SDK",
+      "availability": "可选",
+      "detail": "可在 Node/TypeScript 中编程，属于另一个官方仓库；不直接推断主产品 plugin marketplace。",
+      "sources": [
+        "htk-mockttp"
+      ],
+      "interfaces": [
+        "Mockttp SDK"
+      ]
+    },
+    {
+      "id": "htk-cleanup",
+      "category": "运行",
+      "name": "接入资源关闭",
+      "availability": "原生",
+      "detail": "server shutdown handler 调用所有 interceptors.deactivateAll；不同接入有各自副作用和回收方式。",
+      "sources": [
+        "htk-interceptors-src"
+      ],
+      "interfaces": [
+        "本地 REST API"
+      ]
+    },
+    {
+      "id": "htk-access",
+      "category": "访问控制",
+      "name": "本地 API token 与跨源限制",
+      "availability": "原生",
+      "detail": "本地后端 localhost、CORS、可配置认证 token，桌面自动配置；不是公共无认证云 API。",
+      "sources": [
+        "htk-server-readme"
+      ],
+      "interfaces": [
+        "本地 REST API"
+      ]
+    },
+    {
+      "id": "htk-delivery",
+      "category": "交付",
+      "name": "Windows/macOS/Linux 安装与开源构建",
+      "availability": "原生",
+      "detail": "官方桌面多平台安装；UI/server可源码单独运行。接入 Docker 与产品容器交付需分开。",
+      "sources": [
+        "htk-pricing",
+        "htk-server-readme",
+        "htk-repo"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-team",
+      "category": "产品分层",
+      "name": "团队授权与账单",
+      "availability": "付费",
+      "detail": "集中账单、可转移授权和支持服务；不等价于已交付共享 workspace。",
+      "sources": [
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    },
+    {
+      "id": "htk-team-future",
+      "category": "产品分层",
+      "name": "团队共享 workspace",
+      "availability": "未提供",
+      "detail": "官方价格页仍明确 coming soon，本次不计为已实现功能。",
+      "sources": [
+        "htk-pricing"
+      ],
+      "interfaces": [
+        "Desktop / Web UI"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Desktop / Web UI",
+      "category": "人工界面",
+      "purpose": "Intercept/View/Modify/Send/Settings；Electron 客户端配合本地 server。",
+      "availability": "原生",
+      "sources": [
+        "htk-repo",
+        "htk-server-readme"
+      ]
+    },
+    {
+      "name": "httptoolkit-server start",
+      "category": "CLI",
+      "purpose": "启动本地 server/代理及接入管理。",
+      "availability": "原生",
+      "sources": [
+        "htk-server-readme"
+      ]
+    },
+    {
+      "name": "httptoolkit-ctl",
+      "category": "CLI",
+      "purpose": "动态发现操作，status/help，调用 events/proxy/interceptors/rules/account 操作组。",
+      "availability": "原生",
+      "sources": [
+        "htk-ctl"
+      ]
+    },
+    {
+      "name": "httptoolkit-mcp / server mcp",
+      "category": "MCP stdio",
+      "purpose": "官方 stdio server；动态工具发现、list_changed、类型化参数与操作注解。免费额度及 Pro 分层。",
+      "availability": "部分",
+      "sources": [
+        "htk-mcp",
+        "htk-mcp-ui"
+      ]
+    },
+    {
+      "name": "本地 REST API",
+      "category": "HTTP API",
+      "purpose": "version/update/shutdown/config、interceptors 元数据与激活、client/send。",
+      "availability": "原生",
+      "sources": [
+        "htk-rest-api",
+        "htk-server-readme"
+      ]
+    },
+    {
+      "name": "本地 Operation Bridge",
+      "category": "本地机器接口",
+      "purpose": "/api/status、/api/operations、/api/execute；桥接实时 UI 注册的操作。",
+      "availability": "原生",
+      "sources": [
+        "htk-bridge",
+        "htk-ctl",
+        "htk-mcp"
+      ]
+    },
+    {
+      "name": "events_list",
+      "category": "MCP / ctl 操作",
+      "purpose": "HTTP exchange 列表、过滤、offset/limit；非保证持久递增游标。",
+      "availability": "原生",
+      "sources": [
+        "htk-event-ops"
+      ]
+    },
+    {
+      "name": "events_get-outline",
+      "category": "MCP / ctl 操作",
+      "purpose": "读取头、状态和概要；免费每会话500次，Pro无限。MCP名把 operation 点号替换为下划线。",
+      "availability": "部分",
+      "sources": [
+        "htk-event-ops",
+        "htk-mcp"
+      ]
+    },
+    {
+      "name": "events_get-request-body",
+      "category": "MCP / ctl 操作",
+      "purpose": "请求正文 offset/maxLength 分页；免费每会话100次及每次正文长度限制。",
+      "availability": "部分",
+      "sources": [
+        "htk-event-ops"
+      ]
+    },
+    {
+      "name": "events_get-response-body",
+      "category": "MCP / ctl 操作",
+      "purpose": "响应正文 offset/maxLength 分页；免费每会话100次及每次正文长度限制。",
+      "availability": "部分",
+      "sources": [
+        "htk-event-ops"
+      ]
+    },
+    {
+      "name": "events_clear",
+      "category": "MCP / ctl 操作",
+      "purpose": "清空捕获事件；默认保留 pin，标记 destructiveHint。",
+      "availability": "原生",
+      "sources": [
+        "htk-event-ops"
+      ]
+    },
+    {
+      "name": "proxy_get-config",
+      "category": "MCP / ctl 操作",
+      "purpose": "代理端口、CA 路径/指纹、外部 IPv4 地址。",
+      "availability": "原生",
+      "sources": [
+        "htk-proxy-ops"
+      ]
+    },
+    {
+      "name": "interceptors_list",
+      "category": "MCP / ctl 操作",
+      "purpose": "接入来源支持、可启动、活跃和进行中状态。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptor-ops"
+      ]
+    },
+    {
+      "name": "interceptors_activate",
+      "category": "MCP / ctl 操作",
+      "purpose": "仅无需 UI 的简单接入；Android/Docker/Electron 等交互接入继续使用 UI。",
+      "availability": "付费",
+      "sources": [
+        "htk-interceptor-ops"
+      ]
+    },
+    {
+      "name": "rules_list",
+      "category": "MCP / ctl 操作",
+      "purpose": "当前规则/组、优先级、匹配与步骤摘要及未保存状态。",
+      "availability": "付费",
+      "sources": [
+        "htk-rule-ops"
+      ]
+    },
+    {
+      "name": "rules_activate",
+      "category": "MCP / ctl 操作",
+      "purpose": "启用指定规则或规则组。",
+      "availability": "付费",
+      "sources": [
+        "htk-rule-ops"
+      ]
+    },
+    {
+      "name": "rules_deactivate",
+      "category": "MCP / ctl 操作",
+      "purpose": "停用指定规则或组；配置保留，接口标记幂等。",
+      "availability": "付费",
+      "sources": [
+        "htk-rule-ops"
+      ]
+    },
+    {
+      "name": "account_upgrade",
+      "category": "MCP / ctl 操作",
+      "purpose": "打开产品升级流程；不是自动购买授权。",
+      "availability": "原生",
+      "sources": [
+        "htk-account-ops"
+      ]
+    },
+    {
+      "name": "start_httptoolkit",
+      "category": "MCP 条件工具",
+      "purpose": "未运行且能找到安装路径时启动桌面产品并等待 readiness。",
+      "availability": "原生",
+      "sources": [
+        "htk-mcp"
+      ]
+    },
+    {
+      "name": "diagnose_httptoolkit_connection",
+      "category": "MCP 条件工具",
+      "purpose": "连接异常时显示本地桥接失败原因、进程版本及恢复说明。",
+      "availability": "原生",
+      "sources": [
+        "htk-mcp"
+      ]
+    },
+    {
+      "name": "Fresh Chrome / Beta / Dev / Canary",
+      "category": "接入 interceptor",
+      "purpose": "新 Chromium 配置文件抓包；需已安装渠道。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Fresh Chromium / Dev",
+      "category": "接入 interceptor",
+      "purpose": "新 Chromium 窗口抓包。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Fresh Edge / Beta / Dev / Canary",
+      "category": "接入 interceptor",
+      "purpose": "新 Edge 窗口抓包。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Fresh Brave",
+      "category": "接入 interceptor",
+      "purpose": "新 Brave 窗口抓包。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Fresh Opera",
+      "category": "接入 interceptor",
+      "purpose": "新 Opera 窗口抓包。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Fresh Firefox / Developer / Nightly",
+      "category": "接入 interceptor",
+      "purpose": "新 Firefox 配置文件；首用证书可能需人工确认。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Existing Chrome / Chromium",
+      "category": "接入 interceptor",
+      "purpose": "以原有 profile 全局重启接入；影响该浏览器窗口，非已有 CDP 标签页无扰接管。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Fresh Terminal",
+      "category": "接入 interceptor",
+      "purpose": "启动配置好环境变量/证书的终端。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Existing Terminal",
+      "category": "接入 interceptor",
+      "purpose": "显示 Bash/Fish/PowerShell 接入命令。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Electron App",
+      "category": "接入 interceptor",
+      "purpose": "选择本地 Electron 可执行文件启动接入；有版本和 native 扩展限制。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Attach to JVM",
+      "category": "接入 interceptor",
+      "purpose": "接入已运行 JVM；有目标 JVM/JDK 要求。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Docker Container",
+      "category": "接入 interceptor",
+      "purpose": "选择既有容器，重建/重启并接入；不是交付 HTTP Toolkit Docker 镜像。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Android ADB",
+      "category": "接入 interceptor",
+      "purpose": "连接设备的自动配置接入；需设备许可。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Android manual",
+      "category": "接入 interceptor",
+      "purpose": "通过 Android 辅助应用和手动配对接入。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Android app via Frida",
+      "category": "接入 interceptor",
+      "purpose": "实验性单应用接入，有设备权限前提。",
+      "availability": "可选",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "iOS manual",
+      "category": "接入 interceptor",
+      "purpose": "手动代理/证书配置入口。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "iOS app via Frida",
+      "category": "接入 interceptor",
+      "purpose": "实验性单应用接入，有设备与运行环境要求。",
+      "availability": "可选",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Anything / manual HTTP proxy",
+      "category": "接入 interceptor",
+      "purpose": "任意能配置 HTTP 代理的客户端接入。",
+      "availability": "原生",
+      "sources": [
+        "htk-intercept",
+        "htk-interceptors-src"
+      ]
+    },
+    {
+      "name": "Mockttp SDK",
+      "category": "独立库 API",
+      "purpose": "TypeScript HTTP(S)/WS 代理与测试编程库；不能直接当作 UI/MCP 已有功能。",
+      "availability": "可选",
+      "sources": [
+        "htk-mockttp"
+      ]
+    },
+    {
+      "name": "Modify HTTP matchers / steps",
+      "category": "规则接口",
+      "purpose": "method/host/URL/query/headers/body/JSON 等匹配；手工断点免费，自动处理 Pro。",
+      "availability": "部分",
+      "sources": [
+        "htk-modify"
+      ]
+    },
+    {
+      "name": "Modify WebSocket rules",
+      "category": "规则接口",
+      "purpose": "透传、转发和 echo/reject/listen 步骤，付费范围需结合产品规则分层。",
+      "availability": "部分",
+      "sources": [
+        "htk-ws-rules",
+        "htk-pricing"
+      ]
+    },
+    {
+      "name": "FreshChrome",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Chrome。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "ExistingChrome",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：现有Chrome profile，需全局重启。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshChromeBeta",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Chrome Beta。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshChromeDev",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Chrome Dev。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshChromeCanary",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Chrome Canary。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshChromium",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Chromium。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "ExistingChromium",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：现有Chromium profile，需全局重启。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshChromiumDev",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Chromium Dev。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshEdge",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Edge。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshEdgeBeta",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Edge Beta。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshEdgeDev",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Edge Dev。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshEdgeCanary",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Edge Canary。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshOpera",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Opera。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshBrave",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Brave。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshFirefox",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Firefox。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshFirefoxDeveloper",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Firefox Developer。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshFirefoxNightly",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：Firefox Nightly。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FreshTerminalInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：新终端。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "ExistingTerminalInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：已有终端配置入口。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "ElectronInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：选择并启动Electron应用。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "AndroidAdbInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：ADB设备接入。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FridaAndroidInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：实验性Android单应用接入，有设备前提。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "可选",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "FridaIosInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：实验性iOS单应用接入，有设备前提。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "可选",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "JvmInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：运行中JVM。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    {
+      "name": "DockerContainerInterceptor",
+      "category": "后端注册 interceptor（精确类名）",
+      "purpose": "buildInterceptors注册：已有容器选择/重建接入。可启动性依赖平台、软件安装及设备条件；与UI接入分组分开计数。",
+      "availability": "原生",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    }
+  ],
+  "notes": [
+    "核验日期：2026-10-25（Asia/Shanghai）。元仓库默认分支 main；其 SHA 不是完整产品源码的唯一版本。",
+    "同日核验组件 HEAD：UI 46b45fda825d60773b9c4c1d31ef493170786bce；server 3973d10b7ae8d67632dd6105ee9c70c867baf0ac；desktop 71c10c78abe09bdb025063b28025f5c65bc6812c；Mockttp cfe8cb046996390723433c67830602d0cd2dd8bc。官方说明 server 会后台更新，不能把这几个 HEAD 都声称包含在桌面 v1.27.3 安装包。",
+    "MCP/ctl 和 SSE 事件展示以当前官方源码为依据；官网旧页面未列全这些新入口。MCP 是官方实现，不能据旧印象标为没有。",
+    "MCP 免费层有每会话/正文大小额度；规则操作、自动接入激活等定义为 Pro。没有运行安装包验证当前账号或分发渠道的可用性。",
+    "常规抓包查看和手工断点免费；自动规则、导入导出、配置和部分重发为 Pro。付费分层描述预构建产品，不表示相关源代码未开放。",
+    "代理核心、UI、interceptors 是不同组件；Mockttp SDK 可编程能力不自动等价为 HTTP Toolkit 所有 UI/MCP 工具均已开放。",
+    "Android/iOS 的部分可选接入标为实验性且有设备要求；只列高层能力，不提供修改应用或绕过安全保护的操作方法。",
+    "浏览器启动用于接入抓包，不是已提供任意页面点击、ARIA/ref 或多步业务 Agent；保留这种范围差异。",
+    "未实测连接开放时压缩 SSE 的增量事件链路；当前找到的 parser 接收完整 text 并格式化，不能由此推断有持久事件游标。",
+    "官方价格页将 Team workspaces 标为 coming soon，本次不记为已交付协作能力。",
+    "机器操作目录共有12个operation定义，并非同一时刻暴露12个工具：ready状态免费账号8个、Pro账号11个（account.upgrade仅免费）；start_httptoolkit/diagnose_httptoolkit_connection只在没有operation可用且满足条件时出现，不额外加到ready工具数。",
+    "接入方式的18行是合并浏览器渠道与manual UI路径的产品分组；后端buildInterceptors精确注册25个对象，以下接口目录另外逐类列出，二者不是同一个计数口径。",
+    "补充固定源码证据：HttpBody._runDecode先等待body不再streaming，再Buffer.concat和decodeBody；本报告所审UI/MCP正文读取管线没有开放压缩SSE增量解码，流结束或aborted后才解码，不能将SSE文本展示算作此能力。此结论不否定独立Mockttp库的流式扩展接口。"
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "部分",
+      "detail": "官方 MCP stdio；免费额度，部分工具 Pro，依赖运行中的本地产品。",
+      "sources": [
+        "htk-mcp",
+        "htk-mcp-ui"
+      ]
+    },
+    "D02": {
+      "availability": "未提供",
+      "detail": "固定源码 initialize 只声明 tools，并无 resources/prompts 处理分支。",
+      "sources": [
+        "htk-mcp"
+      ]
+    },
+    "D03": {
+      "availability": "原生",
+      "detail": "官方 MCP 使用 stdio JSON-RPC。",
+      "sources": [
+        "htk-mcp"
+      ]
+    },
+    "D04": {
+      "availability": "部分",
+      "detail": "本地 REST 与 operation bridge；默认本地访问，不冒充公开云 API。",
+      "sources": [
+        "htk-rest-api",
+        "htk-server-readme"
+      ]
+    },
+    "D05": {
+      "availability": "原生",
+      "detail": "ctl 可查状态、读流量和调用接入/规则操作，tiers仍适用。",
+      "sources": [
+        "htk-ctl"
+      ]
+    },
+    "D06": {
+      "availability": "原生",
+      "detail": "完整桌面/Web 调试 UI。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "后端 API/模块；独立 Mockttp SDK 是可选相邻库。",
+      "sources": [
+        "htk-server-readme",
+        "htk-mockttp"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "代理与产品本机运行，不需要模型。",
+      "sources": [
+        "htk-server-readme"
+      ]
+    },
+    "D09": {
+      "availability": "未证实",
+      "detail": "已查当前官方 docs、UI/server 源码和操作目录；未确认该维度的公开功能合同。",
+      "sources": [
+        "htk-operations"
+      ]
+    },
+    "D10": {
+      "availability": "未证实",
+      "detail": "已确认捕获 Docker 容器；未把此当作官方产品镜像交付。",
+      "sources": [
+        "htk-intercept"
+      ]
+    },
+    "D11": {
+      "availability": "原生",
+      "detail": "ctl status、MCP 启动 readiness 和连接诊断。",
+      "sources": [
+        "htk-mcp",
+        "htk-ctl"
+      ]
+    },
+    "D12": {
+      "availability": "部分",
+      "detail": "操作有类别和账号 tier；未确认调用方自选 MCP profiles。",
+      "sources": [
+        "htk-operations",
+        "htk-mcp"
+      ]
+    },
+    "B01": {
+      "availability": "部分",
+      "detail": "可启动预配置抓包浏览器；不是页面动作控制系统。",
+      "sources": [
+        "htk-intercept"
+      ]
+    },
+    "B02": {
+      "availability": "部分",
+      "detail": "可用 existing profile 全局重启接入；非保留既有页面的 CDP attach。",
+      "sources": [
+        "htk-intercept"
+      ]
+    },
+    "B03": {
+      "availability": "部分",
+      "detail": "抓包启动支持 Chromium 家族和 Firefox，非跨引擎自动化 SDK。",
+      "sources": [
+        "htk-intercept"
+      ]
+    },
+    "B04": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B05": {
+      "availability": "部分",
+      "detail": "fresh browser 使用隔离进程/profile；不是多 Context 管理 API。",
+      "sources": [
+        "htk-intercept"
+      ]
+    },
+    "B06": {
+      "availability": "部分",
+      "detail": "existing Chrome/Chromium 接入复用正常 profile，但需重启。",
+      "sources": [
+        "htk-intercept"
+      ]
+    },
+    "B07": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B08": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B09": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B10": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B11": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B12": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B13": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B14": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B15": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B16": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B17": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B18": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B19": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B20": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "B21": {
+      "availability": "付费",
+      "detail": "代理延迟/错误/超时模拟；浏览器离线与速率 API 未证实。",
+      "sources": [
+        "htk-modify"
+      ]
+    },
+    "O01": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O02": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O03": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O04": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O05": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O06": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O07": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O08": {
+      "availability": "部分",
+      "detail": "查看 HTTP HTML 响应，不代表读取当前动态 DOM。",
+      "sources": [
+        "htk-view"
+      ]
+    },
+    "O09": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O10": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O11": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "O12": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "N01": {
+      "availability": "原生",
+      "detail": "独立代理与多客户端接入。",
+      "sources": [
+        "htk-repo",
+        "htk-intercept"
+      ]
+    },
+    "N02": {
+      "availability": "原生",
+      "detail": "代理 CA 与自动信任配置，客户端必须允许相应接入。",
+      "sources": [
+        "htk-intercept"
+      ]
+    },
+    "N03": {
+      "availability": "原生",
+      "detail": "HTTP/2；高级协商配置是 Pro。",
+      "sources": [
+        "htk-settings",
+        "htk-repo"
+      ]
+    },
+    "N04": {
+      "availability": "未证实",
+      "detail": "已查公开协议与设置，没有核实 HTTP/3/QUIC 的产品入口。",
+      "sources": [
+        "htk-repo",
+        "htk-settings"
+      ]
+    },
+    "N05": {
+      "availability": "未证实",
+      "detail": "主产品 HTTP/WS/WebRTC 等展示不能推断任意 TCP/UDP 代理解码。",
+      "sources": [
+        "htk-view",
+        "htk-repo"
+      ]
+    },
+    "N06": {
+      "availability": "部分",
+      "detail": "HTTP 代理和透明 HTTP 接入原生；上游链/SOCKS设置为 Pro。",
+      "sources": [
+        "htk-repo",
+        "htk-settings"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "UI 完整详情，MCP 分概要/正文且免费有额度。",
+      "sources": [
+        "htk-view",
+        "htk-event-ops"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "全文/结构化过滤、来源与pin；保存过滤别名 Pro。",
+      "sources": [
+        "htk-view"
+      ]
+    },
+    "N09": {
+      "availability": "未证实",
+      "detail": "已查当前官方 docs、UI/server 源码和操作目录；未确认该维度的公开功能合同。",
+      "sources": [
+        "htk-operations"
+      ]
+    },
+    "N10": {
+      "availability": "原生",
+      "detail": "压缩和多种文本/二进制格式展示。",
+      "sources": [
+        "htk-view"
+      ]
+    },
+    "N11": {
+      "availability": "部分",
+      "detail": "手动改写免费，自动 mock/变换 Pro。",
+      "sources": [
+        "htk-modify",
+        "htk-pricing"
+      ]
+    },
+    "N12": {
+      "availability": "原生",
+      "detail": "请求、响应、两端手工断点与继续免费。",
+      "sources": [
+        "htk-modify"
+      ]
+    },
+    "N13": {
+      "availability": "部分",
+      "detail": "新建 HTTP 请求免费，从捕获条目编辑重发 Pro。",
+      "sources": [
+        "htk-send"
+      ]
+    },
+    "N14": {
+      "availability": "不适用",
+      "detail": "主产品在独立代理层 mock，不是 browser.route。",
+      "sources": [
+        "htk-modify"
+      ]
+    },
+    "N15": {
+      "availability": "付费",
+      "detail": "HAR 导入导出 Pro。",
+      "sources": [
+        "htk-pricing",
+        "htk-view"
+      ]
+    },
+    "N16": {
+      "availability": "付费",
+      "detail": "请求代码片段/多客户端导出 Pro。",
+      "sources": [
+        "htk-view",
+        "htk-pricing"
+      ]
+    },
+    "N17": {
+      "availability": "付费",
+      "detail": "OpenAPI 导入、API解释和验证；未声称流量自动生成 OpenAPI。",
+      "sources": [
+        "htk-settings",
+        "htk-pricing"
+      ]
+    },
+    "M01": {
+      "availability": "原生",
+      "detail": "UI 查看 WS 消息；当前 MCP event 操作主要读取 HTTP exchanges。",
+      "sources": [
+        "htk-view",
+        "htk-ws-model",
+        "htk-event-ops"
+      ]
+    },
+    "M02": {
+      "availability": "原生",
+      "detail": "方向、text/binary、大小和连接状态。",
+      "sources": [
+        "htk-view",
+        "htk-ws-model"
+      ]
+    },
+    "M03": {
+      "availability": "部分",
+      "detail": "公开 WS 转发/echo/reject/listen 规则；非通用任意消息编辑器已证实。",
+      "sources": [
+        "htk-ws-rules"
+      ]
+    },
+    "M04": {
+      "availability": "部分",
+      "detail": "UI 已有 SSE 字段/多行data解析与JSON展示，输入是 text。",
+      "sources": [
+        "htk-sse-parser"
+      ]
+    },
+    "M05": {
+      "availability": "未提供",
+      "detail": "当前UI/MCP正文管线等待stream终止，再拼接/解压；已有SSE文本展示不构成开放压缩SSE增量解析。",
+      "sources": [
+        "htk-body-pipeline",
+        "htk-sse-parser",
+        "htk-event-ops"
+      ]
+    },
+    "M06": {
+      "availability": "原生",
+      "detail": "UI 在连接开放时更新 WebSocket 应用消息。",
+      "sources": [
+        "htk-view",
+        "htk-ws-model"
+      ]
+    },
+    "M07": {
+      "availability": "部分",
+      "detail": "流量保存/重开 Pro；API offset 分页不是持久消息递增游标。",
+      "sources": [
+        "htk-pricing",
+        "htk-event-ops"
+      ]
+    },
+    "M08": {
+      "availability": "部分",
+      "detail": "HTTP 正文读取提供 isTruncated 等范围元数据；未确认 SSE 尾部/解码失败持久标记。",
+      "sources": [
+        "htk-event-ops",
+        "htk-sse-parser"
+      ]
+    },
+    "W01": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W02": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W03": {
+      "availability": "部分",
+      "detail": "Mockttp/后端可扩展；主产品没有确认用户自定义 Agent 动作注册入口。",
+      "sources": [
+        "htk-mockttp",
+        "htk-operations"
+      ]
+    },
+    "W04": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W05": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W06": {
+      "availability": "部分",
+      "detail": "人工请求断点；交互接入必须在 UI 完成。",
+      "sources": [
+        "htk-modify",
+        "htk-interceptor-ops"
+      ]
+    },
+    "W07": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W08": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W09": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W10": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W11": {
+      "availability": "不适用",
+      "detail": "主线为 HTTP 调试与 Agent 流量工具，不是页面业务自动化产品。",
+      "sources": [
+        "htk-repo"
+      ]
+    },
+    "W12": {
+      "availability": "部分",
+      "detail": "捕获请求编辑重发与持久 Send，不是业务步骤重放。",
+      "sources": [
+        "htk-send"
+      ]
+    },
+    "W13": {
+      "availability": "部分",
+      "detail": "复用浏览器 profile 抓包、客户端证书和上游凭据配置。",
+      "sources": [
+        "htk-intercept",
+        "htk-settings"
+      ]
+    },
+    "W14": {
+      "availability": "部分",
+      "detail": "可解码 Protobuf/gRPC 和结构化 HTTP body；未确认通用 PDF/Office 文件任务解析。",
+      "sources": [
+        "htk-view"
+      ]
+    },
+    "W15": {
+      "availability": "部分",
+      "detail": "Pro webhook 复制实时请求/响应；不等于任务调度或完成通知。",
+      "sources": [
+        "htk-modify"
+      ]
+    },
+    "T01": {
+      "availability": "未证实",
+      "detail": "已查当前官方 docs、UI/server 源码和操作目录；未确认该维度的公开功能合同。",
+      "sources": [
+        "htk-operations"
+      ]
+    },
+    "T02": {
+      "availability": "部分",
+      "detail": "网络时序免费，压缩/缓存分析 Pro；无已证实浏览器 CPU trace。",
+      "sources": [
+        "htk-view"
+      ]
+    },
+    "T03": {
+      "availability": "未证实",
+      "detail": "已查当前官方 docs、UI/server 源码和操作目录；未确认该维度的公开功能合同。",
+      "sources": [
+        "htk-operations"
+      ]
+    },
+    "T04": {
+      "availability": "未证实",
+      "detail": "已查当前官方 docs、UI/server 源码和操作目录；未确认该维度的公开功能合同。",
+      "sources": [
+        "htk-operations"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "规则命中/前后视角关联 HTTP 交换，不是浏览器动作因果链。",
+      "sources": [
+        "htk-view"
+      ]
+    },
+    "T06": {
+      "availability": "部分",
+      "detail": "协议/TLS/错误诊断原生，API验证与缓存分析 Pro。",
+      "sources": [
+        "htk-view",
+        "htk-pricing"
+      ]
+    },
+    "T07": {
+      "availability": "未证实",
+      "detail": "已查当前官方 docs、UI/server 源码和操作目录；未确认该维度的公开功能合同。",
+      "sources": [
+        "htk-operations"
+      ]
+    },
+    "T08": {
+      "availability": "部分",
+      "detail": "可比较原始/转换视角；未确认通用 diff 或完整分析报告生成。",
+      "sources": [
+        "htk-view"
+      ]
+    },
+    "S01": {
+      "availability": "付费",
+      "detail": "产品持久会话、HAR 重开和规则/请求配置 Pro。",
+      "sources": [
+        "htk-pricing",
+        "htk-modify",
+        "htk-send"
+      ]
+    },
+    "S02": {
+      "availability": "部分",
+      "detail": "pin、来源/类型标记与规则组；结构化业务链/笔记未证实。",
+      "sources": [
+        "htk-view",
+        "htk-modify"
+      ]
+    },
+    "S03": {
+      "availability": "付费",
+      "detail": "保存响应正文/附件文件 Pro。",
+      "sources": [
+        "htk-view",
+        "htk-send"
+      ]
+    },
+    "S04": {
+      "availability": "部分",
+      "detail": "proxy_get-config 提供 CA SHA256；未证实附件内容 hash 证据合同。",
+      "sources": [
+        "htk-proxy-ops"
+      ]
+    },
+    "S05": {
+      "availability": "未证实",
+      "detail": "已查当前官方 docs、UI/server 源码和操作目录；未确认该维度的公开功能合同。",
+      "sources": [
+        "htk-operations"
+      ]
+    },
+    "S06": {
+      "availability": "部分",
+      "detail": "清空/删/pin 与正文分页/免费限额；未证实统一磁盘保留预算。",
+      "sources": [
+        "htk-view",
+        "htk-event-ops"
+      ]
+    },
+    "S07": {
+      "availability": "付费",
+      "detail": "HAR、客户端代码、规则/请求导入导出 Pro。",
+      "sources": [
+        "htk-pricing"
+      ]
+    },
+    "X01": {
+      "availability": "部分",
+      "detail": "UI规则即时保存，Pro高级设置部分需重启；源码独立配置。",
+      "sources": [
+        "htk-settings",
+        "htk-modify",
+        "htk-server-readme"
+      ]
+    },
+    "X02": {
+      "availability": "部分",
+      "detail": "官方组件/Mockttp可开发；未确认主产品通用插件 marketplace。",
+      "sources": [
+        "htk-repo",
+        "htk-mockttp"
+      ]
+    },
+    "X03": {
+      "availability": "原生",
+      "detail": "MCP 转发 readOnly/destructive/idempotent hints；注解并非强制权限边界。",
+      "sources": [
+        "htk-mcp",
+        "htk-event-ops",
+        "htk-rule-ops"
+      ]
+    },
+    "X04": {
+      "availability": "原生",
+      "detail": "本地服务 localhost/CORS/token；桌面自动配置。",
+      "sources": [
+        "htk-server-readme"
+      ]
+    },
+    "X05": {
+      "availability": "部分",
+      "detail": "显式 deactivateAll 清理接入；某些接入会重启已有进程，非统一借用资源保护合同。",
+      "sources": [
+        "htk-interceptors-src",
+        "htk-intercept"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "interceptors 状态、ctl status、条件 MCP 诊断及 API 错误。",
+      "sources": [
+        "htk-interceptor-ops",
+        "htk-ctl",
+        "htk-mcp"
+      ]
+    }
+  }
+}

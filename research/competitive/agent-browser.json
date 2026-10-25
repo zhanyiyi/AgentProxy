@@ -1,0 +1,5937 @@
+{
+  "project": "agent-browser",
+  "repo": "https://github.com/vercel-labs/agent-browser",
+  "revision": "372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb",
+  "version": "0.39.2（package.json；正式发布 v0.39.2 于 2026-10-22）",
+  "license": "Apache-2.0",
+  "sources": [
+    {
+      "id": "readme",
+      "title": "README、全部命令分类与选项",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/README.md"
+    },
+    {
+      "id": "mcp_source",
+      "title": "固定 MCP 工具、schema、能力组和协议实现",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/cli/src/mcp.rs"
+    },
+    {
+      "id": "commands",
+      "title": "CLI 解析与命令名",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/cli/src/commands.rs"
+    },
+    {
+      "id": "reference",
+      "title": "完整命令参考",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/skill-data/core/references/commands.md"
+    },
+    {
+      "id": "docs_nav",
+      "title": "官方文档导航",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/meta.json"
+    },
+    {
+      "id": "snapshots",
+      "title": "refs、iframe 与回退规则",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/snapshots.mdx"
+    },
+    {
+      "id": "network",
+      "title": "浏览器路由、查询和 HAR 合同",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/network.mdx"
+    },
+    {
+      "id": "sessions",
+      "title": "隔离、周期保存和恢复合同",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/sessions.mdx"
+    },
+    {
+      "id": "cdp",
+      "title": "CDP、自动连接与标签页重绑",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/cdp-mode.mdx"
+    },
+    {
+      "id": "streaming",
+      "title": "视口 WebSocket 协议与人工输入",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/streaming.mdx"
+    },
+    {
+      "id": "dashboard",
+      "title": "本地观察工作台",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/dashboard.mdx"
+    },
+    {
+      "id": "config",
+      "title": "配置优先级和参数",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/configuration.mdx"
+    },
+    {
+      "id": "security",
+      "title": "策略、域名约束和信任边界",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/security.mdx"
+    },
+    {
+      "id": "plugins",
+      "title": "插件协议",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/plugins.mdx"
+    },
+    {
+      "id": "react",
+      "title": "React 与 Web Vitals",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/react.mdx"
+    },
+    {
+      "id": "files",
+      "title": "下载、截图变化检测与剪贴板",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/files.mdx"
+    },
+    {
+      "id": "recording",
+      "title": "视频产物与 ffmpeg",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/recording.mdx"
+    },
+    {
+      "id": "webmcp",
+      "title": "页面工具发现和异步结果",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/webmcp.mdx"
+    },
+    {
+      "id": "lightpanda",
+      "title": "Lightpanda 引擎限制",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/engines/lightpanda.mdx"
+    },
+    {
+      "id": "obscura",
+      "title": "实验 Obscura 引擎限制",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/engines/obscura.mdx"
+    },
+    {
+      "id": "ios",
+      "title": "iOS Safari 前提",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/ios.mdx"
+    },
+    {
+      "id": "remote_sdk",
+      "title": "单独项目的远程 AgentBrowser SDK",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/providers/remote-agent-browser.mdx"
+    },
+    {
+      "id": "unknown",
+      "title": "发送结果未知时避免重放的实现",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/cli/src/connection.rs"
+    },
+    {
+      "id": "binding",
+      "title": "持久标签页绑定实现",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/cli/src/native/tab_binding.rs"
+    },
+    {
+      "id": "docker",
+      "title": "构建容器而非通用运行镜像",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docker/docker-compose.yml"
+    },
+    {
+      "id": "package",
+      "title": "包版本与交付入口",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/package.json"
+    },
+    {
+      "id": "native",
+      "title": "已移除旧 Node/Playwright daemon 的说明",
+      "url": "https://github.com/vercel-labs/agent-browser/blob/372ac5ce20fab885dbf45ee0c9d510ec8c3b6fdb/docs/content/docs/native-mode.mdx"
+    },
+    {
+      "id": "release",
+      "title": "正式发布 v0.39.2",
+      "url": "https://github.com/vercel-labs/agent-browser/releases/tag/v0.39.2"
+    }
+  ],
+  "features": [
+    {
+      "id": "native",
+      "category": "接入",
+      "name": "原生 Rust CLI 与 stdio MCP",
+      "availability": "原生",
+      "detail": "当前 Rust 原生实现；旧 Node/Playwright daemon 已移除。MCP 与 CLI 共享实现与会话。",
+      "sources": [
+        "readme",
+        "native",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent-browser mcp"
+      ]
+    },
+    {
+      "id": "profiles",
+      "category": "接入",
+      "name": "MCP 分组与分页发现",
+      "availability": "原生",
+      "detail": "core 默认 29 个；network/state/debug/tabs/react/mobile/webmcp 可组合，all 为完整 156 个固定工具。tools/list 分页，不是默认全部暴露。",
+      "sources": [
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent_browser_tools_profiles",
+        "agent-browser mcp --tools"
+      ]
+    },
+    {
+      "id": "install",
+      "category": "交付",
+      "name": "安装、升级与 doctor",
+      "availability": "原生",
+      "detail": "npm、本地依赖、Homebrew、Cargo 和源码入口；doctor 检查环境/浏览器/daemon/配置/提供方/网络，可读 JSON。--fix 修复范围另行明确。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "agent_browser_install",
+        "agent_browser_upgrade",
+        "agent_browser_doctor"
+      ]
+    },
+    {
+      "id": "engines",
+      "category": "浏览器",
+      "name": "多引擎及限制",
+      "availability": "部分",
+      "detail": "Chrome 默认；Lightpanda 另装且不支持 profile/state/扩展等；Obscura 实验，iframe/可访问性/渲染有限；另有 macOS 的 Safari/iOS 路径。不能声称引擎完全等价。",
+      "sources": [
+        "readme",
+        "lightpanda",
+        "obscura",
+        "ios"
+      ],
+      "interfaces": [
+        "--engine",
+        "--executable-path"
+      ]
+    },
+    {
+      "id": "attach",
+      "category": "浏览器",
+      "name": "CDP、发现与现有配置",
+      "availability": "原生",
+      "detail": "连接端口/WS URL 或 auto-connect；复用 Chrome 配置可用只读副本，或选择持久目录。",
+      "sources": [
+        "readme",
+        "cdp",
+        "sessions"
+      ],
+      "interfaces": [
+        "agent_browser_connect",
+        "--cdp",
+        "--auto-connect",
+        "--profile"
+      ]
+    },
+    {
+      "id": "sessions",
+      "category": "状态",
+      "name": "隔离会话与命名空间",
+      "availability": "原生",
+      "detail": "独立自建浏览器会话隔离；共享 CDP 只隔离标签页选择，不隔离 Cookie。可生成工作区会话 ID，查看 daemon/恢复状态。",
+      "sources": [
+        "sessions",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent_browser_session_id",
+        "agent_browser_session_info",
+        "--session",
+        "--namespace"
+      ]
+    },
+    {
+      "id": "binding",
+      "category": "恢复",
+      "name": "持久 target 重绑",
+      "availability": "原生",
+      "detail": "CDP target id 跨 daemon 重启保存；--pin-tab 严格绑定，关闭后返回 tab_gone，不偷偷接管别的页。",
+      "sources": [
+        "cdp",
+        "binding"
+      ],
+      "interfaces": [
+        "--pin-tab",
+        "--no-pin-tab"
+      ]
+    },
+    {
+      "id": "unknown",
+      "category": "恢复",
+      "name": "结果未知时避免重放",
+      "availability": "原生",
+      "detail": "连接实现记录请求是否已写出。变更命令响应不明时返回 outcome_unknown，不重发该已写出的变更；只读命令重试另有规则。不是通用业务步骤检查点。",
+      "sources": [
+        "unknown",
+        "mcp_source"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "navigation",
+      "category": "交互",
+      "name": "导航、标签和窗口",
+      "availability": "原生",
+      "detail": "URL/历史/刷新、SPA pushstate、稳定标签页 ID/用户标签、窗口及 iframe 切换。",
+      "sources": [
+        "readme",
+        "reference",
+        "cdp"
+      ],
+      "interfaces": [
+        "agent_browser_open",
+        "agent_browser_back",
+        "agent_browser_forward",
+        "agent_browser_reload",
+        "agent_browser_pushstate",
+        "agent_browser_tab_new",
+        "agent_browser_tab_switch",
+        "agent_browser_window_new",
+        "agent_browser_frame_switch"
+      ]
+    },
+    {
+      "id": "interaction",
+      "category": "交互",
+      "name": "表单和底层输入",
+      "availability": "原生",
+      "detail": "点击/双击/焦点/hover、逐字或直接输入、按键保持、checkbox、下拉、多文件上传、拖拽与滚动。",
+      "sources": [
+        "readme",
+        "reference"
+      ],
+      "interfaces": [
+        "agent_browser_click",
+        "agent_browser_dblclick",
+        "agent_browser_fill",
+        "agent_browser_keyboard_type",
+        "agent_browser_keyboard_insert_text",
+        "agent_browser_drag",
+        "agent_browser_scroll"
+      ]
+    },
+    {
+      "id": "locators",
+      "category": "定位",
+      "name": "refs 和语义定位器",
+      "availability": "原生",
+      "detail": "ARIA 角色、文字、标签、占位、alt/title/testid、首尾/nth；也支持 CSS/XPath。",
+      "sources": [
+        "readme",
+        "reference"
+      ],
+      "interfaces": [
+        "agent_browser_find"
+      ]
+    },
+    {
+      "id": "refs",
+      "category": "定位",
+      "name": "引用生命周期与唯一回退",
+      "availability": "原生",
+      "detail": "存活 DOM 保留引用；替换/导航失效不循环复用。替换后仅在原 ref 与新 role/name 唯一时回退，歧义失败；虚拟节点引用限快照。",
+      "sources": [
+        "snapshots"
+      ],
+      "interfaces": [
+        "agent_browser_snapshot",
+        "agent_browser_click"
+      ]
+    },
+    {
+      "id": "delta",
+      "category": "观察",
+      "name": "增量与裁剪",
+      "availability": "原生",
+      "detail": "snapshot --delta 首次全量，再 unchanged 或有界结构 JSON delta，按 tab 和选项维护；URL 改变或差异不省空间时全量回退。可交互元素、子树、深度/紧凑/URL 裁剪。",
+      "sources": [
+        "readme",
+        "mcp_source",
+        "snapshots"
+      ],
+      "interfaces": [
+        "agent_browser_snapshot"
+      ]
+    },
+    {
+      "id": "iframe",
+      "category": "观察",
+      "name": "iframe 内联引用",
+      "availability": "原生",
+      "detail": "主快照内联 iframe 内容，引用携带 frame 上下文；也能切换 frame 做局部观察。",
+      "sources": [
+        "snapshots"
+      ],
+      "interfaces": [
+        "agent_browser_frame_switch",
+        "agent_browser_frame_main"
+      ]
+    },
+    {
+      "id": "screenshots",
+      "category": "观察",
+      "name": "标注和变化感知截图",
+      "availability": "原生",
+      "detail": "编号截图与 refs 一致；页面/全页、格式/质量；if-changed 按 tab/范围保留历史，返回 changed/revision/pixelChangeRatio。",
+      "sources": [
+        "files",
+        "readme"
+      ],
+      "interfaces": [
+        "agent_browser_screenshot",
+        "--annotate",
+        "--if-changed",
+        "--threshold"
+      ]
+    },
+    {
+      "id": "read",
+      "category": "观察",
+      "name": "可读文本与资料检索",
+      "availability": "原生",
+      "detail": "read 可读 URL 或渲染 DOM，提供过滤/提纲、llms 索引/全文和 markdown 要求；不是 schema 数据提取。",
+      "sources": [
+        "readme",
+        "reference"
+      ],
+      "interfaces": [
+        "agent_browser_read"
+      ]
+    },
+    {
+      "id": "info",
+      "category": "观察",
+      "name": "页面和元素信息",
+      "availability": "原生",
+      "detail": "读取 text/HTML/value/attr/title/URL/CDP URL/count/box/styles，检查可见、启用、勾选状态。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent_browser_get_text",
+        "agent_browser_get_html",
+        "agent_browser_get_box",
+        "agent_browser_is_visible"
+      ]
+    },
+    {
+      "id": "wait",
+      "category": "交互",
+      "name": "多种等待",
+      "availability": "原生",
+      "detail": "元素状态、文本、URL、load、JS 条件、时间与下载；networkidle 仅适合确定会安静的页面。",
+      "sources": [
+        "readme",
+        "files"
+      ],
+      "interfaces": [
+        "agent_browser_wait_for_selector",
+        "agent_browser_wait_for_text",
+        "agent_browser_wait_for_function",
+        "agent_browser_wait_for_download"
+      ]
+    },
+    {
+      "id": "dialogs",
+      "category": "交互",
+      "name": "原生对话框",
+      "availability": "原生",
+      "detail": "status/accept/dismiss；alert/beforeunload 默认自动取消的行为可关闭。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "agent_browser_dialog_status",
+        "agent_browser_dialog_accept",
+        "agent_browser_dialog_dismiss",
+        "--no-auto-dialog"
+      ]
+    },
+    {
+      "id": "downloads",
+      "category": "文件",
+      "name": "下载、上传与 PDF",
+      "availability": "原生",
+      "detail": "download 或 wait --download 保存文件；默认临时下载目录关闭清理，download-path 指定保留；可 PDF 导出。",
+      "sources": [
+        "files"
+      ],
+      "interfaces": [
+        "agent_browser_download",
+        "agent_browser_upload",
+        "agent_browser_wait_for_download",
+        "agent_browser_pdf",
+        "--download-path"
+      ]
+    },
+    {
+      "id": "clipboard",
+      "category": "文件",
+      "name": "剪贴板",
+      "availability": "原生",
+      "detail": "读/写文本和复制/粘贴快捷键。",
+      "sources": [
+        "files"
+      ],
+      "interfaces": [
+        "agent_browser_clipboard_read",
+        "agent_browser_clipboard_write",
+        "agent_browser_clipboard_copy",
+        "agent_browser_clipboard_paste"
+      ]
+    },
+    {
+      "id": "environment",
+      "category": "环境",
+      "name": "设备与鼠标模拟",
+      "availability": "原生",
+      "detail": "视口、设备、地理位置、媒体、离线、UA、HTTP 头/凭据、触摸及指针；平滑/曲线指针可配置。",
+      "sources": [
+        "readme",
+        "reference"
+      ],
+      "interfaces": [
+        "agent_browser_set_viewport",
+        "agent_browser_set_device",
+        "agent_browser_set_geo",
+        "agent_browser_mouse_move",
+        "agent_browser_tap",
+        "agent_browser_swipe"
+      ]
+    },
+    {
+      "id": "network",
+      "category": "网络",
+      "name": "请求查询与过滤",
+      "availability": "原生",
+      "detail": "浏览器请求/响应详情及 URL、方法、类型、状态过滤，支持清空；不是独立代理抓外部客户端。",
+      "sources": [
+        "network"
+      ],
+      "interfaces": [
+        "agent_browser_network_requests",
+        "agent_browser_network_request"
+      ]
+    },
+    {
+      "id": "route",
+      "category": "网络",
+      "name": "浏览器 mock 和资源拦截",
+      "availability": "原生",
+      "detail": "route/unroute 支持匹配请求、阻断/回应及资源类型过滤；可在首次导航前注册。",
+      "sources": [
+        "network"
+      ],
+      "interfaces": [
+        "agent_browser_network_route",
+        "agent_browser_network_unroute"
+      ]
+    },
+    {
+      "id": "har",
+      "category": "网络",
+      "name": "HAR 与正文策略",
+      "availability": "原生",
+      "detail": "导出 HAR；text 默认每正文最多 2 MB，all 包含二进制 base64，none 仅元数据。没有把导出等同于可重开流量数据库。",
+      "sources": [
+        "network"
+      ],
+      "interfaces": [
+        "agent_browser_network_har_start",
+        "agent_browser_network_har_stop"
+      ]
+    },
+    {
+      "id": "proxy",
+      "category": "网络",
+      "name": "上游代理与 CA 信任",
+      "availability": "原生",
+      "detail": "上游 HTTP/SOCKS 连接与绕过；可增加 CLI CA 信任，Linux 本地 Chromium 也可用；不提供独立 MITM CA 生成服务。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "--proxy",
+        "--proxy-bypass",
+        "--ca-cert",
+        "--use-system-ca"
+      ]
+    },
+    {
+      "id": "state",
+      "category": "状态",
+      "name": "Cookie 和 Web Storage",
+      "availability": "原生",
+      "detail": "Cookie 设置/清理/cURL 导入；local/session Storage CRUD；状态文件 save/load/list/show/rename/clear/clean。",
+      "sources": [
+        "sessions",
+        "reference"
+      ],
+      "interfaces": [
+        "agent_browser_cookies_get",
+        "agent_browser_cookies_set_curl",
+        "agent_browser_storage_get",
+        "agent_browser_state_save",
+        "agent_browser_state_load",
+        "agent_browser_state_clean"
+      ]
+    },
+    {
+      "id": "autosave",
+      "category": "恢复",
+      "name": "周期保存与恢复验证",
+      "availability": "可选",
+      "detail": "--restore 启用 Cookie/localStorage 保存；默认最多每 30 秒在命令收敛后保存，空闲也可保存；URL/文字/JS 验证与失败保存策略避免覆盖好状态。不是每步业务检查点。",
+      "sources": [
+        "sessions"
+      ],
+      "interfaces": [
+        "--restore",
+        "--restore-save",
+        "--restore-check-url",
+        "--restore-check-text",
+        "--restore-check-fn"
+      ]
+    },
+    {
+      "id": "vault",
+      "category": "凭据",
+      "name": "本地凭据与加密状态",
+      "availability": "可选",
+      "detail": "认证 vault 始终加密；普通状态可 AES-256-GCM 加密并按日过期清理；可接凭据插件。",
+      "sources": [
+        "readme",
+        "sessions",
+        "security"
+      ],
+      "interfaces": [
+        "agent_browser_auth_save",
+        "agent_browser_auth_login",
+        "agent_browser_auth_show",
+        "agent_browser_state_clean"
+      ]
+    },
+    {
+      "id": "trace",
+      "category": "调试",
+      "name": "Console、异常、trace 和 profile",
+      "availability": "原生",
+      "detail": "Console 可取原始 CDP args；页面异常、高亮、打开 DevTools，保存执行 trace 与 Chrome profile。",
+      "sources": [
+        "readme",
+        "reference"
+      ],
+      "interfaces": [
+        "agent_browser_console",
+        "agent_browser_errors",
+        "agent_browser_inspect",
+        "agent_browser_trace_start",
+        "agent_browser_profiler_start"
+      ]
+    },
+    {
+      "id": "react",
+      "category": "调试",
+      "name": "React 和 Web Vitals",
+      "availability": "可选",
+      "detail": "需预装 React hook 的组件树/props/hooks/state/source、render记录、Suspense 分类；vitals 有 LCP/CLS/TTFB/FCP/INP，hydration 依页面可用性。",
+      "sources": [
+        "react"
+      ],
+      "interfaces": [
+        "agent_browser_react_tree",
+        "agent_browser_react_inspect",
+        "agent_browser_react_renders_start",
+        "agent_browser_react_suspense",
+        "agent_browser_vitals",
+        "--enable"
+      ]
+    },
+    {
+      "id": "a11y",
+      "category": "诊断",
+      "name": "axe 无障碍审计",
+      "availability": "原生",
+      "detail": "a11y 支持标签和子树过滤，可输出结构化报告。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent_browser_a11y"
+      ]
+    },
+    {
+      "id": "video",
+      "category": "产物",
+      "name": "视频与变化接触表",
+      "availability": "可选",
+      "detail": "WebM/MP4 录制依 ffmpeg，支持 fps、指针、contact sheet 和 restart。",
+      "sources": [
+        "recording",
+        "readme"
+      ],
+      "interfaces": [
+        "agent_browser_record_start",
+        "agent_browser_record_stop",
+        "agent_browser_record_restart"
+      ]
+    },
+    {
+      "id": "diff",
+      "category": "比较",
+      "name": "快照、像素和 URL 差异",
+      "availability": "原生",
+      "detail": "对基线快照/截图或两个 URL 做比较，像素阈值与产物路径可指定。",
+      "sources": [
+        "readme",
+        "reference"
+      ],
+      "interfaces": [
+        "agent_browser_diff_snapshot",
+        "agent_browser_diff_screenshot",
+        "agent_browser_diff_url"
+      ]
+    },
+    {
+      "id": "batch",
+      "category": "多步",
+      "name": "显式批量命令",
+      "availability": "原生",
+      "detail": "字符串或 JSON 命令序列，--bail 首错停止；这是顺序动作列表，不等于可视化条件/并行流程引擎。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent_browser_batch"
+      ]
+    },
+    {
+      "id": "stream",
+      "category": "人工协作",
+      "name": "实时视口与输入",
+      "availability": "原生",
+      "detail": "WebSocket 发送预览图像并接受鼠标/键盘/触摸；有帧率、尺寸、质量及 ack pacing。实时 Console 可能丢失，不是持久审计日志。",
+      "sources": [
+        "streaming"
+      ],
+      "interfaces": [
+        "agent_browser_stream_enable",
+        "agent_browser_stream_status",
+        "agent_browser_stream_disable"
+      ]
+    },
+    {
+      "id": "dashboard",
+      "category": "UI",
+      "name": "本地观察工作台",
+      "availability": "原生",
+      "detail": "跨会话 viewport、活动流、Console、会话创建和人工输入；外部反向代理访问有显式 origin 与 token/cookie 机制。",
+      "sources": [
+        "dashboard",
+        "readme"
+      ],
+      "interfaces": [
+        "agent_browser_dashboard_start",
+        "agent_browser_dashboard_stop"
+      ]
+    },
+    {
+      "id": "chat",
+      "category": "Agent",
+      "name": "自然语言任务循环",
+      "availability": "云端",
+      "detail": "CLI/Dashboard chat 通过 Vercel AI Gateway 模型运行命令；可选模型，需网关配置，服务条款与费用另计；聊天不能任意切换会话/全局设置。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "agent_browser_chat",
+        "--model"
+      ]
+    },
+    {
+      "id": "webmcp",
+      "category": "扩展",
+      "name": "页面工具与分离结果",
+      "availability": "可选",
+      "detail": "页面 WebMCP list/invoke/result/cancel，支持指定 frame、按需 schema 和分离执行；默认 Chrome 实验支持不等于所有引擎都可用。",
+      "sources": [
+        "webmcp",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent_browser_webmcp_list",
+        "agent_browser_webmcp_invoke",
+        "agent_browser_webmcp_result",
+        "agent_browser_webmcp_cancel"
+      ]
+    },
+    {
+      "id": "plugins",
+      "category": "扩展",
+      "name": "进程外插件协议",
+      "availability": "可选",
+      "detail": "插件声明凭据、浏览器来源、启动变更和自定义命令能力，注册来源可 npm/GitHub；插件有策略和能力确认。",
+      "sources": [
+        "plugins",
+        "readme"
+      ],
+      "interfaces": [
+        "agent_browser_plugin_add",
+        "agent_browser_plugin_list",
+        "agent_browser_plugin_run",
+        "plugin.manifest",
+        "credential.resolve",
+        "browser.launch",
+        "launch.mutate",
+        "command.run"
+      ]
+    },
+    {
+      "id": "skills",
+      "category": "扩展",
+      "name": "版本配套技能",
+      "availability": "原生",
+      "detail": "CLI/MCP 列出和读取随安装版本分发的技能，可按需加载参考；包含不同任务集成，不混为独立核心动作。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "agent_browser_skills_list",
+        "agent_browser_skills_get",
+        "agent_browser_skills_path"
+      ]
+    },
+    {
+      "id": "policies",
+      "category": "边界",
+      "name": "动作策略与审批",
+      "availability": "可选",
+      "detail": "静态 action-policy、confirm/deny、输出边界/字数限制；MCP tool 注解与强制策略分开。",
+      "sources": [
+        "security",
+        "readme",
+        "mcp_source"
+      ],
+      "interfaces": [
+        "--action-policy",
+        "--confirm-actions",
+        "--content-boundaries",
+        "--max-output",
+        "agent_browser_confirm",
+        "agent_browser_deny"
+      ]
+    },
+    {
+      "id": "domains",
+      "category": "边界",
+      "name": "域名包含约束",
+      "availability": "可选",
+      "detail": "支持模式下约束导航、子资源、WS/EventSource/sendBeacon，并禁用 WebRTC；为先于页面生效而拒绝已有 CDP、恢复、Safari/iOS 等不兼容启动路径。",
+      "sources": [
+        "security",
+        "readme"
+      ],
+      "interfaces": [
+        "--allowed-domains"
+      ]
+    },
+    {
+      "id": "config",
+      "category": "运行",
+      "name": "配置与初始化",
+      "availability": "原生",
+      "detail": "用户/项目/env/CLI 优先级；自动项目配置不允许 executablePath/args/plugins，显式 --config 另定；支持初始与运行期注入/移除脚本。",
+      "sources": [
+        "config",
+        "readme"
+      ],
+      "interfaces": [
+        "--config",
+        "--init-script",
+        "agent-browser addinitscript",
+        "agent_browser_remove_init_script"
+      ]
+    },
+    {
+      "id": "lifecycle",
+      "category": "运行",
+      "name": "所有权与资源清理",
+      "availability": "原生",
+      "detail": "默认空闲关闭有自建/借用/有头及云端例外；借用浏览器与自建进程区分；Browser Use 云停止失败可保留待清理对象。",
+      "sources": [
+        "sessions",
+        "readme"
+      ],
+      "interfaces": [
+        "--idle-timeout",
+        "agent_browser_close",
+        "agent_browser_session_info"
+      ]
+    },
+    {
+      "id": "cloud",
+      "category": "云端",
+      "name": "云浏览器集成",
+      "availability": "云端",
+      "detail": "Browserless、Browserbase、Browser Use、Kernel、AWS AgentCore 为可选 provider；需外部凭据/服务，不能混作本地免费核心。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "--provider"
+      ]
+    },
+    {
+      "id": "remote",
+      "category": "SDK",
+      "name": "独立远程 Sandbox 库",
+      "availability": "云端",
+      "detail": "文档指向另一个 remote-agent-browser 仓库，可通过 Vercel Sandbox provisioning/稳定会话执行 CLI；不是当前二进制的同名 -p provider。",
+      "sources": [
+        "remote_sdk"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "webgpu",
+      "category": "环境",
+      "name": "WebGPU 与无显示运行",
+      "availability": "可选",
+      "detail": "WebGPU 支持 Linux SwiftShader；displayless Linux headed 可经 Xvfb。依平台/驱动，不能采用 README 宣传数字当实测性能。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "--webgpu",
+        "--headed"
+      ]
+    },
+    {
+      "id": "container",
+      "category": "交付",
+      "name": "构建容器",
+      "availability": "部分",
+      "detail": "本仓库 docker/ 提供 Rust 跨平台构建容器；远程 Sandbox 的运行镜像属于单独集成，不将构建镜像误报为完整运行产品。",
+      "sources": [
+        "docker",
+        "remote_sdk"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "message_boundary",
+      "category": "实时消息",
+      "name": "应用 SSE/WS 消息查询",
+      "availability": "未证实",
+      "detail": "已查网络文档、156 个固定 MCP schema 和命令解析；未证实应用消息事件级持久游标接口。产品自身预览 WebSocket 与捕获网站 WebSocket 是不同能力。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ],
+      "interfaces": []
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "agent_browser_tools_profiles",
+      "category": "MCP / 核心",
+      "purpose": "读取 MCP 启动能力组与当前暴露范围；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent_browser_open",
+      "category": "MCP / 核心",
+      "purpose": "启动浏览器或导航；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser open",
+      "category": "CLI 操作",
+      "purpose": "启动浏览器或导航",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_webmcp_list",
+      "category": "MCP / 页面工具",
+      "purpose": "读取页面 WebMCP 摘要或指定工具 schema；MCP webmcp 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser webmcp list",
+      "category": "CLI 操作",
+      "purpose": "读取页面 WebMCP 摘要或指定工具 schema",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_webmcp_invoke",
+      "category": "MCP / 页面工具",
+      "purpose": "调用页面提供的 WebMCP 工具；MCP webmcp 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser webmcp invoke",
+      "category": "CLI 操作",
+      "purpose": "调用页面提供的 WebMCP 工具",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_webmcp_result",
+      "category": "MCP / 页面工具",
+      "purpose": "读取分离执行的页面工具结果；MCP webmcp 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser webmcp result",
+      "category": "CLI 操作",
+      "purpose": "读取分离执行的页面工具结果",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_webmcp_cancel",
+      "category": "MCP / 页面工具",
+      "purpose": "取消页面工具调用；MCP webmcp 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser webmcp cancel",
+      "category": "CLI 操作",
+      "purpose": "取消页面工具调用",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_read",
+      "category": "MCP / 核心",
+      "purpose": "读取 URL 或当前页面的 Agent 可读文本；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser read",
+      "category": "CLI 操作",
+      "purpose": "读取 URL 或当前页面的 Agent 可读文本",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_snapshot",
+      "category": "MCP / 核心",
+      "purpose": "捕获 refs 与可选增量快照；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser snapshot",
+      "category": "CLI 操作",
+      "purpose": "捕获 refs 与可选增量快照",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_click",
+      "category": "MCP / 核心",
+      "purpose": "点击元素；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser click",
+      "category": "CLI 操作",
+      "purpose": "点击元素",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_fill",
+      "category": "MCP / 核心",
+      "purpose": "清空并填写输入框；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser fill",
+      "category": "CLI 操作",
+      "purpose": "清空并填写输入框",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_type",
+      "category": "MCP / 核心",
+      "purpose": "逐字输入文本；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser type",
+      "category": "CLI 操作",
+      "purpose": "逐字输入文本",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_press",
+      "category": "MCP / 核心",
+      "purpose": "发送按键组合；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser press",
+      "category": "CLI 操作",
+      "purpose": "发送按键组合",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_hover",
+      "category": "MCP / 完整工具集",
+      "purpose": "悬停元素；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser hover",
+      "category": "CLI 操作",
+      "purpose": "悬停元素",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_focus",
+      "category": "MCP / 完整工具集",
+      "purpose": "聚焦元素；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser focus",
+      "category": "CLI 操作",
+      "purpose": "聚焦元素",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_check",
+      "category": "MCP / 核心",
+      "purpose": "勾选控件；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser check",
+      "category": "CLI 操作",
+      "purpose": "勾选控件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_uncheck",
+      "category": "MCP / 核心",
+      "purpose": "取消勾选；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser uncheck",
+      "category": "CLI 操作",
+      "purpose": "取消勾选",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_select",
+      "category": "MCP / 核心",
+      "purpose": "按值或标签选择下拉项；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser select",
+      "category": "CLI 操作",
+      "purpose": "按值或标签选择下拉项",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_scroll",
+      "category": "MCP / 核心",
+      "purpose": "滚动页面或元素；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser scroll",
+      "category": "CLI 操作",
+      "purpose": "滚动页面或元素",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_scroll_into_view",
+      "category": "MCP / 完整工具集",
+      "purpose": "将目标滚入视口；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser scrollintoview",
+      "category": "CLI 操作",
+      "purpose": "将目标滚入视口",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_wait_ms",
+      "category": "MCP / 核心",
+      "purpose": "等待指定毫秒；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser wait <ms>",
+      "category": "CLI 操作",
+      "purpose": "等待指定毫秒",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_wait_for_selector",
+      "category": "MCP / 核心",
+      "purpose": "等待元素状态；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser wait <selector>",
+      "category": "CLI 操作",
+      "purpose": "等待元素状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_wait_for_text",
+      "category": "MCP / 核心",
+      "purpose": "等待文字；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser wait --text",
+      "category": "CLI 操作",
+      "purpose": "等待文字",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_wait_for_url",
+      "category": "MCP / 完整工具集",
+      "purpose": "等待 URL 匹配；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser wait --url",
+      "category": "CLI 操作",
+      "purpose": "等待 URL 匹配",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_wait_for_load",
+      "category": "MCP / 核心",
+      "purpose": "等待页面加载状态；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser wait --load",
+      "category": "CLI 操作",
+      "purpose": "等待页面加载状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_wait_for_function",
+      "category": "MCP / 完整工具集",
+      "purpose": "等待 JavaScript 条件；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser wait --fn",
+      "category": "CLI 操作",
+      "purpose": "等待 JavaScript 条件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_screenshot",
+      "category": "MCP / 核心",
+      "purpose": "截图并可跳过未变化图像；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser screenshot",
+      "category": "CLI 操作",
+      "purpose": "截图并可跳过未变化图像",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_text",
+      "category": "MCP / 核心",
+      "purpose": "读取元素文字；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get text",
+      "category": "CLI 操作",
+      "purpose": "读取元素文字",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_html",
+      "category": "MCP / 完整工具集",
+      "purpose": "读取元素 HTML；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get html",
+      "category": "CLI 操作",
+      "purpose": "读取元素 HTML",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_value",
+      "category": "MCP / 完整工具集",
+      "purpose": "读取表单值；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get value",
+      "category": "CLI 操作",
+      "purpose": "读取表单值",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_url",
+      "category": "MCP / 核心",
+      "purpose": "读取当前 URL；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get url",
+      "category": "CLI 操作",
+      "purpose": "读取当前 URL",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_title",
+      "category": "MCP / 核心",
+      "purpose": "读取页面标题；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get title",
+      "category": "CLI 操作",
+      "purpose": "读取页面标题",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_cdp_url",
+      "category": "MCP / 完整工具集",
+      "purpose": "读取 CDP WebSocket 端点；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get cdp-url",
+      "category": "CLI 操作",
+      "purpose": "读取 CDP WebSocket 端点",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_eval",
+      "category": "MCP / 核心",
+      "purpose": "在页面执行 JavaScript；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser eval",
+      "category": "CLI 操作",
+      "purpose": "在页面执行 JavaScript",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_close",
+      "category": "MCP / 核心",
+      "purpose": "关闭会话浏览器并清理资源；MCP core 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser close",
+      "category": "CLI 操作",
+      "purpose": "关闭会话浏览器并清理资源",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_back",
+      "category": "MCP / 核心/标签页",
+      "purpose": "返回上一页；MCP core/tabs 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser back",
+      "category": "CLI 操作",
+      "purpose": "返回上一页",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_forward",
+      "category": "MCP / 核心/标签页",
+      "purpose": "前进历史页；MCP core/tabs 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser forward",
+      "category": "CLI 操作",
+      "purpose": "前进历史页",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_reload",
+      "category": "MCP / 核心/标签页",
+      "purpose": "刷新页面；MCP core/tabs 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser reload",
+      "category": "CLI 操作",
+      "purpose": "刷新页面",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_dblclick",
+      "category": "MCP / 完整工具集",
+      "purpose": "双击元素；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser dblclick",
+      "category": "CLI 操作",
+      "purpose": "双击元素",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_drag",
+      "category": "MCP / 完整工具集",
+      "purpose": "在元素之间拖拽；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser drag",
+      "category": "CLI 操作",
+      "purpose": "在元素之间拖拽",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_upload",
+      "category": "MCP / 调试",
+      "purpose": "上传本地文件；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser upload",
+      "category": "CLI 操作",
+      "purpose": "上传本地文件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_download",
+      "category": "MCP / 调试",
+      "purpose": "点击元素并保存下载；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser download",
+      "category": "CLI 操作",
+      "purpose": "点击元素并保存下载",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_keydown",
+      "category": "MCP / 移动",
+      "purpose": "保持按键按下；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser keydown",
+      "category": "CLI 操作",
+      "purpose": "保持按键按下",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_keyup",
+      "category": "MCP / 移动",
+      "purpose": "松开按键；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser keyup",
+      "category": "CLI 操作",
+      "purpose": "松开按键",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_keyboard_type",
+      "category": "MCP / 移动",
+      "purpose": "向当前焦点发送真实键盘输入；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser keyboard type",
+      "category": "CLI 操作",
+      "purpose": "向当前焦点发送真实键盘输入",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_keyboard_insert_text",
+      "category": "MCP / 移动",
+      "purpose": "向当前焦点直接插入文本；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser keyboard inserttext",
+      "category": "CLI 操作",
+      "purpose": "向当前焦点直接插入文本",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_wait_for_download",
+      "category": "MCP / 调试",
+      "purpose": "等待并保存下载；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser wait --download",
+      "category": "CLI 操作",
+      "purpose": "等待并保存下载",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_pdf",
+      "category": "MCP / 调试",
+      "purpose": "导出页面 PDF；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser pdf",
+      "category": "CLI 操作",
+      "purpose": "导出页面 PDF",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_attr",
+      "category": "MCP / 完整工具集",
+      "purpose": "读取元素属性；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get attr",
+      "category": "CLI 操作",
+      "purpose": "读取元素属性",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_count",
+      "category": "MCP / 完整工具集",
+      "purpose": "计算匹配元素数；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get count",
+      "category": "CLI 操作",
+      "purpose": "计算匹配元素数",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_box",
+      "category": "MCP / 完整工具集",
+      "purpose": "读取元素边界框；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get box",
+      "category": "CLI 操作",
+      "purpose": "读取元素边界框",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_get_styles",
+      "category": "MCP / 完整工具集",
+      "purpose": "读取计算样式；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser get styles",
+      "category": "CLI 操作",
+      "purpose": "读取计算样式",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_is_visible",
+      "category": "MCP / 完整工具集",
+      "purpose": "检查可见性；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser is visible",
+      "category": "CLI 操作",
+      "purpose": "检查可见性",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_is_enabled",
+      "category": "MCP / 完整工具集",
+      "purpose": "检查是否启用；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser is enabled",
+      "category": "CLI 操作",
+      "purpose": "检查是否启用",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_is_checked",
+      "category": "MCP / 完整工具集",
+      "purpose": "检查勾选状态；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser is checked",
+      "category": "CLI 操作",
+      "purpose": "检查勾选状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_find",
+      "category": "MCP / 完整工具集",
+      "purpose": "按语义或匹配顺序定位并操作；MCP all 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser find",
+      "category": "CLI 操作",
+      "purpose": "按语义或匹配顺序定位并操作",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_mouse_move",
+      "category": "MCP / 移动",
+      "purpose": "移动鼠标指针；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser mouse move",
+      "category": "CLI 操作",
+      "purpose": "移动鼠标指针",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_mouse_down",
+      "category": "MCP / 移动",
+      "purpose": "按下鼠标键；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser mouse down",
+      "category": "CLI 操作",
+      "purpose": "按下鼠标键",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_mouse_up",
+      "category": "MCP / 移动",
+      "purpose": "松开鼠标键；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser mouse up",
+      "category": "CLI 操作",
+      "purpose": "松开鼠标键",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_mouse_wheel",
+      "category": "MCP / 移动",
+      "purpose": "滚动鼠标滚轮；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser mouse wheel",
+      "category": "CLI 操作",
+      "purpose": "滚动鼠标滚轮",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_set_viewport",
+      "category": "MCP / 移动",
+      "purpose": "设置视口和像素比例；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser set viewport",
+      "category": "CLI 操作",
+      "purpose": "设置视口和像素比例",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_set_device",
+      "category": "MCP / 移动",
+      "purpose": "模拟设备配置；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser set device",
+      "category": "CLI 操作",
+      "purpose": "模拟设备配置",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_set_geo",
+      "category": "MCP / 移动",
+      "purpose": "设置地理位置；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser set geo",
+      "category": "CLI 操作",
+      "purpose": "设置地理位置",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_set_offline",
+      "category": "MCP / 网络",
+      "purpose": "切换离线状态；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser set offline",
+      "category": "CLI 操作",
+      "purpose": "切换离线状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_set_headers",
+      "category": "MCP / 网络",
+      "purpose": "设置额外请求头；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser set headers",
+      "category": "CLI 操作",
+      "purpose": "设置额外请求头",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_set_credentials",
+      "category": "MCP / 网络",
+      "purpose": "设置 HTTP Basic 凭据；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser set credentials",
+      "category": "CLI 操作",
+      "purpose": "设置 HTTP Basic 凭据",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_set_media",
+      "category": "MCP / 移动",
+      "purpose": "模拟媒体特征；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser set media",
+      "category": "CLI 操作",
+      "purpose": "模拟媒体特征",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_network_route",
+      "category": "MCP / 网络",
+      "purpose": "配置浏览器请求路由或 mock；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser network route",
+      "category": "CLI 操作",
+      "purpose": "配置浏览器请求路由或 mock",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_network_unroute",
+      "category": "MCP / 网络",
+      "purpose": "移除浏览器请求路由；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser network unroute",
+      "category": "CLI 操作",
+      "purpose": "移除浏览器请求路由",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_network_requests",
+      "category": "MCP / 网络",
+      "purpose": "过滤并列出浏览器请求；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser network requests",
+      "category": "CLI 操作",
+      "purpose": "过滤并列出浏览器请求",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_network_request",
+      "category": "MCP / 网络",
+      "purpose": "读取请求和响应详情；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser network request",
+      "category": "CLI 操作",
+      "purpose": "读取请求和响应详情",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_network_har_start",
+      "category": "MCP / 网络",
+      "purpose": "开始 HAR 记录并选择正文策略；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser network har start",
+      "category": "CLI 操作",
+      "purpose": "开始 HAR 记录并选择正文策略",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_network_har_stop",
+      "category": "MCP / 网络",
+      "purpose": "保存 HAR 文件；MCP network 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser network har stop",
+      "category": "CLI 操作",
+      "purpose": "保存 HAR 文件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_storage_get",
+      "category": "MCP / 状态",
+      "purpose": "读取本地或会话存储；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser storage <local|session> [key]",
+      "category": "CLI 操作",
+      "purpose": "读取本地或会话存储",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_storage_set",
+      "category": "MCP / 状态",
+      "purpose": "设置本地或会话存储项；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser storage <local|session> set",
+      "category": "CLI 操作",
+      "purpose": "设置本地或会话存储项",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_storage_clear",
+      "category": "MCP / 状态",
+      "purpose": "清空指定 Web Storage；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser storage <local|session> clear",
+      "category": "CLI 操作",
+      "purpose": "清空指定 Web Storage",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_cookies_get",
+      "category": "MCP / 状态",
+      "purpose": "读取 Cookie；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser cookies",
+      "category": "CLI 操作",
+      "purpose": "读取 Cookie",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_cookies_set",
+      "category": "MCP / 状态",
+      "purpose": "设置 Cookie；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser cookies set",
+      "category": "CLI 操作",
+      "purpose": "设置 Cookie",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_cookies_set_curl",
+      "category": "MCP / 状态",
+      "purpose": "从 cURL 表示导入 Cookie；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser cookies set --curl",
+      "category": "CLI 操作",
+      "purpose": "从 cURL 表示导入 Cookie",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_cookies_clear",
+      "category": "MCP / 状态",
+      "purpose": "清空 Cookie；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser cookies clear",
+      "category": "CLI 操作",
+      "purpose": "清空 Cookie",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_tab_new",
+      "category": "MCP / 核心/标签页",
+      "purpose": "创建带可选标签的页面；MCP core/tabs 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser tab new",
+      "category": "CLI 操作",
+      "purpose": "创建带可选标签的页面",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_tab_list",
+      "category": "MCP / 核心/标签页",
+      "purpose": "列出标签页；MCP core/tabs 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser tab",
+      "category": "CLI 操作",
+      "purpose": "列出标签页",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_tab_switch",
+      "category": "MCP / 核心/标签页",
+      "purpose": "按稳定 ID 或标签切换页面；MCP core/tabs 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser tab <id|label>",
+      "category": "CLI 操作",
+      "purpose": "按稳定 ID 或标签切换页面",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_tab_close",
+      "category": "MCP / 核心/标签页",
+      "purpose": "关闭标签页；MCP core/tabs 能力组",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser tab close",
+      "category": "CLI 操作",
+      "purpose": "关闭标签页",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_window_new",
+      "category": "MCP / 标签页",
+      "purpose": "创建窗口；MCP tabs 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser window new",
+      "category": "CLI 操作",
+      "purpose": "创建窗口",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_frame_switch",
+      "category": "MCP / 标签页",
+      "purpose": "进入 iframe；MCP tabs 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser frame <selector>",
+      "category": "CLI 操作",
+      "purpose": "进入 iframe",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_frame_main",
+      "category": "MCP / 标签页",
+      "purpose": "返回主 frame；MCP tabs 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser frame main",
+      "category": "CLI 操作",
+      "purpose": "返回主 frame",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_dialog_status",
+      "category": "MCP / 标签页",
+      "purpose": "读取原生对话框状态；MCP tabs 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser dialog status",
+      "category": "CLI 操作",
+      "purpose": "读取原生对话框状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_dialog_accept",
+      "category": "MCP / 标签页",
+      "purpose": "接受对话框或输入 prompt；MCP tabs 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser dialog accept",
+      "category": "CLI 操作",
+      "purpose": "接受对话框或输入 prompt",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_dialog_dismiss",
+      "category": "MCP / 标签页",
+      "purpose": "取消对话框；MCP tabs 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser dialog dismiss",
+      "category": "CLI 操作",
+      "purpose": "取消对话框",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_trace_start",
+      "category": "MCP / 调试",
+      "purpose": "开始执行 trace；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser trace start",
+      "category": "CLI 操作",
+      "purpose": "开始执行 trace",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_trace_stop",
+      "category": "MCP / 调试",
+      "purpose": "结束并保存 trace；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser trace stop",
+      "category": "CLI 操作",
+      "purpose": "结束并保存 trace",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_profiler_start",
+      "category": "MCP / 调试",
+      "purpose": "开始 Chrome 性能 profile；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser profiler start",
+      "category": "CLI 操作",
+      "purpose": "开始 Chrome 性能 profile",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_profiler_stop",
+      "category": "MCP / 调试",
+      "purpose": "结束并保存性能 profile；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser profiler stop",
+      "category": "CLI 操作",
+      "purpose": "结束并保存性能 profile",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_record_start",
+      "category": "MCP / 调试",
+      "purpose": "开始视频录制；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser record start",
+      "category": "CLI 操作",
+      "purpose": "开始视频录制；视频需 ffmpeg",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_record_stop",
+      "category": "MCP / 调试",
+      "purpose": "结束视频录制；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser record stop",
+      "category": "CLI 操作",
+      "purpose": "结束视频录制；视频需 ffmpeg",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_record_restart",
+      "category": "MCP / 调试",
+      "purpose": "结束当前录制并创建新片段；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser record restart",
+      "category": "CLI 操作",
+      "purpose": "结束当前录制并创建新片段；视频需 ffmpeg",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_console",
+      "category": "MCP / 调试",
+      "purpose": "读取控制台记录；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser console",
+      "category": "CLI 操作",
+      "purpose": "读取控制台记录",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_errors",
+      "category": "MCP / 调试",
+      "purpose": "读取页面异常；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser errors",
+      "category": "CLI 操作",
+      "purpose": "读取页面异常",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_highlight",
+      "category": "MCP / 调试",
+      "purpose": "高亮元素；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser highlight",
+      "category": "CLI 操作",
+      "purpose": "高亮元素",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_inspect",
+      "category": "MCP / 调试",
+      "purpose": "打开当前页面 DevTools；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser inspect",
+      "category": "CLI 操作",
+      "purpose": "打开当前页面 DevTools",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_clipboard_read",
+      "category": "MCP / 调试",
+      "purpose": "读取剪贴板文本；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser clipboard read",
+      "category": "CLI 操作",
+      "purpose": "读取剪贴板文本",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_clipboard_write",
+      "category": "MCP / 调试",
+      "purpose": "写入剪贴板；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser clipboard write",
+      "category": "CLI 操作",
+      "purpose": "写入剪贴板",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_clipboard_copy",
+      "category": "MCP / 调试",
+      "purpose": "复制当前选中内容；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser clipboard copy",
+      "category": "CLI 操作",
+      "purpose": "复制当前选中内容",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_clipboard_paste",
+      "category": "MCP / 调试",
+      "purpose": "粘贴到焦点；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser clipboard paste",
+      "category": "CLI 操作",
+      "purpose": "粘贴到焦点",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_auth_save",
+      "category": "MCP / 状态",
+      "purpose": "保存加密凭据配置；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser auth save",
+      "category": "CLI 操作",
+      "purpose": "保存加密凭据配置",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_auth_login",
+      "category": "MCP / 状态",
+      "purpose": "使用本地或插件凭据辅助正常登录；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser auth login",
+      "category": "CLI 操作",
+      "purpose": "使用本地或插件凭据辅助正常登录",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_auth_list",
+      "category": "MCP / 状态",
+      "purpose": "列出凭据配置；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser auth list",
+      "category": "CLI 操作",
+      "purpose": "列出凭据配置",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_auth_show",
+      "category": "MCP / 状态",
+      "purpose": "读取凭据元数据；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser auth show",
+      "category": "CLI 操作",
+      "purpose": "读取凭据元数据",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_auth_delete",
+      "category": "MCP / 状态",
+      "purpose": "删除凭据配置；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser auth delete",
+      "category": "CLI 操作",
+      "purpose": "删除凭据配置",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_state_save",
+      "category": "MCP / 状态",
+      "purpose": "保存 Cookie 与存储状态；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser state save",
+      "category": "CLI 操作",
+      "purpose": "保存 Cookie 与存储状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_state_load",
+      "category": "MCP / 状态",
+      "purpose": "加载 Cookie 与存储状态；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser state load",
+      "category": "CLI 操作",
+      "purpose": "加载 Cookie 与存储状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_state_list",
+      "category": "MCP / 状态",
+      "purpose": "列出状态文件；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser state list",
+      "category": "CLI 操作",
+      "purpose": "列出状态文件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_state_clear",
+      "category": "MCP / 状态",
+      "purpose": "清理保存的状态；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser state clear",
+      "category": "CLI 操作",
+      "purpose": "清理保存的状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_state_show",
+      "category": "MCP / 状态",
+      "purpose": "读取状态文件摘要；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser state show",
+      "category": "CLI 操作",
+      "purpose": "读取状态文件摘要",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_state_clean",
+      "category": "MCP / 状态",
+      "purpose": "清理过期状态文件；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser state clean",
+      "category": "CLI 操作",
+      "purpose": "清理过期状态文件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_state_rename",
+      "category": "MCP / 状态",
+      "purpose": "重命名状态文件；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser state rename",
+      "category": "CLI 操作",
+      "purpose": "重命名状态文件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_tap",
+      "category": "MCP / 移动",
+      "purpose": "执行触摸点击；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser tap",
+      "category": "CLI 操作",
+      "purpose": "执行触摸点击",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_swipe",
+      "category": "MCP / 移动",
+      "purpose": "执行触摸滑动；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser swipe",
+      "category": "CLI 操作",
+      "purpose": "执行触摸滑动",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_device",
+      "category": "MCP / 移动",
+      "purpose": "列出 iOS 设备；MCP mobile 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser device list",
+      "category": "CLI 操作",
+      "purpose": "列出 iOS 设备",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_diff_snapshot",
+      "category": "MCP / 调试",
+      "purpose": "比较页面快照；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser diff snapshot",
+      "category": "CLI 操作",
+      "purpose": "比较页面快照",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_diff_screenshot",
+      "category": "MCP / 调试",
+      "purpose": "比较截图像素；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser diff screenshot",
+      "category": "CLI 操作",
+      "purpose": "比较截图像素",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_diff_url",
+      "category": "MCP / 调试",
+      "purpose": "比较两个 URL 的页面；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser diff url",
+      "category": "CLI 操作",
+      "purpose": "比较两个 URL 的页面",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_batch",
+      "category": "MCP / 调试",
+      "purpose": "执行显式命令序列并可首错停止；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser batch",
+      "category": "CLI 操作",
+      "purpose": "执行显式命令序列并可首错停止",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_react_tree",
+      "category": "MCP / React",
+      "purpose": "读取 React 组件树；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser react tree",
+      "category": "CLI 操作",
+      "purpose": "读取 React 组件树",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_react_inspect",
+      "category": "MCP / React",
+      "purpose": "读取组件 props、hooks、state 与源码；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser react inspect",
+      "category": "CLI 操作",
+      "purpose": "读取组件 props、hooks、state 与源码",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_react_renders_start",
+      "category": "MCP / React",
+      "purpose": "开始记录 React render；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser react renders start",
+      "category": "CLI 操作",
+      "purpose": "开始记录 React render",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_react_renders_stop",
+      "category": "MCP / React",
+      "purpose": "结束并返回 render 记录；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser react renders stop",
+      "category": "CLI 操作",
+      "purpose": "结束并返回 render 记录",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_react_suspense",
+      "category": "MCP / React",
+      "purpose": "检查和分类 Suspense 边界；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser react suspense",
+      "category": "CLI 操作",
+      "purpose": "检查和分类 Suspense 边界",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_vitals",
+      "category": "MCP / React",
+      "purpose": "测量 Web Vitals 和可用的 hydration 信息；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser vitals",
+      "category": "CLI 操作",
+      "purpose": "测量 Web Vitals 和可用的 hydration 信息",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_a11y",
+      "category": "MCP / 调试",
+      "purpose": "使用 axe 规则检查页面无障碍；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser a11y",
+      "category": "CLI 操作",
+      "purpose": "使用 axe 规则检查页面无障碍",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_pushstate",
+      "category": "MCP / React",
+      "purpose": "执行 SPA 客户端导航；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser pushstate",
+      "category": "CLI 操作",
+      "purpose": "执行 SPA 客户端导航",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_remove_init_script",
+      "category": "MCP / React",
+      "purpose": "移除会话初始化脚本；MCP react 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser removeinitscript",
+      "category": "CLI 操作",
+      "purpose": "移除会话初始化脚本",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_confirm",
+      "category": "MCP / 调试",
+      "purpose": "批准待确认动作；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser confirm",
+      "category": "CLI 操作",
+      "purpose": "批准待确认动作",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_deny",
+      "category": "MCP / 调试",
+      "purpose": "拒绝待确认动作；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser deny",
+      "category": "CLI 操作",
+      "purpose": "拒绝待确认动作",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_connect",
+      "category": "MCP / 调试",
+      "purpose": "连接 CDP 浏览器；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser connect",
+      "category": "CLI 操作",
+      "purpose": "连接 CDP 浏览器",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_stream_enable",
+      "category": "MCP / 调试",
+      "purpose": "启用视口预览 WebSocket；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser stream enable",
+      "category": "CLI 操作",
+      "purpose": "启用视口预览 WebSocket",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_stream_disable",
+      "category": "MCP / 调试",
+      "purpose": "关闭视口预览服务；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser stream disable",
+      "category": "CLI 操作",
+      "purpose": "关闭视口预览服务",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_stream_status",
+      "category": "MCP / 调试",
+      "purpose": "读取视口流状态；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser stream status",
+      "category": "CLI 操作",
+      "purpose": "读取视口流状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_session",
+      "category": "MCP / 状态",
+      "purpose": "读取当前会话标识；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser session",
+      "category": "CLI 操作",
+      "purpose": "读取当前会话标识",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_session_list",
+      "category": "MCP / 状态",
+      "purpose": "列出活动会话；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser session list",
+      "category": "CLI 操作",
+      "purpose": "列出活动会话",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_session_id",
+      "category": "MCP / 状态",
+      "purpose": "生成稳定工作区会话标识；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser session id",
+      "category": "CLI 操作",
+      "purpose": "生成稳定工作区会话标识",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_session_info",
+      "category": "MCP / 状态",
+      "purpose": "读取 daemon、启动和恢复状态；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser session info",
+      "category": "CLI 操作",
+      "purpose": "读取 daemon、启动和恢复状态",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_profiles",
+      "category": "MCP / 状态",
+      "purpose": "列出本机 Chrome 配置；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser profiles",
+      "category": "CLI 操作",
+      "purpose": "列出本机 Chrome 配置",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_skills_list",
+      "category": "MCP / 状态",
+      "purpose": "列出版本匹配的捆绑技能；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser skills list",
+      "category": "CLI 操作",
+      "purpose": "列出版本匹配的捆绑技能",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_skills_get",
+      "category": "MCP / 状态",
+      "purpose": "读取捆绑技能与可选参考材料；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser skills get",
+      "category": "CLI 操作",
+      "purpose": "读取捆绑技能与可选参考材料",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_skills_path",
+      "category": "MCP / 状态",
+      "purpose": "读取技能目录；MCP state 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser skills path",
+      "category": "CLI 操作",
+      "purpose": "读取技能目录",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_plugin_add",
+      "category": "MCP / 调试",
+      "purpose": "注册插件；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser plugin add",
+      "category": "CLI 操作",
+      "purpose": "注册插件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_plugin_list",
+      "category": "MCP / 调试",
+      "purpose": "列出插件；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser plugin list",
+      "category": "CLI 操作",
+      "purpose": "列出插件",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_plugin_show",
+      "category": "MCP / 调试",
+      "purpose": "读取插件元数据；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser plugin show",
+      "category": "CLI 操作",
+      "purpose": "读取插件元数据",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_plugin_run",
+      "category": "MCP / 调试",
+      "purpose": "调用插件的公开自定义能力；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser plugin run",
+      "category": "CLI 操作",
+      "purpose": "调用插件的公开自定义能力",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_doctor",
+      "category": "MCP / 调试",
+      "purpose": "诊断安装、浏览器、服务和连接；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser doctor",
+      "category": "CLI 操作",
+      "purpose": "诊断安装、浏览器、服务和连接",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_dashboard_start",
+      "category": "MCP / 调试",
+      "purpose": "启动本地观察工作台；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser dashboard start",
+      "category": "CLI 操作",
+      "purpose": "启动本地观察工作台",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_dashboard_stop",
+      "category": "MCP / 调试",
+      "purpose": "停止本地观察工作台；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser dashboard stop",
+      "category": "CLI 操作",
+      "purpose": "停止本地观察工作台",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_install",
+      "category": "MCP / 调试",
+      "purpose": "安装 Chrome 与可选 Linux 依赖；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser install",
+      "category": "CLI 操作",
+      "purpose": "安装 Chrome 与可选 Linux 依赖",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_upgrade",
+      "category": "MCP / 调试",
+      "purpose": "升级 CLI；MCP debug 能力组",
+      "availability": "可选",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser upgrade",
+      "category": "CLI 操作",
+      "purpose": "升级 CLI",
+      "availability": "原生",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent_browser_chat",
+      "category": "MCP / 调试",
+      "purpose": "通过模型网关执行自然语言浏览任务；MCP debug 能力组",
+      "availability": "云端",
+      "sources": [
+        "mcp_source",
+        "readme"
+      ]
+    },
+    {
+      "name": "agent-browser chat",
+      "category": "CLI 操作",
+      "purpose": "通过模型网关执行自然语言浏览任务",
+      "availability": "云端",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser mcp",
+      "category": "CLI 接入与别名",
+      "purpose": "启动 stdio MCP 服务",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser mcp --tools",
+      "category": "CLI 接入与别名",
+      "purpose": "按能力组选择 MCP 工具",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser addinitscript",
+      "category": "CLI 接入与别名",
+      "purpose": "注册会话级初始化脚本",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser goto",
+      "category": "CLI 接入与别名",
+      "purpose": "open 的导航别名",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser navigate",
+      "category": "CLI 接入与别名",
+      "purpose": "open 的导航别名",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser key",
+      "category": "CLI 接入与别名",
+      "purpose": "press 的别名",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser scrollinto",
+      "category": "CLI 接入与别名",
+      "purpose": "scrollintoview 的别名",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser quit",
+      "category": "CLI 接入与别名",
+      "purpose": "close 的别名",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser exit",
+      "category": "CLI 接入与别名",
+      "purpose": "close 的别名",
+      "availability": "原生",
+      "sources": [
+        "readme",
+        "commands"
+      ]
+    },
+    {
+      "name": "agent-browser find role",
+      "category": "CLI 语义定位",
+      "purpose": "按ARIA 角色定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find text",
+      "category": "CLI 语义定位",
+      "purpose": "按文字定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find label",
+      "category": "CLI 语义定位",
+      "purpose": "按关联标签定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find placeholder",
+      "category": "CLI 语义定位",
+      "purpose": "按占位文字定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find alt",
+      "category": "CLI 语义定位",
+      "purpose": "按替代文字定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find title",
+      "category": "CLI 语义定位",
+      "purpose": "按title 属性定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find testid",
+      "category": "CLI 语义定位",
+      "purpose": "按测试 ID定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find first",
+      "category": "CLI 语义定位",
+      "purpose": "按首个匹配定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find last",
+      "category": "CLI 语义定位",
+      "purpose": "按最后匹配定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "agent-browser find nth",
+      "category": "CLI 语义定位",
+      "purpose": "按指定序号定位并执行指定动作",
+      "availability": "原生",
+      "sources": [
+        "commands",
+        "reference"
+      ]
+    },
+    {
+      "name": "--session",
+      "category": "全局或命令配置",
+      "purpose": "选择独立 daemon 会话",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--restore",
+      "category": "全局或命令配置",
+      "purpose": "启用稳定键的状态自动保存恢复",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--restore-save",
+      "category": "全局或命令配置",
+      "purpose": "选择恢复后保存策略",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--restore-check-url",
+      "category": "全局或命令配置",
+      "purpose": "按 URL 验证恢复状态",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--restore-check-text",
+      "category": "全局或命令配置",
+      "purpose": "按页面文字验证恢复状态",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--restore-check-fn",
+      "category": "全局或命令配置",
+      "purpose": "按 JavaScript 条件验证恢复状态",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--namespace",
+      "category": "全局或命令配置",
+      "purpose": "隔离 daemon 与状态目录命名空间",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--session-name",
+      "category": "全局或命令配置",
+      "purpose": "兼容旧恢复键",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--profile",
+      "category": "全局或命令配置",
+      "purpose": "复用 Chrome 配置或持久目录",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--state",
+      "category": "全局或命令配置",
+      "purpose": "加载初始状态文件",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--headers",
+      "category": "全局或命令配置",
+      "purpose": "配置当前源请求头",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--executable-path",
+      "category": "全局或命令配置",
+      "purpose": "选择浏览器程序",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--extension",
+      "category": "全局或命令配置",
+      "purpose": "加载本地扩展",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--init-script",
+      "category": "全局或命令配置",
+      "purpose": "配置文档启动前脚本",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--enable",
+      "category": "全局或命令配置",
+      "purpose": "加载内建 React DevTools 初始化功能",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--args",
+      "category": "全局或命令配置",
+      "purpose": "追加浏览器启动参数",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--user-agent",
+      "category": "全局或命令配置",
+      "purpose": "设置 UA",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--proxy",
+      "category": "全局或命令配置",
+      "purpose": "配置带可选认证的上游代理",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--proxy-bypass",
+      "category": "全局或命令配置",
+      "purpose": "配置上游代理绕过域名",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--ignore-https-errors",
+      "category": "全局或命令配置",
+      "purpose": "选择忽略证书错误",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--ca-cert",
+      "category": "全局或命令配置",
+      "purpose": "增加 CLI 和受支持 Chromium 的 CA 信任",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--no-ca-cert",
+      "category": "全局或命令配置",
+      "purpose": "清除会话保留的额外 CA",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--use-system-ca",
+      "category": "全局或命令配置",
+      "purpose": "使用系统 CA 信任库",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--allow-file-access",
+      "category": "全局或命令配置",
+      "purpose": "允许 Chromium 本地文件页访问",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--hide-scrollbars",
+      "category": "全局或命令配置",
+      "purpose": "控制截图中的滚动条",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--provider",
+      "category": "全局或命令配置",
+      "purpose": "选择本地、云端或插件浏览器来源",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--device",
+      "category": "全局或命令配置",
+      "purpose": "选择 iOS 设备",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--json",
+      "category": "全局或命令配置",
+      "purpose": "返回结构化 JSON",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--annotate",
+      "category": "全局或命令配置",
+      "purpose": "截图叠加元素编号",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--if-changed",
+      "category": "全局或命令配置",
+      "purpose": "跳过未变化截图",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--threshold",
+      "category": "全局或命令配置",
+      "purpose": "设置截图像素变化阈值",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--screenshot-dir",
+      "category": "全局或命令配置",
+      "purpose": "设置截图保存目录",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--screenshot-quality",
+      "category": "全局或命令配置",
+      "purpose": "设置 JPEG 质量",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--screenshot-format",
+      "category": "全局或命令配置",
+      "purpose": "选择 PNG 或 JPEG",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--headed",
+      "category": "全局或命令配置",
+      "purpose": "显示浏览器窗口",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--webgpu",
+      "category": "全局或命令配置",
+      "purpose": "启用受支持环境的 WebGPU",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--no-webmcp",
+      "category": "全局或命令配置",
+      "purpose": "关闭默认实验页面工具",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--cdp",
+      "category": "全局或命令配置",
+      "purpose": "连接已有浏览器",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--auto-connect",
+      "category": "全局或命令配置",
+      "purpose": "发现运行中的 Chrome",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--pin-tab",
+      "category": "全局或命令配置",
+      "purpose": "固定 CDP target 并在缺失时报错",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--no-pin-tab",
+      "category": "全局或命令配置",
+      "purpose": "解除持久标签页固定",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--color-scheme",
+      "category": "全局或命令配置",
+      "purpose": "配置颜色模式",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--download-path",
+      "category": "全局或命令配置",
+      "purpose": "指定下载目录",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--content-boundaries",
+      "category": "全局或命令配置",
+      "purpose": "将不可信页面输出放入边界标记",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--max-output",
+      "category": "全局或命令配置",
+      "purpose": "限制页面输出字符数",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--allowed-domains",
+      "category": "全局或命令配置",
+      "purpose": "启用域名包含约束并拒绝不支持的启动模式",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--action-policy",
+      "category": "全局或命令配置",
+      "purpose": "加载静态动作策略",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--confirm-actions",
+      "category": "全局或命令配置",
+      "purpose": "要求指定动作类型人工确认",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--confirm-interactive",
+      "category": "全局或命令配置",
+      "purpose": "开启交互式确认",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--input-mode",
+      "category": "全局或命令配置",
+      "purpose": "设置指针移动模式",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--idle-timeout",
+      "category": "全局或命令配置",
+      "purpose": "设置 daemon 空闲关闭",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--engine",
+      "category": "全局或命令配置",
+      "purpose": "选择 Chrome、Lightpanda 或实验 Obscura",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--no-auto-dialog",
+      "category": "全局或命令配置",
+      "purpose": "关闭 alert/beforeunload 自动取消",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--model",
+      "category": "全局或命令配置",
+      "purpose": "选择网关聊天模型",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--verbose",
+      "category": "全局或命令配置",
+      "purpose": "显示聊天工具调用细节",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--quiet",
+      "category": "全局或命令配置",
+      "purpose": "仅显示聊天文本",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--config",
+      "category": "全局或命令配置",
+      "purpose": "显式加载配置文件",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--debug",
+      "category": "全局或命令配置",
+      "purpose": "输出诊断细节",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "plugin.manifest",
+      "category": "插件协议",
+      "purpose": "发现插件声明",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "plugins"
+      ]
+    },
+    {
+      "name": "credential.resolve",
+      "category": "插件协议",
+      "purpose": "调用凭据提供方",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "plugins"
+      ]
+    },
+    {
+      "name": "browser.launch",
+      "category": "插件协议",
+      "purpose": "调用浏览器提供方",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "plugins"
+      ]
+    },
+    {
+      "name": "launch.mutate",
+      "category": "插件协议",
+      "purpose": "调用启动配置扩展",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "plugins"
+      ]
+    },
+    {
+      "name": "command.run",
+      "category": "插件协议",
+      "purpose": "调用插件自定义命令",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "plugins"
+      ]
+    }
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "原生",
+      "detail": "原生 Rust CLI 与本地 stdio MCP。",
+      "sources": [
+        "readme",
+        "mcp_source",
+        "native"
+      ]
+    },
+    "D02": {
+      "availability": "未提供",
+      "detail": "固定 MCP 协议实现提供 tools，未注册 resources/prompts；技能读取以 tools/CLI 暴露。",
+      "sources": [
+        "mcp_source"
+      ]
+    },
+    "D03": {
+      "availability": "原生",
+      "detail": "原生 Rust CLI 与本地 stdio MCP。",
+      "sources": [
+        "readme",
+        "mcp_source",
+        "native"
+      ]
+    },
+    "D04": {
+      "availability": "部分",
+      "detail": "本地预览/工作台有 HTTP/WS；另有单独远程 Sandbox SDK，不等于原生远程 HTTP MCP。",
+      "sources": [
+        "streaming",
+        "dashboard",
+        "remote_sdk"
+      ]
+    },
+    "D05": {
+      "availability": "原生",
+      "detail": "原生 Rust CLI 与本地 stdio MCP。",
+      "sources": [
+        "readme",
+        "mcp_source",
+        "native"
+      ]
+    },
+    "D06": {
+      "availability": "原生",
+      "detail": "本地多会话观察 Dashboard 和人工输入。",
+      "sources": [
+        "dashboard"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "进程外插件接口；远程 TypeScript SDK 位于独立仓库，不混为旧已移除 Node daemon API。",
+      "sources": [
+        "plugins",
+        "remote_sdk",
+        "native"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "原生 Rust CLI 与本地 stdio MCP。",
+      "sources": [
+        "readme",
+        "mcp_source",
+        "native"
+      ]
+    },
+    "D09": {
+      "availability": "云端",
+      "detail": "官方文档集成 Vercel Sandbox 的独立 Remote Agent Browser；其他 provider 是第三方服务。",
+      "sources": [
+        "remote_sdk",
+        "readme"
+      ]
+    },
+    "D10": {
+      "availability": "部分",
+      "detail": "本仓库为构建容器；运行 Sandbox 镜像见独立远程库。",
+      "sources": [
+        "docker",
+        "remote_sdk"
+      ]
+    },
+    "D11": {
+      "availability": "原生",
+      "detail": "doctor/session info 诊断；MCP 分组与分页工具发现。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ]
+    },
+    "D12": {
+      "availability": "原生",
+      "detail": "doctor/session info 诊断；MCP 分组与分页工具发现。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ]
+    },
+    "B01": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B02": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B03": {
+      "availability": "部分",
+      "detail": "Lightpanda、实验 Obscura 和 Safari/iOS；功能和平台支持不对等。",
+      "sources": [
+        "lightpanda",
+        "obscura",
+        "ios"
+      ]
+    },
+    "B04": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B05": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B06": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B07": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B08": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B09": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B10": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B11": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B12": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B13": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B14": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B15": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B16": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B17": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B18": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B19": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B20": {
+      "availability": "原生",
+      "detail": "正式浏览器/状态/交互命令覆盖；引擎及共享 CDP 限制见 features。",
+      "sources": [
+        "readme",
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "B21": {
+      "availability": "部分",
+      "detail": "offline 明确支持；未据此认定有完整带宽/延迟节流模拟。",
+      "sources": [
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "O01": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O02": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O03": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O04": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O05": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O06": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O07": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O08": {
+      "availability": "原生",
+      "detail": "ARIA refs、delta、裁剪、唯一定位回退、标注与变化感知截图及 HTML/文本读取。",
+      "sources": [
+        "readme",
+        "snapshots",
+        "files"
+      ]
+    },
+    "O09": {
+      "availability": "未提供",
+      "detail": "156 个固定工具 schema 无面向任意业务 schema 的页面提取接口；read 的结构化输出不等同 schema extraction。",
+      "sources": [
+        "mcp_source"
+      ]
+    },
+    "O10": {
+      "availability": "云端",
+      "detail": "可选 chat 通过模型网关把自然语言转成命令；默认工具本身不内置模型推理。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "O11": {
+      "availability": "部分",
+      "detail": "替换节点后按唯一 role/name 回退，歧义失败；不是通用视觉/语义自愈。",
+      "sources": [
+        "snapshots"
+      ]
+    },
+    "O12": {
+      "availability": "原生",
+      "detail": "pdf 命令保存页面。",
+      "sources": [
+        "files"
+      ]
+    },
+    "N01": {
+      "availability": "不适用",
+      "detail": "浏览器 CLI/MCP，不是独立解密代理；CA 参数为信任外部 CA，不是生成 MITM CA。",
+      "sources": [
+        "readme",
+        "network"
+      ]
+    },
+    "N02": {
+      "availability": "不适用",
+      "detail": "浏览器 CLI/MCP，不是独立解密代理；CA 参数为信任外部 CA，不是生成 MITM CA。",
+      "sources": [
+        "readme",
+        "network"
+      ]
+    },
+    "N03": {
+      "availability": "未证实",
+      "detail": "已查全部 typed MCP、CLI 解析、完整命令参考和文档导航；未证实该维度的正式产品合同。",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference",
+        "docs_nav"
+      ]
+    },
+    "N04": {
+      "availability": "未证实",
+      "detail": "已查全部 typed MCP、CLI 解析、完整命令参考和文档导航；未证实该维度的正式产品合同。",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference",
+        "docs_nav"
+      ]
+    },
+    "N05": {
+      "availability": "不适用",
+      "detail": "浏览器 CLI/MCP，不是独立解密代理；CA 参数为信任外部 CA，不是生成 MITM CA。",
+      "sources": [
+        "readme",
+        "network"
+      ]
+    },
+    "N06": {
+      "availability": "部分",
+      "detail": "浏览器配置上游代理与 bypass；非多模式独立代理。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "request 详情与 URL/方法/状态/资源类型过滤。",
+      "sources": [
+        "network"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "request 详情与 URL/方法/状态/资源类型过滤。",
+      "sources": [
+        "network"
+      ]
+    },
+    "N09": {
+      "availability": "部分",
+      "detail": "HAR 表达 headers 数组；当前文档未给原始线上头序完整性保证。",
+      "sources": [
+        "network"
+      ]
+    },
+    "N10": {
+      "availability": "部分",
+      "detail": "HAR 文本正文和二进制 base64；未证明保留原传输压缩字节。",
+      "sources": [
+        "network"
+      ]
+    },
+    "N11": {
+      "availability": "原生",
+      "detail": "浏览器路由 mock/abort 和资源类型过滤。",
+      "sources": [
+        "network"
+      ]
+    },
+    "N12": {
+      "availability": "未提供",
+      "detail": "固定网络命令未暴露人工流量断点继续或捕获请求编辑重发工具；任意 eval 不按专用产品能力计。",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "network"
+      ]
+    },
+    "N13": {
+      "availability": "未提供",
+      "detail": "固定网络命令未暴露人工流量断点继续或捕获请求编辑重发工具；任意 eval 不按专用产品能力计。",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "network"
+      ]
+    },
+    "N14": {
+      "availability": "原生",
+      "detail": "浏览器路由 mock/abort 和资源类型过滤。",
+      "sources": [
+        "network"
+      ]
+    },
+    "N15": {
+      "availability": "部分",
+      "detail": "HAR 导出及正文模式明确，未证实 HAR 导入。",
+      "sources": [
+        "network"
+      ]
+    },
+    "N16": {
+      "availability": "部分",
+      "detail": "支持从 Copy-as-cURL 导入 Cookie；未提供捕获请求导出 cURL/客户端代码工具。",
+      "sources": [
+        "reference",
+        "mcp_source"
+      ]
+    },
+    "N17": {
+      "availability": "未提供",
+      "detail": "完整固定目录无 API 聚合或 OpenAPI 导入导出接口。",
+      "sources": [
+        "mcp_source",
+        "commands"
+      ]
+    },
+    "M01": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "M02": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "M03": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "M04": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "M06": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "M07": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "M08": {
+      "availability": "未证实",
+      "detail": "已查网络 schema/命令，无证据确认网站 SSE/WS 应用消息查询合同；预览 WebSocket 另计。",
+      "sources": [
+        "network",
+        "mcp_source",
+        "commands",
+        "streaming"
+      ]
+    },
+    "W01": {
+      "availability": "云端",
+      "detail": "chat 经可配置 AI Gateway 模型执行浏览命令；不是默认 CLI 所需模型。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W02": {
+      "availability": "云端",
+      "detail": "chat 经可配置 AI Gateway 模型执行浏览命令；不是默认 CLI 所需模型。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W03": {
+      "availability": "可选",
+      "detail": "插件自定义命令和页面 WebMCP；chat 可按任务调用。",
+      "sources": [
+        "plugins",
+        "webmcp"
+      ]
+    },
+    "W04": {
+      "availability": "原生",
+      "detail": "batch 显式顺序命令与 --bail；不是完整流程图引擎。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ]
+    },
+    "W05": {
+      "availability": "未提供",
+      "detail": "完整公开命令无正式条件/循环/并行 workflow 定义；外部脚本控制流不计本体。",
+      "sources": [
+        "mcp_source",
+        "commands"
+      ]
+    },
+    "W06": {
+      "availability": "原生",
+      "detail": "实时预览输入可人工接管；可选 confirm/deny 动作策略。",
+      "sources": [
+        "streaming",
+        "security"
+      ]
+    },
+    "W07": {
+      "availability": "部分",
+      "detail": "restore-check URL/文字/JS 及等待条件能验证观察状态；无通用业务目标完成 schema。",
+      "sources": [
+        "sessions",
+        "reference"
+      ]
+    },
+    "W08": {
+      "availability": "原生",
+      "detail": "Dashboard 活动时间流、命令结构化返回和 trace；实时流不宣称持久审计。",
+      "sources": [
+        "dashboard",
+        "streaming",
+        "readme"
+      ]
+    },
+    "W09": {
+      "availability": "部分",
+      "detail": "开启 restore 后周期/退出保存状态；不是每动作业务检查点。",
+      "sources": [
+        "sessions"
+      ]
+    },
+    "W10": {
+      "availability": "原生",
+      "detail": "Cookie/localStorage 恢复，CDP target 跨 daemon 重绑；不恢复已关闭页面的未知业务步骤。",
+      "sources": [
+        "sessions",
+        "cdp",
+        "binding"
+      ]
+    },
+    "W11": {
+      "availability": "原生",
+      "detail": "已写出的变更命令响应不明返回 outcome_unknown，禁止自动重发；只读重试有不同规则。",
+      "sources": [
+        "unknown",
+        "mcp_source"
+      ]
+    },
+    "W12": {
+      "availability": "部分",
+      "detail": "可录制 trace/状态；未证实任意任务历史自动重放或语义动作缓存。",
+      "sources": [
+        "sessions",
+        "readme"
+      ]
+    },
+    "W13": {
+      "availability": "可选",
+      "detail": "加密 vault、凭据插件、正常登录辅助与现有 Chrome 状态。",
+      "sources": [
+        "security",
+        "plugins",
+        "sessions"
+      ]
+    },
+    "W14": {
+      "availability": "部分",
+      "detail": "read 可处理文本/网页；本地 PDF 是浏览器展示，不据此认定通用 Office/PDF 文档解析。",
+      "sources": [
+        "readme",
+        "files"
+      ]
+    },
+    "W15": {
+      "availability": "部分",
+      "detail": "页面 WebMCP 可分离执行并 result/cancel；未证实通用任务定时/webhook。",
+      "sources": [
+        "webmcp"
+      ]
+    },
+    "T01": {
+      "availability": "原生",
+      "detail": "Console/页面异常，Chrome profiler、Web Vitals 与可选 React 性能观察。",
+      "sources": [
+        "readme",
+        "react"
+      ]
+    },
+    "T02": {
+      "availability": "原生",
+      "detail": "Console/页面异常，Chrome profiler、Web Vitals 与可选 React 性能观察。",
+      "sources": [
+        "readme",
+        "react"
+      ]
+    },
+    "T03": {
+      "availability": "未提供",
+      "detail": "156 个固定 MCP 与 CLI 解析无独立 heap snapshot/对象分析工具。",
+      "sources": [
+        "mcp_source",
+        "commands"
+      ]
+    },
+    "T04": {
+      "availability": "部分",
+      "detail": "trace 原生；视频需 ffmpeg，录制功能可选。",
+      "sources": [
+        "recording",
+        "readme"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "Dashboard 活动流与 HAR/trace 辅助排查；没有声明命令导致某网络事件的因果保证。",
+      "sources": [
+        "dashboard",
+        "network",
+        "readme"
+      ]
+    },
+    "T06": {
+      "availability": "原生",
+      "detail": "axe 无障碍、Web Vitals 和 React 调试；不等同于漏洞扫描。",
+      "sources": [
+        "readme",
+        "react",
+        "mcp_source"
+      ]
+    },
+    "T07": {
+      "availability": "未证实",
+      "detail": "已查全部 typed MCP、CLI 解析、完整命令参考和文档导航；未证实该维度的正式产品合同。",
+      "sources": [
+        "mcp_source",
+        "commands",
+        "reference",
+        "docs_nav"
+      ]
+    },
+    "T08": {
+      "availability": "原生",
+      "detail": "snapshot/screenshot/URL diff 和结构化 a11y 结果。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ]
+    },
+    "S01": {
+      "availability": "部分",
+      "detail": "HAR 可保存完整选择范围的正文；未证实重开持久流量数据库及查询。",
+      "sources": [
+        "network"
+      ]
+    },
+    "S02": {
+      "availability": "部分",
+      "detail": "tab 用户标签、录制产物可标识；没有把请求记录标签/备注/DAG 当已支持。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ]
+    },
+    "S03": {
+      "availability": "原生",
+      "detail": "download、wait --download、截图、PDF 与 HAR 二进制正文。",
+      "sources": [
+        "files",
+        "network"
+      ]
+    },
+    "S04": {
+      "availability": "未证实",
+      "detail": "已查下载/文件与输出 schema，未证实统一文件 hash/大小证据合同。",
+      "sources": [
+        "files",
+        "mcp_source"
+      ]
+    },
+    "S05": {
+      "availability": "部分",
+      "detail": "stream status、session info 可见运行状态；非持久 writer 队列审计。",
+      "sources": [
+        "streaming",
+        "sessions"
+      ]
+    },
+    "S06": {
+      "availability": "部分",
+      "detail": "输出字数、HAR 正文预算、状态按日过期与清理；不是统一采集磁盘限额。",
+      "sources": [
+        "readme",
+        "sessions",
+        "network"
+      ]
+    },
+    "S07": {
+      "availability": "原生",
+      "detail": "HAR、trace、视频、截图、PDF、diff 和状态文件产物。",
+      "sources": [
+        "network",
+        "files",
+        "recording",
+        "readme"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "用户/项目/env/CLI 配置及初始化脚本；安全敏感项目字段有不同加载规则。",
+      "sources": [
+        "config"
+      ]
+    },
+    "X02": {
+      "availability": "可选",
+      "detail": "进程外插件协议、npm/GitHub 注册、版本配套 skills 与浏览器扩展。",
+      "sources": [
+        "plugins",
+        "readme"
+      ]
+    },
+    "X03": {
+      "availability": "原生",
+      "detail": "MCP 有只读/开放世界注解；可选静态策略、确认动作和输出边界；注解不代替强制策略。",
+      "sources": [
+        "mcp_source",
+        "security"
+      ]
+    },
+    "X04": {
+      "availability": "部分",
+      "detail": "Dashboard 外部访问 origin/token/cookie 与 loopback stream 约束；不等于远程 HTTP MCP 身份系统。",
+      "sources": [
+        "dashboard",
+        "streaming"
+      ]
+    },
+    "X05": {
+      "availability": "原生",
+      "detail": "自建/借用/云端资源与空闲清理分开；云停止失败有待清理状态。",
+      "sources": [
+        "sessions",
+        "readme"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "JSON 命令结果、doctor、session info、stream status 和 debug。",
+      "sources": [
+        "readme",
+        "mcp_source"
+      ]
+    }
+  },
+  "notes": [
+    "核对日期 2026-10-25；只读官方源码/文档，未运行下载代码、浏览器或性能基准。",
+    "156 个固定 MCP 是所有能力组的目录并集，默认 core 为 29；CLI 命令、别名、配置和插件协议另行列出，不能用总接口数排名。",
+    "工具定义与常量 156 项逐项对齐；具体参数见固定 mcp.rs 的 schema，不复制整段 upstream 描述。",
+    "浏览器视口 WebSocket 不是网站应用 WebSocket 捕获；实时 Console 与活动流也不是持久证据库。",
+    "旧 TypeScript/Playwright daemon 已移除；streaming 文档保留的 TypeScript 片段未视为本版本受支持 SDK 证据。",
+    "多引擎、iOS、WebGPU、云提供方和插件存在不同依赖/限制；Cloud/Gateway 费用与服务条款在外部，本体开源不代表外部服务免费。",
+    "默认自动取消部分 alert/beforeunload；正常 confirm/prompt 和显式 dialog 工具语义应按具体页面读取。",
+    "未证实不是不存在；未提供仅针对本次完整公开 CLI/MCP 目录缺少相应专用接口，不否认外部脚本可自行实现。"
+  ]
+}

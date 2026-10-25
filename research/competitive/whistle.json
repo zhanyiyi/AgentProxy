@@ -1,0 +1,3923 @@
+{
+  "project": "Whistle",
+  "repo": "https://github.com/avwo/whistle",
+  "revision": "16607ba277b383d050bc6efce046b4c92cc0ae39",
+  "version": "2.10.12（master HEAD 的 package.json；GitHub /releases/latest 返回 404，不虚构发布标签）",
+  "license": "MIT",
+  "sources": [
+    {
+      "id": "whistle-meta",
+      "title": "master HEAD 元数据",
+      "url": "https://api.github.com/repos/avwo/whistle/commits/master"
+    },
+    {
+      "id": "whistle-package",
+      "title": "包版本、许可证、Node 要求和 CLI 名",
+      "url": "https://github.com/avwo/whistle/blob/16607ba277b383d050bc6efce046b4c92cc0ae39/package.json"
+    },
+    {
+      "id": "whistle-readme",
+      "title": "官方项目定位与功能",
+      "url": "https://github.com/avwo/whistle/blob/16607ba277b383d050bc6efce046b4c92cc0ae39/README.md"
+    },
+    {
+      "id": "whistle-license",
+      "title": "MIT 许可证",
+      "url": "https://github.com/avwo/whistle/blob/16607ba277b383d050bc6efce046b4c92cc0ae39/LICENSE"
+    },
+    {
+      "id": "whistle-docs",
+      "title": "官方帮助及功能目录",
+      "url": "https://wproxy.org/docs/"
+    },
+    {
+      "id": "whistle-network",
+      "title": "Network、过滤、Timeline 和 Frames",
+      "url": "https://wproxy.org/docs/gui/network.html"
+    },
+    {
+      "id": "whistle-composer",
+      "title": "请求编辑、重发与保存",
+      "url": "https://wproxy.org/docs/gui/composer.html"
+    },
+    {
+      "id": "whistle-https",
+      "title": "HTTPS/HTTP2 与自定义证书",
+      "url": "https://wproxy.org/docs/gui/https.html"
+    },
+    {
+      "id": "whistle-cli",
+      "title": "CLI、配置、多实例与账号",
+      "url": "https://wproxy.org/docs/cli.html"
+    },
+    {
+      "id": "whistle-api",
+      "title": "官方 Local Agent API",
+      "url": "https://wproxy.org/docs/extensions/api.html"
+    },
+    {
+      "id": "whistle-api-src",
+      "title": "本地 API 完整方法与消息游标",
+      "url": "https://github.com/avwo/whistle/blob/16607ba277b383d050bc6efce046b4c92cc0ae39/bin/api.js"
+    },
+    {
+      "id": "whistle-protocols",
+      "title": "全部规则操作类别",
+      "url": "https://wproxy.org/docs/rules/protocols.html"
+    },
+    {
+      "id": "whistle-plugins",
+      "title": "插件安装、扩展位置与处理管道",
+      "url": "https://wproxy.org/docs/extensions/usage.html"
+    },
+    {
+      "id": "whistle-plugin-dev",
+      "title": "插件开发 Hook/API",
+      "url": "https://wproxy.org/docs/extensions/dev.html"
+    },
+    {
+      "id": "whistle-npm",
+      "title": "NPM 模块嵌入",
+      "url": "https://wproxy.org/docs/extensions/npm.html"
+    },
+    {
+      "id": "whistle-reqscript",
+      "title": "请求阶段动态规则",
+      "url": "https://wproxy.org/docs/rules/reqScript.html"
+    },
+    {
+      "id": "whistle-framescript",
+      "title": "WebSocket/TCP 帧脚本",
+      "url": "https://wproxy.org/docs/rules/frameScript.html"
+    },
+    {
+      "id": "whistle-weinre",
+      "title": "远程 DOM 调试",
+      "url": "https://wproxy.org/docs/gui/weinre.html"
+    },
+    {
+      "id": "whistle-console",
+      "title": "远程 Console",
+      "url": "https://wproxy.org/docs/gui/console.html"
+    },
+    {
+      "id": "whistle-reqwrite",
+      "title": "请求数据保存",
+      "url": "https://wproxy.org/docs/rules/reqWrite.html"
+    },
+    {
+      "id": "whistle-reswrite",
+      "title": "响应数据保存",
+      "url": "https://wproxy.org/docs/rules/resWrite.html"
+    },
+    {
+      "id": "whistle-mobile",
+      "title": "移动设备接入",
+      "url": "https://wproxy.org/docs/mobile.html"
+    },
+    {
+      "id": "whistle-faq",
+      "title": "协议接入限制与错误排查",
+      "url": "https://wproxy.org/docs/faq.html"
+    },
+    {
+      "id": "whistle-extra-api-transport",
+      "title": "固定版本Agent API的HTTP路径/认证封装",
+      "url": "https://github.com/avwo/whistle/blob/16607ba277b383d050bc6efce046b4c92cc0ae39/bin/use.js"
+    },
+    {
+      "id": "whistle-extra-protocol-source",
+      "title": "固定版本规则操作名及兼容别名注册",
+      "url": "https://github.com/avwo/whistle/blob/16607ba277b383d050bc6efce046b4c92cc0ae39/lib/rules/protocols.js"
+    },
+    {
+      "id": "whistle-rule-external",
+      "title": "规则协议 @",
+      "url": "https://wproxy.org/docs/rules/@.html"
+    },
+    {
+      "id": "whistle-rule-plugin-vars",
+      "title": "规则协议 %",
+      "url": "https://wproxy.org/docs/rules/plugin-vars.html"
+    },
+    {
+      "id": "whistle-rule-file",
+      "title": "规则协议 file",
+      "url": "https://wproxy.org/docs/rules/file.html"
+    },
+    {
+      "id": "whistle-rule-xfile",
+      "title": "规则协议 xfile",
+      "url": "https://wproxy.org/docs/rules/xfile.html"
+    },
+    {
+      "id": "whistle-rule-tpl",
+      "title": "规则协议 tpl",
+      "url": "https://wproxy.org/docs/rules/tpl.html"
+    },
+    {
+      "id": "whistle-rule-xtpl",
+      "title": "规则协议 xtpl",
+      "url": "https://wproxy.org/docs/rules/xtpl.html"
+    },
+    {
+      "id": "whistle-rule-rawfile",
+      "title": "规则协议 rawfile",
+      "url": "https://wproxy.org/docs/rules/rawfile.html"
+    },
+    {
+      "id": "whistle-rule-xrawfile",
+      "title": "规则协议 xrawfile",
+      "url": "https://wproxy.org/docs/rules/xrawfile.html"
+    },
+    {
+      "id": "whistle-rule-https",
+      "title": "规则协议 https",
+      "url": "https://wproxy.org/docs/rules/https.html"
+    },
+    {
+      "id": "whistle-rule-http",
+      "title": "规则协议 http",
+      "url": "https://wproxy.org/docs/rules/http.html"
+    },
+    {
+      "id": "whistle-rule-wss",
+      "title": "规则协议 wss",
+      "url": "https://wproxy.org/docs/rules/wss.html"
+    },
+    {
+      "id": "whistle-rule-ws",
+      "title": "规则协议 ws",
+      "url": "https://wproxy.org/docs/rules/ws.html"
+    },
+    {
+      "id": "whistle-rule-tunnel",
+      "title": "规则协议 tunnel",
+      "url": "https://wproxy.org/docs/rules/tunnel.html"
+    },
+    {
+      "id": "whistle-rule-host",
+      "title": "规则协议 host",
+      "url": "https://wproxy.org/docs/rules/host.html"
+    },
+    {
+      "id": "whistle-rule-xhost",
+      "title": "规则协议 xhost",
+      "url": "https://wproxy.org/docs/rules/xhost.html"
+    },
+    {
+      "id": "whistle-rule-proxy",
+      "title": "规则协议 proxy",
+      "url": "https://wproxy.org/docs/rules/proxy.html"
+    },
+    {
+      "id": "whistle-rule-xproxy",
+      "title": "规则协议 xproxy",
+      "url": "https://wproxy.org/docs/rules/xproxy.html"
+    },
+    {
+      "id": "whistle-rule-https-proxy",
+      "title": "规则协议 https-proxy",
+      "url": "https://wproxy.org/docs/rules/https-proxy.html"
+    },
+    {
+      "id": "whistle-rule-xhttps-proxy",
+      "title": "规则协议 xhttps-proxy",
+      "url": "https://wproxy.org/docs/rules/xhttps-proxy.html"
+    },
+    {
+      "id": "whistle-rule-socks",
+      "title": "规则协议 socks",
+      "url": "https://wproxy.org/docs/rules/socks.html"
+    },
+    {
+      "id": "whistle-rule-xsocks",
+      "title": "规则协议 xsocks",
+      "url": "https://wproxy.org/docs/rules/xsocks.html"
+    },
+    {
+      "id": "whistle-rule-pac",
+      "title": "规则协议 pac",
+      "url": "https://wproxy.org/docs/rules/pac.html"
+    },
+    {
+      "id": "whistle-rule-urlParams",
+      "title": "规则协议 urlParams",
+      "url": "https://wproxy.org/docs/rules/urlParams.html"
+    },
+    {
+      "id": "whistle-rule-pathReplace",
+      "title": "规则协议 pathReplace",
+      "url": "https://wproxy.org/docs/rules/pathReplace.html"
+    },
+    {
+      "id": "whistle-rule-sniCallback",
+      "title": "规则协议 sniCallback",
+      "url": "https://wproxy.org/docs/rules/sniCallback.html"
+    },
+    {
+      "id": "whistle-rule-method",
+      "title": "规则协议 method",
+      "url": "https://wproxy.org/docs/rules/method.html"
+    },
+    {
+      "id": "whistle-rule-tlsOptions",
+      "title": "规则协议 tlsOptions",
+      "url": "https://wproxy.org/docs/rules/cipher.html"
+    },
+    {
+      "id": "whistle-rule-reqHeaders",
+      "title": "规则协议 reqHeaders",
+      "url": "https://wproxy.org/docs/rules/reqHeaders.html"
+    },
+    {
+      "id": "whistle-rule-forwardedFor",
+      "title": "规则协议 forwardedFor",
+      "url": "https://wproxy.org/docs/rules/forwardedFor.html"
+    },
+    {
+      "id": "whistle-rule-ua",
+      "title": "规则协议 ua",
+      "url": "https://wproxy.org/docs/rules/ua.html"
+    },
+    {
+      "id": "whistle-rule-auth",
+      "title": "规则协议 auth",
+      "url": "https://wproxy.org/docs/rules/auth.html"
+    },
+    {
+      "id": "whistle-rule-cache",
+      "title": "规则协议 cache",
+      "url": "https://wproxy.org/docs/rules/cache.html"
+    },
+    {
+      "id": "whistle-rule-referer",
+      "title": "规则协议 referer",
+      "url": "https://wproxy.org/docs/rules/referer.html"
+    },
+    {
+      "id": "whistle-rule-attachment",
+      "title": "规则协议 attachment",
+      "url": "https://wproxy.org/docs/rules/attachment.html"
+    },
+    {
+      "id": "whistle-rule-reqCharset",
+      "title": "规则协议 reqCharset",
+      "url": "https://wproxy.org/docs/rules/reqCharset.html"
+    },
+    {
+      "id": "whistle-rule-reqCookies",
+      "title": "规则协议 reqCookies",
+      "url": "https://wproxy.org/docs/rules/reqCookies.html"
+    },
+    {
+      "id": "whistle-rule-reqCors",
+      "title": "规则协议 reqCors",
+      "url": "https://wproxy.org/docs/rules/reqCors.html"
+    },
+    {
+      "id": "whistle-rule-reqType",
+      "title": "规则协议 reqType",
+      "url": "https://wproxy.org/docs/rules/reqType.html"
+    },
+    {
+      "id": "whistle-rule-reqBody",
+      "title": "规则协议 reqBody",
+      "url": "https://wproxy.org/docs/rules/reqBody.html"
+    },
+    {
+      "id": "whistle-rule-reqMerge",
+      "title": "规则协议 reqMerge",
+      "url": "https://wproxy.org/docs/rules/reqMerge.html"
+    },
+    {
+      "id": "whistle-rule-reqPrepend",
+      "title": "规则协议 reqPrepend",
+      "url": "https://wproxy.org/docs/rules/reqPrepend.html"
+    },
+    {
+      "id": "whistle-rule-reqAppend",
+      "title": "规则协议 reqAppend",
+      "url": "https://wproxy.org/docs/rules/reqAppend.html"
+    },
+    {
+      "id": "whistle-rule-reqReplace",
+      "title": "规则协议 reqReplace",
+      "url": "https://wproxy.org/docs/rules/reqReplace.html"
+    },
+    {
+      "id": "whistle-rule-reqWrite",
+      "title": "规则协议 reqWrite",
+      "url": "https://wproxy.org/docs/rules/reqWrite.html"
+    },
+    {
+      "id": "whistle-rule-reqWriteRaw",
+      "title": "规则协议 reqWriteRaw",
+      "url": "https://wproxy.org/docs/rules/reqWriteRaw.html"
+    },
+    {
+      "id": "whistle-rule-reqRules",
+      "title": "规则协议 reqRules",
+      "url": "https://wproxy.org/docs/rules/reqRules.html"
+    },
+    {
+      "id": "whistle-rule-reqScript",
+      "title": "规则协议 reqScript",
+      "url": "https://wproxy.org/docs/rules/reqScript.html"
+    },
+    {
+      "id": "whistle-rule-statusCode",
+      "title": "规则协议 statusCode",
+      "url": "https://wproxy.org/docs/rules/statusCode.html"
+    },
+    {
+      "id": "whistle-rule-replaceStatus",
+      "title": "规则协议 replaceStatus",
+      "url": "https://wproxy.org/docs/rules/replaceStatus.html"
+    },
+    {
+      "id": "whistle-rule-redirect",
+      "title": "规则协议 redirect",
+      "url": "https://wproxy.org/docs/rules/redirect.html"
+    },
+    {
+      "id": "whistle-rule-locationHref",
+      "title": "规则协议 locationHref",
+      "url": "https://wproxy.org/docs/rules/locationHref.html"
+    },
+    {
+      "id": "whistle-rule-resHeaders",
+      "title": "规则协议 resHeaders",
+      "url": "https://wproxy.org/docs/rules/resHeaders.html"
+    },
+    {
+      "id": "whistle-rule-responseFor",
+      "title": "规则协议 responseFor",
+      "url": "https://wproxy.org/docs/rules/responseFor.html"
+    },
+    {
+      "id": "whistle-rule-resCharset",
+      "title": "规则协议 resCharset",
+      "url": "https://wproxy.org/docs/rules/resCharset.html"
+    },
+    {
+      "id": "whistle-rule-resCookies",
+      "title": "规则协议 resCookies",
+      "url": "https://wproxy.org/docs/rules/resCookies.html"
+    },
+    {
+      "id": "whistle-rule-resCors",
+      "title": "规则协议 resCors",
+      "url": "https://wproxy.org/docs/rules/resCors.html"
+    },
+    {
+      "id": "whistle-rule-resType",
+      "title": "规则协议 resType",
+      "url": "https://wproxy.org/docs/rules/resType.html"
+    },
+    {
+      "id": "whistle-rule-resBody",
+      "title": "规则协议 resBody",
+      "url": "https://wproxy.org/docs/rules/resBody.html"
+    },
+    {
+      "id": "whistle-rule-resMerge",
+      "title": "规则协议 resMerge",
+      "url": "https://wproxy.org/docs/rules/resMerge.html"
+    },
+    {
+      "id": "whistle-rule-resPrepend",
+      "title": "规则协议 resPrepend",
+      "url": "https://wproxy.org/docs/rules/resPrepend.html"
+    },
+    {
+      "id": "whistle-rule-resAppend",
+      "title": "规则协议 resAppend",
+      "url": "https://wproxy.org/docs/rules/resAppend.html"
+    },
+    {
+      "id": "whistle-rule-resReplace",
+      "title": "规则协议 resReplace",
+      "url": "https://wproxy.org/docs/rules/resReplace.html"
+    },
+    {
+      "id": "whistle-rule-htmlPrepend",
+      "title": "规则协议 htmlPrepend",
+      "url": "https://wproxy.org/docs/rules/htmlPrepend.html"
+    },
+    {
+      "id": "whistle-rule-htmlBody",
+      "title": "规则协议 htmlBody",
+      "url": "https://wproxy.org/docs/rules/htmlBody.html"
+    },
+    {
+      "id": "whistle-rule-htmlAppend",
+      "title": "规则协议 htmlAppend",
+      "url": "https://wproxy.org/docs/rules/htmlAppend.html"
+    },
+    {
+      "id": "whistle-rule-cssPrepend",
+      "title": "规则协议 cssPrepend",
+      "url": "https://wproxy.org/docs/rules/cssPrepend.html"
+    },
+    {
+      "id": "whistle-rule-cssBody",
+      "title": "规则协议 cssBody",
+      "url": "https://wproxy.org/docs/rules/cssBody.html"
+    },
+    {
+      "id": "whistle-rule-cssAppend",
+      "title": "规则协议 cssAppend",
+      "url": "https://wproxy.org/docs/rules/cssAppend.html"
+    },
+    {
+      "id": "whistle-rule-jsPrepend",
+      "title": "规则协议 jsPrepend",
+      "url": "https://wproxy.org/docs/rules/jsPrepend.html"
+    },
+    {
+      "id": "whistle-rule-jsBody",
+      "title": "规则协议 jsBody",
+      "url": "https://wproxy.org/docs/rules/jsBody.html"
+    },
+    {
+      "id": "whistle-rule-jsAppend",
+      "title": "规则协议 jsAppend",
+      "url": "https://wproxy.org/docs/rules/jsAppend.html"
+    },
+    {
+      "id": "whistle-rule-trailers",
+      "title": "规则协议 trailers",
+      "url": "https://wproxy.org/docs/rules/trailers.html"
+    },
+    {
+      "id": "whistle-rule-resWrite",
+      "title": "规则协议 resWrite",
+      "url": "https://wproxy.org/docs/rules/resWrite.html"
+    },
+    {
+      "id": "whistle-rule-resWriteRaw",
+      "title": "规则协议 resWriteRaw",
+      "url": "https://wproxy.org/docs/rules/resWriteRaw.html"
+    },
+    {
+      "id": "whistle-rule-resRules",
+      "title": "规则协议 resRules",
+      "url": "https://wproxy.org/docs/rules/resRules.html"
+    },
+    {
+      "id": "whistle-rule-resScript",
+      "title": "规则协议 resScript",
+      "url": "https://wproxy.org/docs/rules/resScript.html"
+    },
+    {
+      "id": "whistle-rule-pipe",
+      "title": "规则协议 pipe",
+      "url": "https://wproxy.org/docs/rules/pipe.html"
+    },
+    {
+      "id": "whistle-rule-delete",
+      "title": "规则协议 delete",
+      "url": "https://wproxy.org/docs/rules/delete.html"
+    },
+    {
+      "id": "whistle-rule-headerReplace",
+      "title": "规则协议 headerReplace",
+      "url": "https://wproxy.org/docs/rules/headerReplace.html"
+    },
+    {
+      "id": "whistle-rule-reqDelay",
+      "title": "规则协议 reqDelay",
+      "url": "https://wproxy.org/docs/rules/reqDelay.html"
+    },
+    {
+      "id": "whistle-rule-resDelay",
+      "title": "规则协议 resDelay",
+      "url": "https://wproxy.org/docs/rules/resDelay.html"
+    },
+    {
+      "id": "whistle-rule-reqSpeed",
+      "title": "规则协议 reqSpeed",
+      "url": "https://wproxy.org/docs/rules/reqSpeed.html"
+    },
+    {
+      "id": "whistle-rule-resSpeed",
+      "title": "规则协议 resSpeed",
+      "url": "https://wproxy.org/docs/rules/resSpeed.html"
+    },
+    {
+      "id": "whistle-rule-weinre",
+      "title": "规则协议 weinre",
+      "url": "https://wproxy.org/docs/rules/weinre.html"
+    },
+    {
+      "id": "whistle-rule-log",
+      "title": "规则协议 log",
+      "url": "https://wproxy.org/docs/rules/log.html"
+    },
+    {
+      "id": "whistle-rule-style",
+      "title": "规则协议 style",
+      "url": "https://wproxy.org/docs/rules/style.html"
+    },
+    {
+      "id": "whistle-rule-lineProps",
+      "title": "规则协议 lineProps",
+      "url": "https://wproxy.org/docs/rules/lineProps.html"
+    },
+    {
+      "id": "whistle-rule-enable",
+      "title": "规则协议 enable",
+      "url": "https://wproxy.org/docs/rules/enable.html"
+    },
+    {
+      "id": "whistle-rule-disable",
+      "title": "规则协议 disable",
+      "url": "https://wproxy.org/docs/rules/disable.html"
+    },
+    {
+      "id": "whistle-rule-ignore",
+      "title": "规则协议 ignore",
+      "url": "https://wproxy.org/docs/rules/ignore.html"
+    },
+    {
+      "id": "whistle-rule-skip",
+      "title": "规则协议 skip",
+      "url": "https://wproxy.org/docs/rules/skip.html"
+    },
+    {
+      "id": "whistle-rule-excludeFilter",
+      "title": "规则协议 excludeFilter",
+      "url": "https://wproxy.org/docs/rules/excludeFilter.html"
+    },
+    {
+      "id": "whistle-rule-includeFilter",
+      "title": "规则协议 includeFilter",
+      "url": "https://wproxy.org/docs/rules/includeFilter.html"
+    },
+    {
+      "id": "whistle-rule-frameScript",
+      "title": "规则协议 frameScript",
+      "url": "https://wproxy.org/docs/rules/frameScript.html"
+    }
+  ],
+  "features": [
+    {
+      "id": "whistle-protocol",
+      "category": "协议",
+      "name": "HTTP、HTTPS、HTTP/2、WebSocket 与 TCP",
+      "availability": "原生",
+      "detail": "官方公开抓包与改写协议范围；未据此声称支持 UDP 或 HTTP/3。",
+      "sources": [
+        "whistle-readme"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames"
+      ]
+    },
+    {
+      "id": "whistle-h2",
+      "category": "协议",
+      "name": "HTTP/2 开关与请求构造",
+      "availability": "原生",
+      "detail": "HTTPS 设置可切 HTTP/2，Composer 可选择 HTTP/2；实际握手限制依赖客户端和服务端。",
+      "sources": [
+        "whistle-https",
+        "whistle-composer"
+      ],
+      "interfaces": [
+        "HTTPS / Custom Certs",
+        "Composer"
+      ]
+    },
+    {
+      "id": "whistle-modes",
+      "category": "接入",
+      "name": "HTTP(S)/SOCKS/反向代理",
+      "availability": "原生",
+      "detail": "CLI 可监听 HTTPS 与 SOCKS5 端口，常规客户端或外部设备可接入。",
+      "sources": [
+        "whistle-readme",
+        "whistle-cli"
+      ],
+      "interfaces": [
+        "w2 / whistle / wproxy"
+      ]
+    },
+    {
+      "id": "whistle-upstream",
+      "category": "接入",
+      "name": "上游 HTTP、HTTPS、SOCKS 与 PAC",
+      "availability": "原生",
+      "detail": "规则支持上游代理及其回退变体和 PAC；host/xhost 为目标解析映射。",
+      "sources": [
+        "whistle-protocols"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-mobile",
+      "category": "接入",
+      "name": "移动端代理与证书引导",
+      "availability": "原生",
+      "detail": "移动设备设置代理及扫码下载安装 CA；不是无条件捕获所有 App。",
+      "sources": [
+        "whistle-mobile",
+        "whistle-faq"
+      ],
+      "interfaces": [
+        "HTTPS / Custom Certs"
+      ]
+    },
+    {
+      "id": "whistle-ui",
+      "category": "界面",
+      "name": "完整 Web 调试工作台",
+      "availability": "原生",
+      "detail": "Network/规则/值/插件/Weinre/Console/Composer 共享界面，官方还提供可选桌面客户端。",
+      "sources": [
+        "whistle-readme",
+        "whistle-docs"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames",
+        "Rules / Values",
+        "Composer"
+      ]
+    },
+    {
+      "id": "whistle-details",
+      "category": "观察",
+      "name": "请求响应详情与匹配规则",
+      "availability": "原生",
+      "detail": "Overview、Inspectors、Timeline 和 Server 错误；可查看已命中的规则。",
+      "sources": [
+        "whistle-network"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames"
+      ]
+    },
+    {
+      "id": "whistle-search",
+      "category": "观察",
+      "name": "全文/正则与多条件过滤",
+      "availability": "原生",
+      "detail": "URL、方法、头体、Host、IP、状态、类型、应用、标记、Composer 和错误筛选。",
+      "sources": [
+        "whistle-network"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames"
+      ]
+    },
+    {
+      "id": "whistle-capture-filter",
+      "category": "观察",
+      "name": "捕获过滤与显示过滤分开",
+      "availability": "原生",
+      "detail": "Include/Exclude Filter 作用未来请求；底部搜索也可过滤已显示请求，公开语义不同。",
+      "sources": [
+        "whistle-network"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames"
+      ]
+    },
+    {
+      "id": "whistle-ui-budget",
+      "category": "存储",
+      "name": "列表预算与树形查看",
+      "availability": "原生",
+      "detail": "Maximum Rows、可选列、域名/路径树、仅本机来源与大正文独立窗口。",
+      "sources": [
+        "whistle-network"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames"
+      ]
+    },
+    {
+      "id": "whistle-ws",
+      "category": "实时消息",
+      "name": "WebSocket/TCP Frames 观察",
+      "availability": "原生",
+      "detail": "连接开放期间查看应用数据和传输方向，可在 Frames Composer 向两端发送自定义数据。",
+      "sources": [
+        "whistle-network",
+        "whistle-api-src"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames",
+        "Local Agent API: network"
+      ]
+    },
+    {
+      "id": "whistle-frame-control",
+      "category": "实时消息",
+      "name": "暂停、继续和忽略传输",
+      "availability": "原生",
+      "detail": "Frames 的 Send/Receive、Pause、Ignore，以及对应初始规则控制。",
+      "sources": [
+        "whistle-network"
+      ],
+      "interfaces": [
+        "Network / Inspectors / Timeline / Frames"
+      ]
+    },
+    {
+      "id": "whistle-frame-script",
+      "category": "实时消息",
+      "name": "消息脚本扩展",
+      "availability": "原生",
+      "detail": "frameScript 对 WebSocket 和普通 TCP 数据帧进行脚本处理；不推断 SSE 事件级处理。",
+      "sources": [
+        "whistle-framescript"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-frame-cursor",
+      "category": "实时消息",
+      "name": "帧增量游标与方向筛选",
+      "availability": "原生",
+      "detail": "getFrames 支持 reqId、startId/startTime、count、latest、client/server，公开最大单次 120。",
+      "sources": [
+        "whistle-api-src"
+      ],
+      "interfaces": [
+        "Local Agent API: network"
+      ]
+    },
+    {
+      "id": "whistle-maplocal",
+      "category": "改写",
+      "name": "本地文件、模板与原始响应映射",
+      "availability": "原生",
+      "detail": "file/xfile、tpl/xtpl、rawfile/xrawfile 等一等规则类别。",
+      "sources": [
+        "whistle-protocols"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-mapremote",
+      "category": "改写",
+      "name": "远程 HTTP/WebSocket/隧道路由",
+      "availability": "原生",
+      "detail": "http/https/ws/wss/tunnel 及协议继承，host/DNS 目标映射。",
+      "sources": [
+        "whistle-protocols"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-request-rewrite",
+      "category": "改写",
+      "name": "请求字段和内容改写",
+      "availability": "原生",
+      "detail": "方法、URL 参数/路径、头、Cookie、UA、鉴权字段、CORS、字符集、正文与 JSON 合并/替换。",
+      "sources": [
+        "whistle-protocols"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-response-rewrite",
+      "category": "改写",
+      "name": "响应字段与内容改写",
+      "availability": "原生",
+      "detail": "状态/重定向、头/Cookie/CORS、正文/JSON，以及 HTML/CSS/JS 增改与 trailers 规则。",
+      "sources": [
+        "whistle-protocols"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-dynamic-rules",
+      "category": "改写",
+      "name": "动态请求/响应规则脚本",
+      "availability": "原生",
+      "detail": "reqScript/resScript、reqRules/resRules 按运行上下文生成规则；不是业务流程执行引擎。",
+      "sources": [
+        "whistle-protocols",
+        "whistle-reqscript"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-throttle",
+      "category": "调试",
+      "name": "延迟与带宽节流",
+      "availability": "原生",
+      "detail": "请求/响应延迟和传输速度是一等规则。",
+      "sources": [
+        "whistle-protocols"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-write",
+      "category": "存储",
+      "name": "请求响应正文或原始报文写出",
+      "availability": "原生",
+      "detail": "reqWrite/reqWriteRaw/resWrite/resWriteRaw；可保存响应附件字节，具体规则区分正文和原始报文。",
+      "sources": [
+        "whistle-protocols",
+        "whistle-reqwrite",
+        "whistle-reswrite"
+      ],
+      "interfaces": [
+        "Rules / Values"
+      ]
+    },
+    {
+      "id": "whistle-composer-build",
+      "category": "重发",
+      "name": "完整请求构造与文件正文",
+      "availability": "原生",
+      "detail": "方法、URL/参数、头体、文件正文、HTTP2、自定义规则及是否套用全局规则。",
+      "sources": [
+        "whistle-composer"
+      ],
+      "interfaces": [
+        "Composer",
+        "Local Agent API: network"
+      ]
+    },
+    {
+      "id": "whistle-replay",
+      "category": "重发",
+      "name": "选中流量重发与批量次数",
+      "availability": "原生",
+      "detail": "列表 Replay 或 Composer 编辑后发送；Composer 次数上限 100。",
+      "sources": [
+        "whistle-composer",
+        "whistle-network"
+      ],
+      "interfaces": [
+        "Composer"
+      ]
+    },
+    {
+      "id": "whistle-export",
+      "category": "导出",
+      "name": "请求导入导出和 cURL",
+      "availability": "原生",
+      "detail": "Composer 提供 Import/Export/AsCURL；这里不把未核验的 HAR/SAZ 格式当成已证实。",
+      "sources": [
+        "whistle-composer"
+      ],
+      "interfaces": [
+        "Composer"
+      ]
+    },
+    {
+      "id": "whistle-saved",
+      "category": "存储",
+      "name": "保存会话与重开",
+      "availability": "原生",
+      "detail": "源码公开 network.saveSessions/getSavedSessions；Composer 自动保存最多 64 条历史。",
+      "sources": [
+        "whistle-api-src",
+        "whistle-composer"
+      ],
+      "interfaces": [
+        "Local Agent API: network",
+        "Composer"
+      ]
+    },
+    {
+      "id": "whistle-ca",
+      "category": "证书",
+      "name": "CA 下载、系统安装与格式选择",
+      "availability": "原生",
+      "detail": "CRT/CER/PEM 和移动二维码；CLI ca 在 Windows/macOS 自动安装，Linux 需手动。",
+      "sources": [
+        "whistle-https",
+        "whistle-cli"
+      ],
+      "interfaces": [
+        "HTTPS / Custom Certs",
+        "w2 / whistle / wproxy"
+      ]
+    },
+    {
+      "id": "whistle-cert-custom",
+      "category": "证书",
+      "name": "自定义服务器证书和根证书",
+      "availability": "部分",
+      "detail": "UI 上传成对服务器 key/cert；自定义根证书需指定目录并重启，不能直接在 UI 当普通服务器证书上传。",
+      "sources": [
+        "whistle-https"
+      ],
+      "interfaces": [
+        "HTTPS / Custom Certs"
+      ]
+    },
+    {
+      "id": "whistle-auth",
+      "category": "访问控制",
+      "name": "管理与只读游客账号",
+      "availability": "原生",
+      "detail": "CLI 可设置管理账号和只读 guest 账号，单独 UI 端口与 allowOrigin。",
+      "sources": [
+        "whistle-cli"
+      ],
+      "interfaces": [
+        "w2 / whistle / wproxy"
+      ]
+    },
+    {
+      "id": "whistle-proxy-auth",
+      "category": "访问控制",
+      "name": "代理认证扩展",
+      "availability": "可选",
+      "detail": "代理请求认证通过插件 Hook/插件实现；不把管理界面登录等价成代理认证。",
+      "sources": [
+        "whistle-cli",
+        "whistle-plugins"
+      ],
+      "interfaces": [
+        "Plugin Hooks / pipe"
+      ]
+    },
+    {
+      "id": "whistle-weinre",
+      "category": "浏览器调试",
+      "name": "远程 DOM/CSS 检查",
+      "availability": "原生",
+      "detail": "Weinre 为页面远程调试入口；需要规则接入，不是 Agent ARIA/ref 自动化。",
+      "sources": [
+        "whistle-weinre"
+      ],
+      "interfaces": [
+        "Weinre / Console"
+      ]
+    },
+    {
+      "id": "whistle-console",
+      "category": "浏览器调试",
+      "name": "远程 Console 日志",
+      "availability": "原生",
+      "detail": "页面 log 规则与 Console 界面记录远程 console。",
+      "sources": [
+        "whistle-console",
+        "whistle-protocols"
+      ],
+      "interfaces": [
+        "Weinre / Console"
+      ]
+    },
+    {
+      "id": "whistle-nodeapi",
+      "category": "机器接口",
+      "name": "官方 Local Agent API",
+      "availability": "原生",
+      "detail": "规则、值、插件、网络、CA、HTTPS 与文件操作，Node 进程可调用。",
+      "sources": [
+        "whistle-api",
+        "whistle-api-src"
+      ],
+      "interfaces": [
+        "Local Agent API: network",
+        "Local Agent API: rules",
+        "Local Agent API: values",
+        "Local Agent API: plugins"
+      ]
+    },
+    {
+      "id": "whistle-npm-embed",
+      "category": "机器接口",
+      "name": "NPM 模块嵌入运行",
+      "availability": "原生",
+      "detail": "官方提供将 Whistle 当 Node 模块使用的入口。",
+      "sources": [
+        "whistle-npm"
+      ],
+      "interfaces": [
+        "Whistle NPM module"
+      ]
+    },
+    {
+      "id": "whistle-plugin-system",
+      "category": "扩展",
+      "name": "插件 Hook 与内容管道",
+      "availability": "原生",
+      "detail": "自定义协议、证书、认证、动态规则、请求处理、流式内容 pipe；需要插件实现具体功能。",
+      "sources": [
+        "whistle-plugins",
+        "whistle-plugin-dev"
+      ],
+      "interfaces": [
+        "Plugin Hooks / pipe"
+      ]
+    },
+    {
+      "id": "whistle-plugin-ui",
+      "category": "扩展",
+      "name": "插件界面扩展",
+      "availability": "原生",
+      "detail": "插件可扩展主面板/菜单、Inspectors、Composer 和 Tools，也可无界面运行。",
+      "sources": [
+        "whistle-plugins"
+      ],
+      "interfaces": [
+        "Plugin UI / menus / tabs"
+      ]
+    },
+    {
+      "id": "whistle-plugin-manage",
+      "category": "扩展",
+      "name": "插件安装、更新和开关",
+      "availability": "原生",
+      "detail": "UI/CLI 安装卸载，插件全局与单独开关、Node API 控制。",
+      "sources": [
+        "whistle-plugins",
+        "whistle-cli",
+        "whistle-api-src"
+      ],
+      "interfaces": [
+        "Plugins",
+        "w2 / whistle / wproxy",
+        "Local Agent API: plugins"
+      ]
+    },
+    {
+      "id": "whistle-instance",
+      "category": "运行",
+      "name": "多实例、存储隔离与配置",
+      "availability": "原生",
+      "detail": "每实例独立 storage 和端口；.whistlerc、config、baseDir、rcPath、系统代理 CLI。",
+      "sources": [
+        "whistle-cli"
+      ],
+      "interfaces": [
+        "w2 / whistle / wproxy"
+      ]
+    },
+    {
+      "id": "whistle-status",
+      "category": "运行",
+      "name": "状态、服务器和插件日志",
+      "availability": "原生",
+      "detail": "w2 status/run、Server/Console 面板及 API getStatus；不称全自动安装修复 doctor。",
+      "sources": [
+        "whistle-cli",
+        "whistle-network",
+        "whistle-api-src"
+      ],
+      "interfaces": [
+        "w2 / whistle / wproxy",
+        "Local Agent API: network"
+      ]
+    },
+    {
+      "id": "whistle-delivery",
+      "category": "运行",
+      "name": "跨平台 CLI 与官方桌面客户端",
+      "availability": "原生",
+      "detail": "Node>=16；Windows/macOS/Linux；文档说明无界面服务器/Docker 场景，但本次未确认官方镜像。",
+      "sources": [
+        "whistle-docs",
+        "whistle-package",
+        "whistle-readme"
+      ],
+      "interfaces": [
+        "w2 / whistle / wproxy",
+        "Whistle desktop client"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Network / Inspectors / Timeline / Frames",
+      "category": "Web UI",
+      "purpose": "抓包列表、请求响应详情、性能时间、WebSocket/TCP 实时数据。",
+      "availability": "原生",
+      "sources": [
+        "whistle-network"
+      ]
+    },
+    {
+      "name": "Composer",
+      "category": "Web UI",
+      "purpose": "构造/编辑/重发、请求独立规则、HTTP2、文件正文、cURL。",
+      "availability": "原生",
+      "sources": [
+        "whistle-composer"
+      ]
+    },
+    {
+      "name": "Rules / Values",
+      "category": "Web UI",
+      "purpose": "规则分组、优先级、匹配过滤及外部值管理。",
+      "availability": "原生",
+      "sources": [
+        "whistle-docs",
+        "whistle-protocols"
+      ]
+    },
+    {
+      "name": "HTTPS / Custom Certs",
+      "category": "Web UI",
+      "purpose": "HTTPS 抓包、HTTP2、自定义服务器证书管理与 CA 下载。",
+      "availability": "原生",
+      "sources": [
+        "whistle-https"
+      ]
+    },
+    {
+      "name": "Weinre / Console",
+      "category": "Web UI",
+      "purpose": "按规则接入页面的远程 DOM/CSS 与 console 调试。",
+      "availability": "原生",
+      "sources": [
+        "whistle-weinre",
+        "whistle-console"
+      ]
+    },
+    {
+      "name": "Plugins",
+      "category": "Web UI",
+      "purpose": "安装、更新、开关、卸载插件，打开插件设置和扩展界面。",
+      "availability": "原生",
+      "sources": [
+        "whistle-plugins"
+      ]
+    },
+    {
+      "name": "w2 / whistle / wproxy",
+      "category": "CLI",
+      "purpose": "start/restart/stop/status、add、proxy、ca、install/uninstall、exec、run；多个入口指向同一 CLI。",
+      "availability": "原生",
+      "sources": [
+        "whistle-package",
+        "whistle-cli"
+      ]
+    },
+    {
+      "name": "Local Agent API: network",
+      "category": "Node API",
+      "purpose": "getStatus/getSessions/getFrames/request/abort/saveSessions/getSavedSessions；有过滤和 live cursor。",
+      "availability": "原生",
+      "sources": [
+        "whistle-api",
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "Local Agent API: rules",
+      "category": "Node API",
+      "purpose": "状态/开关、规则列表/读取/新增/选择、优先级及多选设置。",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "Local Agent API: values",
+      "category": "Node API",
+      "purpose": "值列表、读取与新增。",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "Local Agent API: plugins",
+      "category": "Node API",
+      "purpose": "插件全局开关、列表/读取、选择启用和取消。",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "Local Agent API: CA / HTTPS / files / utils",
+      "category": "Node API",
+      "purpose": "CA、HTTPS 开关、临时文件、请求响应 JSON 辅助。",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "本地 Web UI HTTP endpoints",
+      "category": "内部 HTTP API",
+      "purpose": "Node API 调用的 sessions/frames/composer/saved/rules 等接口，不与公开 MCP 等价。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "Whistle NPM module",
+      "category": "嵌入 API",
+      "purpose": "将代理作为 Node 模块运行及集成。",
+      "availability": "原生",
+      "sources": [
+        "whistle-npm"
+      ]
+    },
+    {
+      "name": "Plugin Hooks / pipe",
+      "category": "插件 API",
+      "purpose": "请求响应规则/证书/代理认证/内容管道与 WebSocket/TCP 扩展。",
+      "availability": "原生",
+      "sources": [
+        "whistle-plugins",
+        "whistle-plugin-dev"
+      ]
+    },
+    {
+      "name": "Plugin UI / menus / tabs",
+      "category": "插件 API",
+      "purpose": "扩展主面板、Inspectors、Composer、Tools、列表菜单与插件设置。",
+      "availability": "原生",
+      "sources": [
+        "whistle-plugins"
+      ]
+    },
+    {
+      "name": "Whistle desktop client",
+      "category": "独立官方客户端",
+      "purpose": "官方推荐的桌面安装和配置入口；与本仓库 CLI 包分开。",
+      "availability": "可选",
+      "sources": [
+        "whistle-readme",
+        "whistle-docs"
+      ]
+    },
+    {
+      "name": "api.getRootCA",
+      "category": "Local Agent Node API",
+      "purpose": "获取本地代理CA证书数据；底层GET /cgi-bin/rootca",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.isEnabledHTTPS",
+      "category": "Local Agent Node API",
+      "purpose": "读取HTTPS捕获开关；底层GET /cgi-bin/is-enabled-https",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.isEnabledHttps",
+      "category": "Local Agent Node API：兼容别名",
+      "purpose": "isEnabledHTTPS的大小写兼容别名；底层GET /cgi-bin/is-enabled-https",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.setEnableHTTPS",
+      "category": "Local Agent Node API",
+      "purpose": "设置HTTPS捕获开关；底层POST /cgi-bin/intercept-https-connects",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.setEnableHttps",
+      "category": "Local Agent Node API：兼容别名",
+      "purpose": "setEnableHTTPS的大小写兼容别名；底层POST /cgi-bin/intercept-https-connects",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.createFile",
+      "category": "Local Agent Node API",
+      "purpose": "保存Buffer或文本为代理临时文件；底层POST /cgi-bin/temp/create",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.getFile",
+      "category": "Local Agent Node API",
+      "purpose": "按临时文件路径读取文本内容；底层GET /cgi-bin/temp/get",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.network.getStatus",
+      "category": "Local Agent Node API",
+      "purpose": "读取应用版本、存储名称与客户端形态；底层GET /cgi-bin/status",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.network.getSessions",
+      "category": "Local Agent Node API",
+      "purpose": "按游标、时间、类型、URL、方法、状态或头条件读取抓包记录；底层POST /cgi-bin/sessions",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.network.saveSessions",
+      "category": "Local Agent Node API",
+      "purpose": "把指定会话集合保存为可重开的命名记录；底层POST /cgi-bin/saved/save",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.network.getSavedSessions",
+      "category": "Local Agent Node API",
+      "purpose": "读取保存会话并解压返回会话数据；底层GET /cgi-bin/saved/sessions",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.network.getFrames",
+      "category": "Local Agent Node API",
+      "purpose": "按请求ID、方向、时间/游标读取WebSocket或Socket帧；底层POST /cgi-bin/frames",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.network.request",
+      "category": "Local Agent Node API",
+      "purpose": "通过Composer构造请求，可带正文、HTTP2和本次规则设置；底层POST /cgi-bin/composer",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.network.abort",
+      "category": "Local Agent Node API",
+      "purpose": "中止指定一个或多个捕获请求；底层POST /cgi-bin/abort",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.getStatus",
+      "category": "Local Agent Node API",
+      "purpose": "读取规则启停、优先级、多选和规则列表状态；底层GET /cgi-bin/rules/status",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.turnOff",
+      "category": "Local Agent Node API",
+      "purpose": "全局停用规则；底层POST /cgi-bin/rules/disable-all-rules",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.turnOn",
+      "category": "Local Agent Node API",
+      "purpose": "全局启用规则；底层POST /cgi-bin/rules/disable-all-rules",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.isMultiSelect",
+      "category": "Local Agent Node API",
+      "purpose": "读取是否允许同时选择多个规则文件；底层GET /cgi-bin/rules/is-multi-select",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.setMultiSelect",
+      "category": "Local Agent Node API",
+      "purpose": "设置规则文件多选模式；底层POST /cgi-bin/rules/allow-multiple-choice",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.setLaterFirst",
+      "category": "Local Agent Node API",
+      "purpose": "设置后置规则优先策略；底层POST /cgi-bin/rules/enable-back-rules-first",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.getList",
+      "category": "Local Agent Node API",
+      "purpose": "列出规则文件及内容和选择状态；底层GET /cgi-bin/rules/list",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.add",
+      "category": "Local Agent Node API",
+      "purpose": "新增或替换规则文件，可配置选中与置顶；底层POST /cgi-bin/rules/add",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.get",
+      "category": "Local Agent Node API",
+      "purpose": "读取指定规则文件内容；底层GET /cgi-bin/rules/value",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.select",
+      "category": "Local Agent Node API",
+      "purpose": "选中并启用指定规则文件；底层POST /cgi-bin/rules/select2",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.unselect",
+      "category": "Local Agent Node API",
+      "purpose": "取消指定规则文件选择或清除选择；底层POST /cgi-bin/rules/unselect2",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.rules.moveToTop",
+      "category": "Local Agent Node API",
+      "purpose": "将指定规则文件移动到顶部；底层POST /cgi-bin/rules/move-top",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.values.getList",
+      "category": "Local Agent Node API",
+      "purpose": "列出命名值及其内容；底层GET /cgi-bin/values/list",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.values.get",
+      "category": "Local Agent Node API",
+      "purpose": "读取指定命名值；底层GET /cgi-bin/values/value",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.values.add",
+      "category": "Local Agent Node API",
+      "purpose": "新增或替换命名值；底层POST /cgi-bin/values/add",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.plugins.getStatus",
+      "category": "Local Agent Node API",
+      "purpose": "读取插件全局状态；底层GET /cgi-bin/plugins/status",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.plugins.turnOff",
+      "category": "Local Agent Node API",
+      "purpose": "全局停用插件；底层POST /cgi-bin/plugins/disable-all-plugins",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.plugins.turnOn",
+      "category": "Local Agent Node API",
+      "purpose": "全局启用插件；底层POST /cgi-bin/plugins/disable-all-plugins",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.plugins.getList",
+      "category": "Local Agent Node API",
+      "purpose": "列出已知插件；底层GET /cgi-bin/plugins/list",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.plugins.get",
+      "category": "Local Agent Node API",
+      "purpose": "读取指定插件信息；底层GET /cgi-bin/plugins/plugin",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.plugins.select",
+      "category": "Local Agent Node API",
+      "purpose": "启用指定插件；底层POST /cgi-bin/plugins/disable-plugin",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.plugins.unselect",
+      "category": "Local Agent Node API",
+      "purpose": "停用指定插件；底层POST /cgi-bin/plugins/disable-plugin",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "api.utils.createPattern",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "生成规则匹配模式",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.isUtf8",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "判断字节内容是否为UTF8",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getText",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "从Buffer或base64内容按字符集取得文本",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getUtf8Buf",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "将给定数据转换成UTF8 Buffer",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getReqBody",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "取得抓包请求的文本正文",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getResBody",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "取得抓包响应的文本正文",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getReqJson",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "将抓包请求正文解析为JSON",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getResJson",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "将抓包响应正文解析为JSON",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getRawReq",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "组合请求行、头和文本正文用于查看",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getRawRes",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "组合状态行、头和文本正文用于查看",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getRules",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "读取会话命中的去重规则文本",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "api.utils.getTimings",
+      "category": "Local Agent本地辅助函数",
+      "purpose": "计算DNS、连接、请求、响应、下载、总耗时与首字节时间",
+      "availability": "原生",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/rootca",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.getRootCA；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/is-enabled-https",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.isEnabledHTTPS, api.isEnabledHttps；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/intercept-https-connects",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.setEnableHTTPS, api.setEnableHttps；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/temp/create",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.createFile；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/temp/get",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.getFile；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/status",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.network.getStatus；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/sessions",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.network.getSessions；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/saved/save",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.network.saveSessions；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/saved/sessions",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.network.getSavedSessions；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/frames",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.network.getFrames；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/composer",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.network.request；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/abort",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.network.abort；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/rules/status",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.getStatus；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/rules/disable-all-rules",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.turnOff, api.rules.turnOn；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/rules/is-multi-select",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.isMultiSelect；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/rules/allow-multiple-choice",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.setMultiSelect；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/rules/enable-back-rules-first",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.setLaterFirst；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/rules/list",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.getList；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/rules/add",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.add；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/rules/value",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.get；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/rules/select2",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.select；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/rules/unselect2",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.unselect；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/rules/move-top",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.rules.moveToTop；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/values/list",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.values.getList；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/values/value",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.values.get；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/values/add",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.values.add；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/plugins/status",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.plugins.getStatus；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/plugins/disable-all-plugins",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.plugins.turnOff, api.plugins.turnOn；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/plugins/list",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.plugins.getList；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "GET /cgi-bin/plugins/plugin",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.plugins.get；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "POST /cgi-bin/plugins/disable-plugin",
+      "category": "Local Agent底层HTTP路径",
+      "purpose": "支撑api.plugins.select, api.plugins.unselect；此处只枚举公开Node API调用的路径，不声称所有Web UI内部CGI均为稳定公共API。",
+      "availability": "部分",
+      "sources": [
+        "whistle-api-src",
+        "whistle-extra-api-transport"
+      ]
+    },
+    {
+      "name": "rule:@",
+      "category": "规则协议：特殊规则",
+      "purpose": "引入外部规则或设置客户端证书",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-external",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:%",
+      "category": "规则协议：特殊规则",
+      "purpose": "设置插件变量值",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-plugin-vars",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:file",
+      "category": "规则协议：本地映射",
+      "purpose": "以本地文件/目录内容响应",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-file",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xfile",
+      "category": "规则协议：本地映射",
+      "purpose": "本地文件存在时响应，否则继续真实请求",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-xfile",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:tpl",
+      "category": "规则协议：本地映射",
+      "purpose": "以本地模板生成响应",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-tpl",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xtpl",
+      "category": "规则协议：本地映射",
+      "purpose": "模板存在时生成响应，否则继续真实请求",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-xtpl",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:rawfile",
+      "category": "规则协议：本地映射",
+      "purpose": "使用含状态行/头/正文的本地响应文件",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-rawfile",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xrawfile",
+      "category": "规则协议：本地映射",
+      "purpose": "本地完整响应文件存在时使用，否则继续真实请求",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-xrawfile",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:https",
+      "category": "规则协议：远程映射",
+      "purpose": "将目标映射到指定HTTPS地址",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-https",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:http",
+      "category": "规则协议：远程映射",
+      "purpose": "将目标映射到指定HTTP地址",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-http",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:wss",
+      "category": "规则协议：远程映射",
+      "purpose": "映射TLS WebSocket目的地址",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-wss",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:ws",
+      "category": "规则协议：远程映射",
+      "purpose": "映射未加密WebSocket目的地址",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-ws",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:tunnel",
+      "category": "规则协议：远程映射",
+      "purpose": "映射隧道连接目的地址",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-tunnel",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:host",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "映射目标主机/IP或端口",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-host",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xhost",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "目标地址映射失败时使用原地址回退",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-xhost",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:proxy",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "设置上游HTTP代理",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-proxy",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xproxy",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "上游HTTP代理失败时直接连接回退",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-xproxy",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:https-proxy",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "设置TLS连接的上游HTTP代理",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-https-proxy",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xhttps-proxy",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "HTTPS上游代理失败时直接连接回退",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-xhttps-proxy",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:socks",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "设置上游SOCKS代理",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-socks",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xsocks",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "SOCKS上游失败时直接连接回退",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-xsocks",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:pac",
+      "category": "规则协议：目标地址与上游",
+      "purpose": "按PAC决定上游代理",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-pac",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:urlParams",
+      "category": "规则协议：请求改写",
+      "purpose": "合并或更新URL查询参数",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-urlParams",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:pathReplace",
+      "category": "规则协议：请求改写",
+      "purpose": "替换请求URL路径内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-pathReplace",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:sniCallback",
+      "category": "规则协议：请求改写",
+      "purpose": "使用插件处理服务端证书选择",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-sniCallback",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:method",
+      "category": "规则协议：请求改写",
+      "purpose": "改写请求HTTP方法",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-method",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:tlsOptions",
+      "category": "规则协议：请求改写",
+      "purpose": "配置到服务端的TLS连接选项",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-tlsOptions",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqHeaders",
+      "category": "规则协议：请求改写",
+      "purpose": "合并或改写请求头",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqHeaders",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:forwardedFor",
+      "category": "规则协议：请求改写",
+      "purpose": "设置请求来源转发头",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-forwardedFor",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:ua",
+      "category": "规则协议：请求改写",
+      "purpose": "设置User-Agent",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-ua",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:auth",
+      "category": "规则协议：请求改写",
+      "purpose": "设置HTTP Basic认证信息",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-auth",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:cache",
+      "category": "规则协议：请求改写",
+      "purpose": "设置HTTP缓存相关头",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-cache",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:referer",
+      "category": "规则协议：请求改写",
+      "purpose": "设置Referer",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-referer",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:attachment",
+      "category": "规则协议：请求改写",
+      "purpose": "设置下载附件文件名和内容处置",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-attachment",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqCharset",
+      "category": "规则协议：请求改写",
+      "purpose": "设置请求字符集",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqCharset",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqCookies",
+      "category": "规则协议：请求改写",
+      "purpose": "合并或改写请求Cookie",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqCookies",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqCors",
+      "category": "规则协议：请求改写",
+      "purpose": "改写请求跨域相关头",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqCors",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqType",
+      "category": "规则协议：请求改写",
+      "purpose": "设置请求Content-Type",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqType",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqBody",
+      "category": "规则协议：请求改写",
+      "purpose": "替换请求正文",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqBody",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqMerge",
+      "category": "规则协议：请求改写",
+      "purpose": "合并请求JSON或表单数据",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqMerge",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqPrepend",
+      "category": "规则协议：请求改写",
+      "purpose": "在请求正文前添加内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqPrepend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqAppend",
+      "category": "规则协议：请求改写",
+      "purpose": "在请求正文后添加内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqAppend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqReplace",
+      "category": "规则协议：请求改写",
+      "purpose": "按文本或规则替换请求正文",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqReplace",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqWrite",
+      "category": "规则协议：请求改写",
+      "purpose": "将请求正文写入文件",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqWrite",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqWriteRaw",
+      "category": "规则协议：请求改写",
+      "purpose": "将请求头与正文写入文件",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqWriteRaw",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqRules",
+      "category": "规则协议：请求改写",
+      "purpose": "为请求动态提供附加规则",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqRules",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqScript",
+      "category": "规则协议：请求改写",
+      "purpose": "通过请求阶段脚本生成规则",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqScript",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:statusCode",
+      "category": "规则协议：响应改写",
+      "purpose": "直接生成指定状态响应",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-statusCode",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:replaceStatus",
+      "category": "规则协议：响应改写",
+      "purpose": "替换上游响应状态码",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-replaceStatus",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:redirect",
+      "category": "规则协议：响应改写",
+      "purpose": "返回HTTP重定向响应",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-redirect",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:locationHref",
+      "category": "规则协议：响应改写",
+      "purpose": "通过页面位置跳转重定向",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-locationHref",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resHeaders",
+      "category": "规则协议：响应改写",
+      "purpose": "合并或改写响应头",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resHeaders",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:responseFor",
+      "category": "规则协议：响应改写",
+      "purpose": "标注响应来源信息",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-responseFor",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resCharset",
+      "category": "规则协议：响应改写",
+      "purpose": "设置响应字符集",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resCharset",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resCookies",
+      "category": "规则协议：响应改写",
+      "purpose": "合并或改写响应Cookie",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resCookies",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resCors",
+      "category": "规则协议：响应改写",
+      "purpose": "设置响应跨域相关头",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resCors",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resType",
+      "category": "规则协议：响应改写",
+      "purpose": "设置响应Content-Type",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resType",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resBody",
+      "category": "规则协议：响应改写",
+      "purpose": "替换响应正文",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resBody",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resMerge",
+      "category": "规则协议：响应改写",
+      "purpose": "合并响应JSON数据",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resMerge",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resPrepend",
+      "category": "规则协议：响应改写",
+      "purpose": "在响应正文前添加内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resPrepend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resAppend",
+      "category": "规则协议：响应改写",
+      "purpose": "在响应正文后添加内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resAppend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resReplace",
+      "category": "规则协议：响应改写",
+      "purpose": "按文本或规则替换响应正文",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resReplace",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:htmlPrepend",
+      "category": "规则协议：响应改写",
+      "purpose": "在HTML内容前添加片段",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-htmlPrepend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:htmlBody",
+      "category": "规则协议：响应改写",
+      "purpose": "替换HTML内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-htmlBody",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:htmlAppend",
+      "category": "规则协议：响应改写",
+      "purpose": "在HTML内容后添加片段",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-htmlAppend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:cssPrepend",
+      "category": "规则协议：响应改写",
+      "purpose": "在样式内容前添加CSS",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-cssPrepend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:cssBody",
+      "category": "规则协议：响应改写",
+      "purpose": "替换样式内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-cssBody",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:cssAppend",
+      "category": "规则协议：响应改写",
+      "purpose": "在样式内容后添加CSS",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-cssAppend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:jsPrepend",
+      "category": "规则协议：响应改写",
+      "purpose": "在脚本内容前添加JavaScript",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-jsPrepend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:jsBody",
+      "category": "规则协议：响应改写",
+      "purpose": "替换脚本内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-jsBody",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:jsAppend",
+      "category": "规则协议：响应改写",
+      "purpose": "在脚本内容后添加JavaScript",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-jsAppend",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:trailers",
+      "category": "规则协议：响应改写",
+      "purpose": "设置HTTP尾部字段",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-trailers",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resWrite",
+      "category": "规则协议：响应改写",
+      "purpose": "将响应正文写入文件",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resWrite",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resWriteRaw",
+      "category": "规则协议：响应改写",
+      "purpose": "将响应头与正文写入文件",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resWriteRaw",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resRules",
+      "category": "规则协议：响应改写",
+      "purpose": "为响应阶段提供附加规则",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resRules",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resScript",
+      "category": "规则协议：响应改写",
+      "purpose": "通过响应阶段脚本生成规则",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resScript",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:pipe",
+      "category": "规则协议：通用处理",
+      "purpose": "把请求响应内容交给插件管道处理",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-pipe",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:delete",
+      "category": "规则协议：通用处理",
+      "purpose": "删除指定头、Cookie或参数等字段",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-delete",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:headerReplace",
+      "category": "规则协议：通用处理",
+      "purpose": "按规则替换请求或响应头中的内容",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-headerReplace",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqDelay",
+      "category": "规则协议：限速与延迟",
+      "purpose": "延迟向服务端发送请求",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqDelay",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resDelay",
+      "category": "规则协议：限速与延迟",
+      "purpose": "延迟向客户端返回响应",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resDelay",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:reqSpeed",
+      "category": "规则协议：限速与延迟",
+      "purpose": "限制请求发送速度",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-reqSpeed",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:resSpeed",
+      "category": "规则协议：限速与延迟",
+      "purpose": "限制响应发送速度",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-resSpeed",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:weinre",
+      "category": "规则协议：调试工具",
+      "purpose": "启用页面远程DOM/CSS调试",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-weinre",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:log",
+      "category": "规则协议：调试工具",
+      "purpose": "接入页面Console调试",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-log",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:style",
+      "category": "规则协议：设置",
+      "purpose": "设置抓包列表的显示样式",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-style",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:lineProps",
+      "category": "规则协议：设置",
+      "purpose": "为规则行附加属性设置",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-lineProps",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:enable",
+      "category": "规则协议：设置",
+      "purpose": "启用指定代理处理能力",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-enable",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:disable",
+      "category": "规则协议：设置",
+      "purpose": "关闭指定代理处理能力",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-disable",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:ignore",
+      "category": "规则协议：过滤",
+      "purpose": "忽略指定类型的规则处理",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-ignore",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:skip",
+      "category": "规则协议：过滤",
+      "purpose": "ignore规则的兼容名称",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-skip",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:excludeFilter",
+      "category": "规则协议：过滤",
+      "purpose": "排除满足条件的规则匹配",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-excludeFilter",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:includeFilter",
+      "category": "规则协议：过滤",
+      "purpose": "只让满足条件的请求应用规则",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-includeFilter",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:frameScript",
+      "category": "规则协议：响应改写",
+      "purpose": "以脚本处理WebSocket/TCP应用数据",
+      "availability": "原生",
+      "sources": [
+        "whistle-rule-frameScript",
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:ruleFile",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 rulesFile；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:ruleScript",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 rulesFile；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:rulesScript",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 rulesFile；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:download",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 attachment；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:http-proxy",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 proxy；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:xhttp-proxy",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 xproxy；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:status",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 statusCode；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:hosts",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 host；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:html",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 htmlAppend；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:js",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 jsAppend；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    },
+    {
+      "name": "rule:css",
+      "category": "规则协议：兼容名称",
+      "purpose": "固定版本源码兼容名称，映射至 cssAppend；不作为另一项独立产品能力计数。",
+      "availability": "部分",
+      "sources": [
+        "whistle-extra-protocol-source"
+      ]
+    }
+  ],
+  "notes": [
+    "核验日期：2026-10-25（Asia/Shanghai）。默认分支 master；源码引用固定到指定 HEAD，网站文档是当日可见的浮动文档。",
+    "Whistle 的 Local Agent API 是官方接口，不应把它描述成只能人工操作或没有 Agent 接入。官方 docs 要求 >=2.10.7；固定 HEAD 还公开 saveSessions/getSavedSessions/request/abort 等方法，详见源码。",
+    "未找到官方 MCP server 或资源/提示模板的明确合同，标记未证实；这不否定其 Node API 和本地 HTTP 实现。",
+    "浏览器 ARIA/ref、模型自主规划、业务步骤恢复不属于核心产品定位。Weinre/Console 远程调试不等于完整浏览器自动化。",
+    "WebSocket/TCP 的 Pause/Ignore 是消息传输控制；没有据此声称提供 HTTP 请求响应的通用人工断点编辑器。",
+    "不把 hosts 映射规则叫作独立 DNS 服务器，不把 SOCKS 上游当 UDP 捕获，也不把插件可编程性推断为已完成安全扫描产品。",
+    "插件内处理脚本、用户账号与 Node API 是本地运行能力；本报告没有确认官方托管 SaaS。",
+    "补充固定SHA 16607ba277b383d050bc6efce046b4c92cc0ae39 的bin/api.js全部exports：36个服务方法（含2个HTTPS大小写兼容名）与12个本地utils，总48具名Node API；规范方法46个。",
+    "同时列出这些Node API实际使用的31个HTTP方法+CGI路径；不是完整Web UI内部CGI接口目录，也不将内部CGI稳定性等同文档承诺。",
+    "规则目录来自官方protocols正文及导航中的frameScript，去重后94个公开操作名/符号；另保留11个源码兼容名称。@/%是特殊语法，http-proxy等别名与原生协议能力不重复计分。",
+    "没有枚举任意动态插件前缀、每个参数、过滤表达式或正则接受的协议组合；G/P和rule是内部注册用途，不凭内部数组将其宣称为独立公开产品功能。"
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "D02": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "D03": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "D04": {
+      "availability": "部分",
+      "detail": "Local Agent API 通过本地 Web UI HTTP 端点工作；不是 MCP HTTP。",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    "D05": {
+      "availability": "原生",
+      "detail": "CLI 除启动外可管理规则、系统代理、证书和插件。",
+      "sources": [
+        "whistle-cli"
+      ]
+    },
+    "D06": {
+      "availability": "原生",
+      "detail": "Web 工作台及可选官方桌面客户端。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "官方 Node API、NPM 模块与插件 Hooks。",
+      "sources": [
+        "whistle-api",
+        "whistle-npm",
+        "whistle-plugin-dev"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "Node/桌面本地运行，无模型要求。",
+      "sources": [
+        "whistle-package",
+        "whistle-readme"
+      ]
+    },
+    "D09": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "D10": {
+      "availability": "部分",
+      "detail": "有官方文档的 Docker 容器部署场景；本次未确认官方预构建镜像。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "D11": {
+      "availability": "原生",
+      "detail": "w2 status、run 和 network.getStatus；覆盖实例而非完整 doctor。",
+      "sources": [
+        "whistle-cli",
+        "whistle-api-src"
+      ]
+    },
+    "D12": {
+      "availability": "部分",
+      "detail": "规则/插件可分组和开关；未确认 MCP tool profiles。",
+      "sources": [
+        "whistle-cli",
+        "whistle-api-src"
+      ]
+    },
+    "B01": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B02": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B03": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B04": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B05": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B06": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B07": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B08": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B09": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B10": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B11": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B12": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B13": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B14": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B15": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B16": {
+      "availability": "部分",
+      "detail": "Weinre/Console 远程调试；非标准 browser_act API。",
+      "sources": [
+        "whistle-weinre",
+        "whistle-console"
+      ]
+    },
+    "B17": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B18": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B19": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B20": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "B21": {
+      "availability": "原生",
+      "detail": "代理请求/响应延迟和速度规则，不是浏览器设备模拟。",
+      "sources": [
+        "whistle-protocols"
+      ]
+    },
+    "O01": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O02": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O03": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O04": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O05": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O06": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O07": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O08": {
+      "availability": "部分",
+      "detail": "Weinre 可检查远程 DOM/CSS；非 ARIA 或结构化提取。",
+      "sources": [
+        "whistle-weinre"
+      ]
+    },
+    "O09": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O10": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O11": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "O12": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "N01": {
+      "availability": "原生",
+      "detail": "独立代理捕获浏览器、App 和其他客户端。",
+      "sources": [
+        "whistle-readme",
+        "whistle-mobile"
+      ]
+    },
+    "N02": {
+      "availability": "原生",
+      "detail": "CA、HTTPS 解密、自定义证书。",
+      "sources": [
+        "whistle-https"
+      ]
+    },
+    "N03": {
+      "availability": "原生",
+      "detail": "HTTP/2 设置与 Composer 入口。",
+      "sources": [
+        "whistle-https",
+        "whistle-composer"
+      ]
+    },
+    "N04": {
+      "availability": "未证实",
+      "detail": "已查官方协议清单，未找到 HTTP/3/QUIC 公开支持合同。",
+      "sources": [
+        "whistle-readme",
+        "whistle-protocols"
+      ]
+    },
+    "N05": {
+      "availability": "部分",
+      "detail": "明确支持 TCP；未确认通用 UDP/DTLS 捕获。",
+      "sources": [
+        "whistle-readme",
+        "whistle-network"
+      ]
+    },
+    "N06": {
+      "availability": "原生",
+      "detail": "HTTP/HTTPS/SOCKS/反向代理；规则可链 HTTP(S)/SOCKS 上游与 PAC。",
+      "sources": [
+        "whistle-readme",
+        "whistle-cli",
+        "whistle-protocols"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "Overview/Inspectors/Timeline 与 network.getSessions。",
+      "sources": [
+        "whistle-network",
+        "whistle-api-src"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "多条件搜索、捕获过滤、IP/应用/标记/错误等范围。",
+      "sources": [
+        "whistle-network"
+      ]
+    },
+    "N09": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "N10": {
+      "availability": "部分",
+      "detail": "原生 Inspectors/Pretty/字符集规则；Protobuf/自定义内容解码通过 pipe 插件。",
+      "sources": [
+        "whistle-network",
+        "whistle-composer",
+        "whistle-plugins"
+      ]
+    },
+    "N11": {
+      "availability": "原生",
+      "detail": "丰富本地/远程映射及请求/响应规则。",
+      "sources": [
+        "whistle-protocols"
+      ]
+    },
+    "N12": {
+      "availability": "部分",
+      "detail": "WS/TCP Frames 可 Pause/Ignore/继续；未核实通用 HTTP 人工断点编辑器。",
+      "sources": [
+        "whistle-network"
+      ]
+    },
+    "N13": {
+      "availability": "原生",
+      "detail": "Replay、Composer、network.request。",
+      "sources": [
+        "whistle-network",
+        "whistle-composer",
+        "whistle-api-src"
+      ]
+    },
+    "N14": {
+      "availability": "不适用",
+      "detail": "规则在代理层，不算浏览器 route 接口。",
+      "sources": [
+        "whistle-protocols"
+      ]
+    },
+    "N15": {
+      "availability": "未证实",
+      "detail": "本次查到 Composer 导入导出和保存会话，尚未确认当前 HAR 双向格式合同。",
+      "sources": [
+        "whistle-composer",
+        "whistle-api-src"
+      ]
+    },
+    "N16": {
+      "availability": "原生",
+      "detail": "Composer AsCURL。",
+      "sources": [
+        "whistle-composer"
+      ]
+    },
+    "N17": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "M01": {
+      "availability": "原生",
+      "detail": "Frames 与 getFrames 查看实时消息。",
+      "sources": [
+        "whistle-network",
+        "whistle-api-src"
+      ]
+    },
+    "M02": {
+      "availability": "原生",
+      "detail": "方向与二进制 Buffer/base64 支持；TCP 和 WS 数据需区分。",
+      "sources": [
+        "whistle-api-src",
+        "whistle-network"
+      ]
+    },
+    "M03": {
+      "availability": "原生",
+      "detail": "Frames Composer、frameScript 和插件处理。",
+      "sources": [
+        "whistle-network",
+        "whistle-framescript"
+      ]
+    },
+    "M04": {
+      "availability": "未证实",
+      "detail": "已核对实时消息文档，明确的是 WS/TCP Frames，未证实 SSE event/id/data 专用解析。",
+      "sources": [
+        "whistle-network",
+        "whistle-api-src"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "不能由 HTTP 压缩或 pipe 能力推断压缩 SSE 的增量事件解析。",
+      "sources": [
+        "whistle-plugins",
+        "whistle-network"
+      ]
+    },
+    "M06": {
+      "availability": "原生",
+      "detail": "开放连接下 Frames 和 getFrames 支持增量读取。",
+      "sources": [
+        "whistle-network",
+        "whistle-api-src"
+      ]
+    },
+    "M07": {
+      "availability": "部分",
+      "detail": "getFrames 有 startId/startTime；会话另有保存/重开，未核实二者合成跨重启消息游标合同。",
+      "sources": [
+        "whistle-api-src"
+      ]
+    },
+    "M08": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "W01": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W02": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W03": {
+      "availability": "部分",
+      "detail": "可扩展代理插件和 Node API，不是通用业务 Agent 自定义动作框架。",
+      "sources": [
+        "whistle-plugins",
+        "whistle-api"
+      ]
+    },
+    "W04": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W05": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W06": {
+      "availability": "部分",
+      "detail": "WS/TCP 暂停/继续允许人工调试；非业务步骤审批。",
+      "sources": [
+        "whistle-network"
+      ]
+    },
+    "W07": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W08": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W09": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W10": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W11": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W12": {
+      "availability": "部分",
+      "detail": "HTTP 请求 Replay 与 Composer 历史，不是浏览器动作回放。",
+      "sources": [
+        "whistle-composer"
+      ]
+    },
+    "W13": {
+      "availability": "部分",
+      "detail": "HTTP auth/Cookie 改写、自定义证书；不含浏览器登录自动化。",
+      "sources": [
+        "whistle-protocols",
+        "whistle-https"
+      ]
+    },
+    "W14": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "W15": {
+      "availability": "不适用",
+      "detail": "本项目主线是网络调试代理，未把浏览器 Agent 合同作为核心定位。",
+      "sources": [
+        "whistle-readme"
+      ]
+    },
+    "T01": {
+      "availability": "原生",
+      "detail": "Console 远程日志；需页面接入规则。",
+      "sources": [
+        "whistle-console"
+      ]
+    },
+    "T02": {
+      "availability": "部分",
+      "detail": "Timeline 提供网络性能信息；不是浏览器 CPU 性能 trace。",
+      "sources": [
+        "whistle-network"
+      ]
+    },
+    "T03": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "T04": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "规则命中与请求在同一详情；不是浏览器动作因果链。",
+      "sources": [
+        "whistle-network"
+      ]
+    },
+    "T06": {
+      "availability": "部分",
+      "detail": "Server/captureError 与 TLS 排查；未确认内置被动漏洞规则库。",
+      "sources": [
+        "whistle-network",
+        "whistle-faq"
+      ]
+    },
+    "T07": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "T08": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "S01": {
+      "availability": "原生",
+      "detail": "saveSessions/getSavedSessions、保存记录和 Composer 历史。",
+      "sources": [
+        "whistle-api-src",
+        "whistle-composer"
+      ]
+    },
+    "S02": {
+      "availability": "部分",
+      "detail": "请求 Mark/样式和树形分组；未证实多步业务依赖链接。",
+      "sources": [
+        "whistle-network",
+        "whistle-protocols"
+      ]
+    },
+    "S03": {
+      "availability": "原生",
+      "detail": "resWrite/reqWrite 等保存正文或原始报文字节。",
+      "sources": [
+        "whistle-reswrite",
+        "whistle-reqwrite"
+      ]
+    },
+    "S04": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "S05": {
+      "availability": "未证实",
+      "detail": "已查官方文档目录、Local Agent API 与固定源码；未确认该维度的正式功能合同。",
+      "sources": [
+        "whistle-docs"
+      ]
+    },
+    "S06": {
+      "availability": "部分",
+      "detail": "Maximum Rows、Composer 最多64历史、getFrames 单次120；不是统一长期磁盘预算。",
+      "sources": [
+        "whistle-network",
+        "whistle-composer",
+        "whistle-api-src"
+      ]
+    },
+    "S07": {
+      "availability": "原生",
+      "detail": "会话/请求导出和正文保存；不宣称自动业务证据报告。",
+      "sources": [
+        "whistle-api-src",
+        "whistle-composer",
+        "whistle-reswrite"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": ".whistlerc/config/CLI，运行时 Rules/Values/插件开关。",
+      "sources": [
+        "whistle-cli",
+        "whistle-api-src"
+      ]
+    },
+    "X02": {
+      "availability": "原生",
+      "detail": "npm 插件、Hooks、pipe、自定义协议及 UI 扩展。",
+      "sources": [
+        "whistle-plugins",
+        "whistle-plugin-dev"
+      ]
+    },
+    "X03": {
+      "availability": "不适用",
+      "detail": "未确认官方 MCP；guest 账号是 Web UI 权限而非 MCP 只读注解。",
+      "sources": [
+        "whistle-cli",
+        "whistle-api"
+      ]
+    },
+    "X04": {
+      "availability": "部分",
+      "detail": "管理/只读游客账号与 CORS；代理认证是插件能力。",
+      "sources": [
+        "whistle-cli",
+        "whistle-plugins"
+      ]
+    },
+    "X05": {
+      "availability": "部分",
+      "detail": "CLI 管理指定 storage 实例生命周期；没有借用浏览器上下文合同。",
+      "sources": [
+        "whistle-cli"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "status、Server/Console 和插件运行状态。",
+      "sources": [
+        "whistle-cli",
+        "whistle-network",
+        "whistle-plugins"
+      ]
+    }
+  }
+}

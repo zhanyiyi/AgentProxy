@@ -1,0 +1,2808 @@
+{
+  "project": "AgentProxy",
+  "repo": "https://github.com/zhanyiyi/AgentProxy",
+  "revision": "e8ca17e781272ab3a690e348ab4415211ccde148",
+  "version": "pyproject 0.1.0；对比 codex/runtime-browser-polish 的 e8ca17e，不是默认 main",
+  "license": "pyproject 声明 MIT；当前跟踪目录没有单独 LICENSE 文件",
+  "sources": [
+    {
+      "id": "AP01",
+      "title": "src/agent_proxy/tools/tools.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py"
+    },
+    {
+      "id": "AP02",
+      "title": "src/agent_proxy/core/browser_controller.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/browser_controller.py"
+    },
+    {
+      "id": "AP03",
+      "title": "src/agent_proxy/core/browser_snapshot.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/browser_snapshot.py"
+    },
+    {
+      "id": "AP04",
+      "title": "src/agent_proxy/core/stream_capture.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/stream_capture.py"
+    },
+    {
+      "id": "AP05",
+      "title": "src/agent_proxy/core/traffic_db.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/traffic_db.py"
+    },
+    {
+      "id": "AP06",
+      "title": "src/agent_proxy/core/flow_writer.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/flow_writer.py"
+    },
+    {
+      "id": "AP07",
+      "title": "src/agent_proxy/core/workflow_state.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/workflow_state.py"
+    },
+    {
+      "id": "AP08",
+      "title": "src/agent_proxy/core/session_manager.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/session_manager.py"
+    },
+    {
+      "id": "AP09",
+      "title": "src/agent_proxy/main.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py"
+    },
+    {
+      "id": "AP10",
+      "title": "src/agent_proxy/config/__init__.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/config/__init__.py"
+    },
+    {
+      "id": "AP11",
+      "title": "src/agent_proxy/core/traffic_analysis.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/traffic_analysis.py"
+    },
+    {
+      "id": "AP12",
+      "title": "src/agent_proxy/core/artifact_store.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/artifact_store.py"
+    },
+    {
+      "id": "AP13",
+      "title": "src/agent_proxy/models.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/models.py"
+    },
+    {
+      "id": "AP14",
+      "title": "README.md",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/README.md"
+    },
+    {
+      "id": "AP15",
+      "title": "src/agent_proxy/prompt_loader.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/prompt_loader.py"
+    },
+    {
+      "id": "AP16",
+      "title": "pyproject.toml",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/pyproject.toml"
+    },
+    {
+      "id": "AP17",
+      "title": "src/agent_proxy/core/cert_installer.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/cert_installer.py"
+    },
+    {
+      "id": "AP18",
+      "title": "src/agent_proxy/core/browser_events.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/browser_events.py"
+    },
+    {
+      "id": "AP19",
+      "title": "src/agent_proxy/core/passive_scan.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/passive_scan.py"
+    },
+    {
+      "id": "AP20",
+      "title": "src/agent_proxy/core/param_extractor.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/param_extractor.py"
+    },
+    {
+      "id": "AP21",
+      "title": "src/agent_proxy/core/mitm_controller.py",
+      "url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/core/mitm_controller.py"
+    }
+  ],
+  "features": [
+    {
+      "id": "AP-D01",
+      "category": "接入与产品形态",
+      "name": "原生 MCP tools",
+      "availability": "原生",
+      "detail": "73 个显式注册 MCP tools；非全部都为只读",
+      "sources": [
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-D02",
+      "category": "接入与产品形态",
+      "name": "MCP resources / prompts",
+      "availability": "可选",
+      "detail": "本地 Markdown/Python prompt loader；未注册 MCP resources",
+      "sources": [
+        "AP15",
+        "AP09"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-D03",
+      "category": "接入与产品形态",
+      "name": "stdio 接入",
+      "availability": "原生",
+      "detail": "默认 MCP stdio",
+      "sources": [
+        "AP09"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-D04",
+      "category": "接入与产品形态",
+      "name": "HTTP 远程机器接口",
+      "availability": "原生",
+      "detail": "MCP sse 和 streamable-http；不是独立 REST 产品 API",
+      "sources": [
+        "AP09"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-D07",
+      "category": "接入与产品形态",
+      "name": "可编程 SDK / 插件 API",
+      "availability": "部分",
+      "detail": "Python create_server/SessionManager 可嵌入，本地 prompt context 可扩展；没有独立承诺稳定的 SDK",
+      "sources": [
+        "AP09",
+        "AP08",
+        "AP15"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-D08",
+      "category": "接入与产品形态",
+      "name": "本地运行",
+      "availability": "原生",
+      "detail": "Python 服务、本地 Chromium、mitmproxy 和 SQLite",
+      "sources": [
+        "AP09",
+        "AP16"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-D11",
+      "category": "接入与产品形态",
+      "name": "安装与运行诊断入口",
+      "availability": "部分",
+      "detail": "session_status 显示端口、生命周期、DB 和 writer；cert_status 检查 NSS；没有综合 doctor",
+      "sources": [
+        "AP08",
+        "AP17"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B01",
+      "category": "浏览器连接与交互",
+      "name": "启动受控浏览器",
+      "availability": "原生",
+      "detail": "启动 Playwright Chromium，代理自动配置",
+      "sources": [
+        "AP02",
+        "AP08"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B02",
+      "category": "浏览器连接与交互",
+      "name": "连接已有浏览器 / CDP",
+      "availability": "原生",
+      "detail": "Chromium/Chrome CDP；借用已有 Context 和页面",
+      "sources": [
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B04",
+      "category": "浏览器连接与交互",
+      "name": "headless / headed",
+      "availability": "原生",
+      "detail": "headless 参数和 --no-headless",
+      "sources": [
+        "AP01",
+        "AP09"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B05",
+      "category": "浏览器连接与交互",
+      "name": "独立会话 / Context",
+      "availability": "原生",
+      "detail": "命名 Context、独立 Cookie/localStorage、切换和列表",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B06",
+      "category": "浏览器连接与交互",
+      "name": "持久用户目录 / 配置",
+      "availability": "部分",
+      "detail": "profile_dir 保存各 Context storageState JSON；不是完整持久浏览器用户目录",
+      "sources": [
+        "AP02",
+        "AP08"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B07",
+      "category": "浏览器连接与交互",
+      "name": "标签页与 popup",
+      "availability": "原生",
+      "detail": "追踪 popup，列出/选择已跟踪页（含借用CDP页），仅关闭自有页；无专门 new-tab 工具",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B08",
+      "category": "浏览器连接与交互",
+      "name": "iframe 操作",
+      "availability": "原生",
+      "detail": "frame selector 和 Playwright 原生 iframe refs",
+      "sources": [
+        "AP02",
+        "AP03"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B09",
+      "category": "浏览器连接与交互",
+      "name": "导航与历史",
+      "availability": "原生",
+      "detail": "navigate、go_back、go_forward、reload",
+      "sources": [
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B10",
+      "category": "浏览器连接与交互",
+      "name": "点击与指针动作",
+      "availability": "原生",
+      "detail": "click 和 browser_act hover；未提供专门双击/任意坐标工具",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B11",
+      "category": "浏览器连接与交互",
+      "name": "输入、键盘与表单",
+      "availability": "原生",
+      "detail": "fill、type、select、key 与 ref/selector 动作",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B12",
+      "category": "浏览器连接与交互",
+      "name": "拖拽与滚动",
+      "availability": "部分",
+      "detail": "browser_act scroll 可把目标滚入视野或按数值距离垂直滚动；未提供拖拽入口",
+      "sources": [
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B13",
+      "category": "浏览器连接与交互",
+      "name": "原生对话框决策",
+      "availability": "原生",
+      "detail": "显式 accept/dismiss；prompt_text；pending dialog 状态",
+      "sources": [
+        "AP18",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B14",
+      "category": "浏览器连接与交互",
+      "name": "文件上传",
+      "availability": "原生",
+      "detail": "browser_act upload 调用 set_input_files；路径由调用方提供",
+      "sources": [
+        "AP02",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B15",
+      "category": "浏览器连接与交互",
+      "name": "下载跟踪与保存",
+      "availability": "原生",
+      "detail": "pending/completed/failed/cancelled，保存文件并计算大小和 SHA256",
+      "sources": [
+        "AP18"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B16",
+      "category": "浏览器连接与交互",
+      "name": "页面 JavaScript 执行",
+      "availability": "原生",
+      "detail": "browser_execute_js",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B17",
+      "category": "浏览器连接与交互",
+      "name": "条件等待",
+      "availability": "原生",
+      "detail": "browser_wait_for 元素与导航 wait_until；未提供通用业务成功条件",
+      "sources": [
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B18",
+      "category": "浏览器连接与交互",
+      "name": "Cookie 管理",
+      "availability": "原生",
+      "detail": "browser_get_cookies、browser_set_cookies",
+      "sources": [
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B19",
+      "category": "浏览器连接与交互",
+      "name": "浏览器存储状态导入导出",
+      "availability": "原生",
+      "detail": "session_save_profile、命名 Context state JSON 载入",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-B21",
+      "category": "浏览器连接与交互",
+      "name": "网络离线 / 节流",
+      "availability": "部分",
+      "detail": "browser_set_offline；未提供带宽/CPU 节流入口",
+      "sources": [
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O01",
+      "category": "页面观察与定位",
+      "name": "ARIA / 无障碍快照",
+      "availability": "原生",
+      "detail": "Playwright 1.60 AI ARIA snapshot，全页或 frame",
+      "sources": [
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O02",
+      "category": "页面观察与定位",
+      "name": "元素引用 refs",
+      "availability": "原生",
+      "detail": "原生 eN/fNeN ref，操作必须带 snapshot_id",
+      "sources": [
+        "AP03",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O03",
+      "category": "页面观察与定位",
+      "name": "增量快照 / 差异输出",
+      "availability": "原生",
+      "detail": "full/delta、snapshot_id、base_snapshot_id，按 tab/frame 维护基线",
+      "sources": [
+        "AP03"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O04",
+      "category": "页面观察与定位",
+      "name": "快照搜索、裁剪或过滤",
+      "availability": "部分",
+      "detail": "frame 选择与输出字符预算；没有快照搜索、role过滤或任意子树裁剪参数",
+      "sources": [
+        "AP01",
+        "AP02",
+        "AP03"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O05",
+      "category": "页面观察与定位",
+      "name": "过期引用合同",
+      "availability": "原生",
+      "detail": "检查 ref 来自最新已交付快照，过期明确拒绝；导航/文档变化失效",
+      "sources": [
+        "AP03",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O06",
+      "category": "页面观察与定位",
+      "name": "页面 / 元素截图",
+      "availability": "部分",
+      "detail": "当前视口原生 MCP Image；未提供元素/全长截图参数",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O08",
+      "category": "页面观察与定位",
+      "name": "HTML / DOM / 文本读取",
+      "availability": "原生",
+      "detail": "按 selector 读取 text/innerHTML，默认字符预算",
+      "sources": [
+        "AP01",
+        "AP02"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-O09",
+      "category": "页面观察与定位",
+      "name": "Schema 约束结构化提取",
+      "availability": "部分",
+      "detail": "响应 JSONPath/CSS/regex 提取；没有页面 Schema/模型约束提取",
+      "sources": [
+        "AP01",
+        "AP11"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N01",
+      "category": "代理与网络捕获",
+      "name": "独立代理捕获外部客户端",
+      "availability": "原生",
+      "detail": "proxy-only 模式供外部浏览器/客户端显式配置代理",
+      "sources": [
+        "AP01",
+        "AP08"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N02",
+      "category": "代理与网络捕获",
+      "name": "HTTPS 解密与 CA",
+      "availability": "原生",
+      "detail": "mitmproxy CA 与 HTTPS；可检查/安装浏览器 NSS 信任，Windows 有支持边界",
+      "sources": [
+        "AP21",
+        "AP17"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N03",
+      "category": "代理与网络捕获",
+      "name": "HTTP/2 支持",
+      "availability": "部分",
+      "detail": "regular mitmproxy 的 HTTP/2 能力；封装未给独立兼容矩阵",
+      "sources": [
+        "AP21"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N06",
+      "category": "代理与网络捕获",
+      "name": "代理模式与上游链路",
+      "availability": "部分",
+      "detail": "regular HTTP/HTTPS 显式代理；未暴露 reverse/transparent/SOCKS/WireGuard 等模式",
+      "sources": [
+        "AP21",
+        "AP09"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N07",
+      "category": "代理与网络捕获",
+      "name": "请求 / 响应详情",
+      "availability": "原生",
+      "detail": "traffic_inspect meta/preview/full，头、状态、正文、cURL",
+      "sources": [
+        "AP01",
+        "AP05"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N08",
+      "category": "代理与网络捕获",
+      "name": "搜索、过滤与范围",
+      "availability": "原生",
+      "detail": "字面关键词、hostname/子域、method、limit；scope_set 过滤采集域名",
+      "sources": [
+        "AP05",
+        "AP21",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N09",
+      "category": "代理与网络捕获",
+      "name": "多值 / 有序响应头",
+      "availability": "原生",
+      "detail": "数据库保存有序头列表；详情同时提供字典和 ordered 列表",
+      "sources": [
+        "AP05",
+        "AP06"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N10",
+      "category": "代理与网络捕获",
+      "name": "正文解码与格式展示",
+      "availability": "原生",
+      "detail": "响应压缩由 mitmproxy 解码，按 charset 解正文，二进制附件元数据；SSE 专用增量解码",
+      "sources": [
+        "AP05",
+        "AP04"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N11",
+      "category": "代理与网络捕获",
+      "name": "请求 / 响应修改与 mock",
+      "availability": "部分",
+      "detail": "规则可注入头、正则替换正文和 block；不是完整可配置响应 mock 系统",
+      "sources": [
+        "AP13",
+        "AP21"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N13",
+      "category": "代理与网络捕获",
+      "name": "请求编辑与重发",
+      "availability": "原生",
+      "detail": "显式请求重发，参数和结果关联；这里只清点已有接口，不增加执行编排",
+      "sources": [
+        "AP01",
+        "AP21"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N16",
+      "category": "代理与网络捕获",
+      "name": "cURL / 客户端代码导出",
+      "availability": "原生",
+      "detail": "flow cURL 和客户端代码导出接口",
+      "sources": [
+        "AP01",
+        "AP11"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-N17",
+      "category": "代理与网络捕获",
+      "name": "API 结构 / OpenAPI",
+      "availability": "部分",
+      "detail": "捕获请求模式聚合并导出推断 OpenAPI v3；不等于经过验证的完整服务 schema",
+      "sources": [
+        "AP11",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-M01",
+      "category": "实时消息",
+      "name": "WebSocket 消息查看",
+      "availability": "原生",
+      "detail": "WebSocket 重组后的完整应用消息",
+      "sources": [
+        "AP04",
+        "AP21"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-M02",
+      "category": "实时消息",
+      "name": "WebSocket 双向 / 二进制",
+      "availability": "原生",
+      "detail": "client/server 方向、opcode，文本 UTF8、二进制 base64",
+      "sources": [
+        "AP04"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-M04",
+      "category": "实时消息",
+      "name": "SSE 事件级解析",
+      "availability": "原生",
+      "detail": "data 多行、id/event/retry、CR/LF、UTF8 BOM 与 incomplete 尾事件",
+      "sources": [
+        "AP04"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-M05",
+      "category": "实时消息",
+      "name": "压缩 SSE 增量解析",
+      "availability": "原生",
+      "detail": "gzip/x-gzip、deflate/raw、br、zstd、编码链；原传输字节保持不变",
+      "sources": [
+        "AP04",
+        "AP21"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-M06",
+      "category": "实时消息",
+      "name": "开放连接期间查询消息",
+      "availability": "原生",
+      "detail": "responseheaders安装observer，事件入writer后异步提交；连接开放时可查询已提交记录，不承诺入队即落库",
+      "sources": [
+        "AP21",
+        "AP06",
+        "AP05"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-M07",
+      "category": "实时消息",
+      "name": "消息持久化与增量游标",
+      "availability": "原生",
+      "detail": "SQLite stream_messages，递增 id/after_id/next_after_id，clear 不复用旧 id",
+      "sources": [
+        "AP05",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-M08",
+      "category": "实时消息",
+      "name": "消息完整性 / 截断标记",
+      "availability": "原生",
+      "detail": "SSE original_bytes计解码后data字段UTF8字节；truncated/incomplete和解码/限额诊断；中断只标新保存尾事件，不回改已完成事件",
+      "sources": [
+        "AP04"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W03",
+      "category": "Agent 与多步任务",
+      "name": "用户自定义工具 / 动作",
+      "availability": "部分",
+      "detail": "本地 prompt context Python 扩展；没有正式自定义动作注册产品接口",
+      "sources": [
+        "AP15",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W04",
+      "category": "Agent 与多步任务",
+      "name": "多步骤工作流定义",
+      "availability": "部分",
+      "detail": "browse_and_capture 执行显式动作数组，遇 pending 决策停止；不是流程引擎",
+      "sources": [
+        "AP08",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W06",
+      "category": "Agent 与多步任务",
+      "name": "人工接管 / 审批节点",
+      "availability": "部分",
+      "detail": "headed/CDP 可人工登录与接管，原生 dialog 显式决策；没有审批工作流节点",
+      "sources": [
+        "AP02",
+        "AP18"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W08",
+      "category": "Agent 与多步任务",
+      "name": "步骤历史 / 动作回执",
+      "availability": "部分",
+      "detail": "统一navigate_browser/act_browser链路持久回执；go_back/go_forward/reload/execute_js旧入口不全覆盖",
+      "sources": [
+        "AP08",
+        "AP07",
+        "AP18",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W09",
+      "category": "Agent 与多步任务",
+      "name": "自动步骤检查点",
+      "availability": "部分",
+      "detail": "统一导航/动作链路自动保存前后检查点，不保存输入值；历史跳转、刷新和任意JS入口未经过该链路",
+      "sources": [
+        "AP08",
+        "AP07",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W10",
+      "category": "Agent 与多步任务",
+      "name": "跨进程恢复 / 状态重绑",
+      "availability": "部分",
+      "detail": "同库重开保留游标，可重绑唯一匹配活页面；不自动重建登录或导航",
+      "sources": [
+        "AP08",
+        "AP07"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W11",
+      "category": "Agent 与多步任务",
+      "name": "未知结果处理 / 防重复执行",
+      "availability": "部分",
+      "detail": "统一检查点链路把中断标unknown/needs_review，验证前拒绝为not_started，不自动重放；旧导航/JS入口未全部纳入",
+      "sources": [
+        "AP07",
+        "AP08",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-W13",
+      "category": "Agent 与多步任务",
+      "name": "凭据 / 登录辅助",
+      "availability": "部分",
+      "detail": "CDP人工登录、storageState、从本人采集流量按主机复用会话；无凭据保险库",
+      "sources": [
+        "AP01",
+        "AP08"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-T01",
+      "category": "调试与分析",
+      "name": "浏览器 Console / 异常",
+      "availability": "部分",
+      "detail": "有限队列记录 console 消息，可查询/clear；未提供独立 pageerror/调试器产品接口",
+      "sources": [
+        "AP02",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-T05",
+      "category": "调试与分析",
+      "name": "动作与网络关联视图",
+      "availability": "部分",
+      "detail": "动作窗口和近期流量用于时间相关排查；没有统一UI和已证实因果归因",
+      "sources": [
+        "AP08",
+        "AP18"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-T06",
+      "category": "调试与分析",
+      "name": "被动检查 / 诊断信号",
+      "availability": "原生",
+      "detail": "已观测响应被动规则、finding/signal 分层、按规则/级别查询；信号不是漏洞确认",
+      "sources": [
+        "AP19",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-T07",
+      "category": "调试与分析",
+      "name": "扩展安全测试模块",
+      "availability": "原生",
+      "detail": "仓库已有显式参数化请求测试工具；本报告仅列存在性，不提供操作流程",
+      "sources": [
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-T08",
+      "category": "调试与分析",
+      "name": "差异比较 / 报告",
+      "availability": "原生",
+      "detail": "请求响应字段/状态/长度差异，Markdown evidence bundle",
+      "sources": [
+        "AP11",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-S01",
+      "category": "存储与证据",
+      "name": "持久流量存储与重开",
+      "availability": "原生",
+      "detail": "SQLite WAL，本实例隔离，显式 --db-path 重开旧采集",
+      "sources": [
+        "AP05",
+        "AP08",
+        "AP09"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-S02",
+      "category": "存储与证据",
+      "name": "记录标签、备注与链接",
+      "availability": "原生",
+      "detail": "flow tags、notes、显式 links 与链查询；值匹配关联仍为线索",
+      "sources": [
+        "AP05",
+        "AP11",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-S03",
+      "category": "存储与证据",
+      "name": "二进制附件保存",
+      "availability": "原生",
+      "detail": "响应 PDF/Office/ZIP/CSV 附件和浏览器下载保存",
+      "sources": [
+        "AP12",
+        "AP18"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-S04",
+      "category": "存储与证据",
+      "name": "文件哈希与大小证据",
+      "availability": "原生",
+      "detail": "附件和已保存下载的 SHA256、size、path/省略原因",
+      "sources": [
+        "AP12",
+        "AP18"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-S05",
+      "category": "存储与证据",
+      "name": "队列 / 丢弃 / 写入状态",
+      "availability": "原生",
+      "detail": "queued/pending/persisted/messages/dropped/write_errors/scan_errors；5000共享队列满丢最旧待写项，drain完成仍需查错误",
+      "sources": [
+        "AP06",
+        "AP08"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-S06",
+      "category": "存储与证据",
+      "name": "保留预算与清理范围",
+      "availability": "部分",
+      "detail": "正文/消息/附件有预算；公开 traffic_clear 清流量、消息、回执和检查点，保留附件/下载文件，无容量/时间保留策略",
+      "sources": [
+        "AP04",
+        "AP05",
+        "AP12",
+        "AP07",
+        "AP08"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-S07",
+      "category": "存储与证据",
+      "name": "证据打包 / 导出",
+      "availability": "部分",
+      "detail": "Markdown/flow JSON/OpenAPI 导出；没有一次导出全部消息、附件与步骤的完整归档包",
+      "sources": [
+        "AP01",
+        "AP11"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-X01",
+      "category": "扩展与运行边界",
+      "name": "配置文件 / 运行时配置",
+      "availability": "原生",
+      "detail": "YAML默认与override合并，配置查看；config_add 仅内存运行时变更",
+      "sources": [
+        "AP10",
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-X02",
+      "category": "扩展与运行边界",
+      "name": "插件 / addon 生态",
+      "availability": "部分",
+      "detail": "可选本地 prompt pack，内部基于 mitmproxy addons；无通用插件管理/市场入口",
+      "sources": [
+        "AP15",
+        "AP21"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-X03",
+      "category": "扩展与运行边界",
+      "name": "MCP 权限 / 只读提示",
+      "availability": "部分",
+      "detail": "MCP readOnly/destructive/idempotent 注解提示；不是服务端强制审批策略",
+      "sources": [
+        "AP01"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-X05",
+      "category": "扩展与运行边界",
+      "name": "进程资源清理与所有权",
+      "availability": "原生",
+      "detail": "启动停止串行、取消清理、超时预算；借用 CDP Context/页保护，lifespan 清理",
+      "sources": [
+        "AP08",
+        "AP02",
+        "AP09"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "AP-X06",
+      "category": "扩展与运行边界",
+      "name": "结构化日志与运行状态",
+      "availability": "原生",
+      "detail": "旋转文件日志、阶段异常、session_status 与 writer 可查询状态",
+      "sources": [
+        "AP09",
+        "AP08",
+        "AP06"
+      ],
+      "interfaces": []
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "session_start",
+      "category": "MCP/会话",
+      "purpose": "启动完整浏览器和代理会话",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "proxy_port: int=8080, headless: bool=True, profile_dir: str=None, unsafe_disable_web_security: bool=False",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L42"
+    },
+    {
+      "name": "session_connect_cdp",
+      "category": "MCP/会话",
+      "purpose": "连接已有 Chrome/Chromium 并启动代理",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "endpoint_url: str='http://127.0.0.1:9222', proxy_port: int=8080",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L60"
+    },
+    {
+      "name": "session_start_proxy_only",
+      "category": "MCP/会话",
+      "purpose": "仅启动代理供外部客户端采集",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "proxy_port: int=8080",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L71"
+    },
+    {
+      "name": "session_attach_browser",
+      "category": "MCP/会话",
+      "purpose": "给已有代理会话附加受控浏览器",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "headless: bool=True, profile_dir: str=None, unsafe_disable_web_security: bool=False, hydrate_host: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L95"
+    },
+    {
+      "name": "session_stop",
+      "category": "MCP/会话",
+      "purpose": "停止拥有的会话资源",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L127"
+    },
+    {
+      "name": "cert_status",
+      "category": "MCP/规则与其它",
+      "purpose": "检查浏览器 NSS 证书信任状态",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "ca_path: str=DEFAULT_CA_PATH, nickname: str=DEFAULT_NICKNAME",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L132"
+    },
+    {
+      "name": "cert_install",
+      "category": "MCP/规则与其它",
+      "purpose": "按浏览器安装 CA 信任，受平台工具限制",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "browser: str='both', ca_path: str=DEFAULT_CA_PATH, nickname: str=DEFAULT_NICKNAME",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L146"
+    },
+    {
+      "name": "session_status",
+      "category": "MCP/会话",
+      "purpose": "读取会话、代理、浏览器和写入状态",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L170"
+    },
+    {
+      "name": "session_save_profile",
+      "category": "MCP/会话",
+      "purpose": "保存浏览器 storageState",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "name: str=None, path: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L175"
+    },
+    {
+      "name": "session_create_context",
+      "category": "MCP/会话",
+      "purpose": "创建隔离命名 Context",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "name: str, from_profile: bool=True",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L186"
+    },
+    {
+      "name": "session_use_context",
+      "category": "MCP/会话",
+      "purpose": "切换活动 Context",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "name: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L199"
+    },
+    {
+      "name": "session_list_contexts",
+      "category": "MCP/会话",
+      "purpose": "列出 Context",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L208"
+    },
+    {
+      "name": "config_show",
+      "category": "MCP/规则与其它",
+      "purpose": "查看当前规则配置",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "section: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L216"
+    },
+    {
+      "name": "config_add",
+      "category": "MCP/规则与其它",
+      "purpose": "更新内存规则配置，不写回 YAML",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "kind: str, category: str=None, rule_id: str=None, regex: str=None, severity: str='medium', confidence: str='finding', flags: str='i', rescan: bool=True, payloads: List[str]=None, words: List[str]=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L242"
+    },
+    {
+      "name": "browser_navigate",
+      "category": "MCP/浏览器",
+      "purpose": "导航 URL 并返回当前状态",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "url: str, wait_until: str='domcontentloaded'",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L321"
+    },
+    {
+      "name": "browser_click",
+      "category": "MCP/浏览器",
+      "purpose": "按 selector 点击",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "selector: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L330"
+    },
+    {
+      "name": "browser_fill",
+      "category": "MCP/浏览器",
+      "purpose": "填写输入框",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "selector: str, value: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L338"
+    },
+    {
+      "name": "browser_type",
+      "category": "MCP/浏览器",
+      "purpose": "逐字输入",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "selector: str, value: str, delay: int=50",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L347"
+    },
+    {
+      "name": "browser_select_option",
+      "category": "MCP/浏览器",
+      "purpose": "选择下拉选项",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "selector: str, value: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L357"
+    },
+    {
+      "name": "browser_press_key",
+      "category": "MCP/浏览器",
+      "purpose": "发送键盘按键",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "key: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L366"
+    },
+    {
+      "name": "browser_screenshot",
+      "category": "MCP/浏览器",
+      "purpose": "获取当前视口 MCP 原生图片",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L374"
+    },
+    {
+      "name": "browser_get_text",
+      "category": "MCP/浏览器",
+      "purpose": "读取页面或 selector 文本",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "selector: str=None, max_chars: int=40000",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L382"
+    },
+    {
+      "name": "browser_get_html",
+      "category": "MCP/浏览器",
+      "purpose": "读取页面或 selector HTML",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "selector: str=None, max_chars: int=40000",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L396"
+    },
+    {
+      "name": "browser_execute_js",
+      "category": "MCP/浏览器",
+      "purpose": "执行页面 JavaScript",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "script: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L409"
+    },
+    {
+      "name": "browser_wait_for",
+      "category": "MCP/浏览器",
+      "purpose": "等待元素出现",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "selector: str, timeout: int=30000",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L417"
+    },
+    {
+      "name": "browser_go_back",
+      "category": "MCP/浏览器",
+      "purpose": "浏览器历史后退",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L426"
+    },
+    {
+      "name": "browser_go_forward",
+      "category": "MCP/浏览器",
+      "purpose": "浏览器历史前进",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L431"
+    },
+    {
+      "name": "browser_reload",
+      "category": "MCP/浏览器",
+      "purpose": "刷新页面",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L436"
+    },
+    {
+      "name": "browser_get_cookies",
+      "category": "MCP/浏览器",
+      "purpose": "读取 Context Cookie",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L441"
+    },
+    {
+      "name": "browser_set_cookies",
+      "category": "MCP/浏览器",
+      "purpose": "设置 Context Cookie",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "cookies: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L446"
+    },
+    {
+      "name": "browser_set_headers",
+      "category": "MCP/浏览器",
+      "purpose": "设置浏览器请求附加头",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "headers: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L458"
+    },
+    {
+      "name": "browser_set_offline",
+      "category": "MCP/浏览器",
+      "purpose": "切换浏览器离线状态",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "offline: bool=True",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L470"
+    },
+    {
+      "name": "browser_accessibility_tree",
+      "category": "MCP/浏览器",
+      "purpose": "兼容的全量无障碍快照入口",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L478"
+    },
+    {
+      "name": "browser_snapshot",
+      "category": "MCP/浏览器",
+      "purpose": "获取带原生 ref 的 full/delta 页面快照",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "frame: str=None, incremental: bool=True",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L483"
+    },
+    {
+      "name": "browser_act",
+      "category": "MCP/浏览器",
+      "purpose": "执行 click/fill/type/select/press/hover/upload/scroll 动作",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "action: str, selector: str=None, value: str=None, frame: str=None, delay: int=50, ref: str=None, snapshot_id: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L493"
+    },
+    {
+      "name": "browser_checkpoint",
+      "category": "MCP/浏览器",
+      "purpose": "inspect/save/restore/acknowledge 本地步骤检查点",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "operation: str='inspect', context: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L512"
+    },
+    {
+      "name": "browser_tabs",
+      "category": "MCP/浏览器",
+      "purpose": "列出或选择已跟踪标签页，仅关闭自有页",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "operation: str='list', tab_id: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L522"
+    },
+    {
+      "name": "browser_dialog",
+      "category": "MCP/浏览器",
+      "purpose": "显式处理 confirm/alert/prompt",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "accept: bool, prompt_text: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L536"
+    },
+    {
+      "name": "browser_downloads",
+      "category": "MCP/浏览器",
+      "purpose": "查询下载保存状态、文件和哈希",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L546"
+    },
+    {
+      "name": "session_timeline",
+      "category": "MCP/会话",
+      "purpose": "读取持久动作回执时间线",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "limit: int=50",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L551"
+    },
+    {
+      "name": "browser_hydrate_from_traffic",
+      "category": "MCP/浏览器",
+      "purpose": "按指定主机把已有会话状态装入浏览器",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "host: str, context: str='default', limit: int=200",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L558"
+    },
+    {
+      "name": "browser_get_console_logs",
+      "category": "MCP/浏览器",
+      "purpose": "读取或清理采集的 console 日志",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "clear: bool=False",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L583"
+    },
+    {
+      "name": "traffic_list",
+      "category": "MCP/流量",
+      "purpose": "读取近期流量摘要",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "limit: int=20, with_findings: bool=False",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L595"
+    },
+    {
+      "name": "traffic_messages",
+      "category": "MCP/流量",
+      "purpose": "按 flow/protocol/游标读取持久 SSE/WS 消息",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str=None, after_id: int=0, limit: int=50, protocol: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L606"
+    },
+    {
+      "name": "traffic_inspect",
+      "category": "MCP/流量",
+      "purpose": "按 meta/preview/full 层级查看 flow",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, level: str='preview', full_body: bool=False",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L623"
+    },
+    {
+      "name": "traffic_search",
+      "category": "MCP/流量",
+      "purpose": "按关键词、域名或方法搜索流量",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "query: str=None, domain: str=None, method: str=None, limit: int=50",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L642"
+    },
+    {
+      "name": "traffic_clear",
+      "category": "MCP/流量",
+      "purpose": "清理数据库记录，附件文件保留",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L654"
+    },
+    {
+      "name": "traffic_extract",
+      "category": "MCP/流量",
+      "purpose": "对响应做 JSONPath/CSS/regex 提取并可保存变量",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, json_path: str=None, css_selector: str=None, regex: str=None, group_index: int=1, save_as: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L660"
+    },
+    {
+      "name": "traffic_replay",
+      "category": "MCP/流量",
+      "purpose": "显式重发已有请求并返回关联结果",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, method: str=None, headers_json: str=None, body: str=None, timeout: float=30.0, context: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L701"
+    },
+    {
+      "name": "traffic_fuzz",
+      "category": "MCP/流量",
+      "purpose": "已有参数化请求测试入口，仅记录产品存在性",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, target_param: str, param_type: str='query', payload_category: str='sqli', timeout: float=10.0",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L754"
+    },
+    {
+      "name": "traffic_auth_detect",
+      "category": "MCP/流量",
+      "purpose": "识别已捕获流量中的认证形式线索",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_ids: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L815"
+    },
+    {
+      "name": "site_map",
+      "category": "MCP/规则与其它",
+      "purpose": "按主机和路径汇总已观察端点",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "domain: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L827"
+    },
+    {
+      "name": "traffic_findings",
+      "category": "MCP/流量",
+      "purpose": "读取被动检查 finding/signal 和统计",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "severity: str=None, category: str=None, rule_id: str=None, flow_id: str=None, kind: str='finding', stats: bool=False, limit: int=50",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L837"
+    },
+    {
+      "name": "traffic_diff",
+      "category": "MCP/流量",
+      "purpose": "比较两个 flow 的状态、大小和正文",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_a: str, flow_b: str, max_lines: int=50",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L869"
+    },
+    {
+      "name": "traffic_tag",
+      "category": "MCP/流量",
+      "purpose": "给 flow 增加标签",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, tag: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L886"
+    },
+    {
+      "name": "traffic_untag",
+      "category": "MCP/流量",
+      "purpose": "移除 flow 标签",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, tag: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L895"
+    },
+    {
+      "name": "traffic_find_by_tag",
+      "category": "MCP/流量",
+      "purpose": "按标签找 flow",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "tag: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L901"
+    },
+    {
+      "name": "traffic_link",
+      "category": "MCP/流量",
+      "purpose": "显式保存 flow 之间的关系",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "source_id: str, target_id: str, relation: str=''",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L909"
+    },
+    {
+      "name": "traffic_chain",
+      "category": "MCP/流量",
+      "purpose": "查询关系子图",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, depth: int=2",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L919"
+    },
+    {
+      "name": "traffic_correlate",
+      "category": "MCP/流量",
+      "purpose": "按值匹配产生候选数据关联，非因果证明",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "freq_cap: int=8, max_edges: int=200",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L930"
+    },
+    {
+      "name": "traffic_params",
+      "category": "MCP/流量",
+      "purpose": "读取参数位置和语义标签",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L958"
+    },
+    {
+      "name": "evidence_bundle",
+      "category": "MCP/规则与其它",
+      "purpose": "按已有记录生成 Markdown 证据摘要",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, depth: int=3",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L978"
+    },
+    {
+      "name": "note_add",
+      "category": "MCP/规则与其它",
+      "purpose": "保存分析结论与备注",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str, verdict: str, scenario: str='', sensitive_fields: str='', test_steps: str='', conclusion: str=''",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L991"
+    },
+    {
+      "name": "note_get",
+      "category": "MCP/规则与其它",
+      "purpose": "读取分析备注",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str=None, verdict: str=None, limit: int=50",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1039"
+    },
+    {
+      "name": "note_remove",
+      "category": "MCP/规则与其它",
+      "purpose": "移除分析备注",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_id: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1059"
+    },
+    {
+      "name": "traffic_generate_code",
+      "category": "MCP/流量",
+      "purpose": "导出已捕获请求的客户端表示",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "flow_ids: str, framework: str='curl_cffi'",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1065"
+    },
+    {
+      "name": "traffic_set_session_variable",
+      "category": "MCP/流量",
+      "purpose": "设置显式请求参数替换变量",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "name: str, value: str",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1075"
+    },
+    {
+      "name": "intercept_add_rule",
+      "category": "MCP/规则与其它",
+      "purpose": "添加头、正文替换或阻断规则",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "rule_id: str, action_type: str, url_pattern: str='.*', method: str=None, key: str=None, value: str=None, search_pattern: str=None, phase: str='request'",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1088"
+    },
+    {
+      "name": "intercept_list_rules",
+      "category": "MCP/规则与其它",
+      "purpose": "列出当前代理规则",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1133"
+    },
+    {
+      "name": "intercept_remove_rule",
+      "category": "MCP/规则与其它",
+      "purpose": "移除部分或全部代理规则",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "rule_id: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1147"
+    },
+    {
+      "name": "scope_set",
+      "category": "MCP/规则与其它",
+      "purpose": "设置采集域名范围",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "allowed_domains: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1162"
+    },
+    {
+      "name": "browse_and_capture",
+      "category": "MCP/规则与其它",
+      "purpose": "导航并执行显式动作数组后返回流量摘要",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "url: str, wait_until: str='domcontentloaded', actions: str=None",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1177"
+    },
+    {
+      "name": "export_session",
+      "category": "MCP/规则与其它",
+      "purpose": "导出 openapi/patterns/traffic 表示",
+      "availability": "原生",
+      "sources": [
+        "AP01"
+      ],
+      "signature": "format: str='openapi', domain: str=None, limit: int=200",
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/tools/tools.py#L1193"
+    },
+    {
+      "name": "--port",
+      "category": "CLI/服务启动选项",
+      "purpose": "MITM 代理默认端口",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L88"
+    },
+    {
+      "name": "--host",
+      "category": "CLI/服务启动选项",
+      "purpose": "MITM 监听地址",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L89"
+    },
+    {
+      "name": "--headless",
+      "category": "CLI/服务启动选项",
+      "purpose": "无头浏览器",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L90"
+    },
+    {
+      "name": "--no-headless",
+      "category": "CLI/服务启动选项",
+      "purpose": "显示浏览器窗口",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L91"
+    },
+    {
+      "name": "--timeout",
+      "category": "CLI/服务启动选项",
+      "purpose": "浏览器原语超时毫秒",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L92"
+    },
+    {
+      "name": "--startup-timeout",
+      "category": "CLI/服务启动选项",
+      "purpose": "会话启动总时间预算秒",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L93"
+    },
+    {
+      "name": "--shutdown-timeout",
+      "category": "CLI/服务启动选项",
+      "purpose": "资源清理总时间预算秒",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L94"
+    },
+    {
+      "name": "--log-dir",
+      "category": "CLI/服务启动选项",
+      "purpose": "旋转文件日志目录",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L95"
+    },
+    {
+      "name": "--transport",
+      "category": "CLI/服务启动选项",
+      "purpose": "stdio/sse/streamable-http 传输选择",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L96"
+    },
+    {
+      "name": "--config",
+      "category": "CLI/服务启动选项",
+      "purpose": "YAML 规则包路径",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L97"
+    },
+    {
+      "name": "--db-path",
+      "category": "CLI/服务启动选项",
+      "purpose": "重开明确指定的采集数据库",
+      "availability": "原生",
+      "sources": [
+        "AP09"
+      ],
+      "source_url": "https://github.com/zhanyiyi/AgentProxy/blob/e8ca17e781272ab3a690e348ab4415211ccde148/src/agent_proxy/main.py#L100"
+    }
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "原生",
+      "detail": "73 个显式注册 MCP tools；非全部都为只读",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "D02": {
+      "availability": "可选",
+      "detail": "本地 Markdown/Python prompt loader；未注册 MCP resources",
+      "sources": [
+        "AP15",
+        "AP09"
+      ]
+    },
+    "D03": {
+      "availability": "原生",
+      "detail": "默认 MCP stdio",
+      "sources": [
+        "AP09"
+      ]
+    },
+    "D04": {
+      "availability": "原生",
+      "detail": "MCP sse 和 streamable-http；不是独立 REST 产品 API",
+      "sources": [
+        "AP09"
+      ]
+    },
+    "D05": {
+      "availability": "未提供",
+      "detail": "agent-proxy CLI 仅启动与配置服务，操作经 MCP tools",
+      "sources": [
+        "AP09",
+        "AP16"
+      ]
+    },
+    "D06": {
+      "availability": "未提供",
+      "detail": "没有独立 Web/桌面工作台；headed 浏览器不等于管理 UI",
+      "sources": [
+        "AP09",
+        "AP14"
+      ]
+    },
+    "D07": {
+      "availability": "部分",
+      "detail": "Python create_server/SessionManager 可嵌入，本地 prompt context 可扩展；没有独立承诺稳定的 SDK",
+      "sources": [
+        "AP09",
+        "AP08",
+        "AP15"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "Python 服务、本地 Chromium、mitmproxy 和 SQLite",
+      "sources": [
+        "AP09",
+        "AP16"
+      ]
+    },
+    "D09": {
+      "availability": "未提供",
+      "detail": "当前仓库没有官方托管服务入口",
+      "sources": [
+        "AP14"
+      ]
+    },
+    "D10": {
+      "availability": "未提供",
+      "detail": "当前跟踪目录没有 Dockerfile、镜像或 compose 交付",
+      "sources": [
+        "AP14",
+        "AP16"
+      ]
+    },
+    "D11": {
+      "availability": "部分",
+      "detail": "session_status 显示端口、生命周期、DB 和 writer；cert_status 检查 NSS；没有综合 doctor",
+      "sources": [
+        "AP08",
+        "AP17"
+      ]
+    },
+    "D12": {
+      "availability": "未提供",
+      "detail": "register_all_tools 一次注册全部工具，无公开工具组开关",
+      "sources": [
+        "AP01",
+        "AP09"
+      ]
+    },
+    "B01": {
+      "availability": "原生",
+      "detail": "启动 Playwright Chromium，代理自动配置",
+      "sources": [
+        "AP02",
+        "AP08"
+      ]
+    },
+    "B02": {
+      "availability": "原生",
+      "detail": "Chromium/Chrome CDP；借用已有 Context 和页面",
+      "sources": [
+        "AP02"
+      ]
+    },
+    "B03": {
+      "availability": "未提供",
+      "detail": "公开启动路径固定 Playwright Chromium；未提供 Firefox/WebKit 引擎选择",
+      "sources": [
+        "AP02"
+      ]
+    },
+    "B04": {
+      "availability": "原生",
+      "detail": "headless 参数和 --no-headless",
+      "sources": [
+        "AP01",
+        "AP09"
+      ]
+    },
+    "B05": {
+      "availability": "原生",
+      "detail": "命名 Context、独立 Cookie/localStorage、切换和列表",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "B06": {
+      "availability": "部分",
+      "detail": "profile_dir 保存各 Context storageState JSON；不是完整持久浏览器用户目录",
+      "sources": [
+        "AP02",
+        "AP08"
+      ]
+    },
+    "B07": {
+      "availability": "原生",
+      "detail": "追踪 popup，列出/选择已跟踪页（含借用CDP页），仅关闭自有页；无专门 new-tab 工具",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "B08": {
+      "availability": "原生",
+      "detail": "frame selector 和 Playwright 原生 iframe refs",
+      "sources": [
+        "AP02",
+        "AP03"
+      ]
+    },
+    "B09": {
+      "availability": "原生",
+      "detail": "navigate、go_back、go_forward、reload",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "B10": {
+      "availability": "原生",
+      "detail": "click 和 browser_act hover；未提供专门双击/任意坐标工具",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "B11": {
+      "availability": "原生",
+      "detail": "fill、type、select、key 与 ref/selector 动作",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "B12": {
+      "availability": "部分",
+      "detail": "browser_act scroll 可把目标滚入视野或按数值距离垂直滚动；未提供拖拽入口",
+      "sources": [
+        "AP02"
+      ]
+    },
+    "B13": {
+      "availability": "原生",
+      "detail": "显式 accept/dismiss；prompt_text；pending dialog 状态",
+      "sources": [
+        "AP18",
+        "AP01"
+      ]
+    },
+    "B14": {
+      "availability": "原生",
+      "detail": "browser_act upload 调用 set_input_files；路径由调用方提供",
+      "sources": [
+        "AP02",
+        "AP01"
+      ]
+    },
+    "B15": {
+      "availability": "原生",
+      "detail": "pending/completed/failed/cancelled，保存文件并计算大小和 SHA256",
+      "sources": [
+        "AP18"
+      ]
+    },
+    "B16": {
+      "availability": "原生",
+      "detail": "browser_execute_js",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "B17": {
+      "availability": "原生",
+      "detail": "browser_wait_for 元素与导航 wait_until；未提供通用业务成功条件",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "B18": {
+      "availability": "原生",
+      "detail": "browser_get_cookies、browser_set_cookies",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "B19": {
+      "availability": "原生",
+      "detail": "session_save_profile、命名 Context state JSON 载入",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "B20": {
+      "availability": "未提供",
+      "detail": "自建Context固定1280x720，借用CDP Context保留原视口；工具/CLI无设备、时区或位置参数",
+      "sources": [
+        "AP02",
+        "AP09"
+      ]
+    },
+    "B21": {
+      "availability": "部分",
+      "detail": "browser_set_offline；未提供带宽/CPU 节流入口",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "O01": {
+      "availability": "原生",
+      "detail": "Playwright 1.60 AI ARIA snapshot，全页或 frame",
+      "sources": [
+        "AP02"
+      ]
+    },
+    "O02": {
+      "availability": "原生",
+      "detail": "原生 eN/fNeN ref，操作必须带 snapshot_id",
+      "sources": [
+        "AP03",
+        "AP02"
+      ]
+    },
+    "O03": {
+      "availability": "原生",
+      "detail": "full/delta、snapshot_id、base_snapshot_id，按 tab/frame 维护基线",
+      "sources": [
+        "AP03"
+      ]
+    },
+    "O04": {
+      "availability": "部分",
+      "detail": "frame 选择与输出字符预算；没有快照搜索、role过滤或任意子树裁剪参数",
+      "sources": [
+        "AP01",
+        "AP02",
+        "AP03"
+      ]
+    },
+    "O05": {
+      "availability": "原生",
+      "detail": "检查 ref 来自最新已交付快照，过期明确拒绝；导航/文档变化失效",
+      "sources": [
+        "AP03",
+        "AP02"
+      ]
+    },
+    "O06": {
+      "availability": "部分",
+      "detail": "当前视口原生 MCP Image；未提供元素/全长截图参数",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "O07": {
+      "availability": "未提供",
+      "detail": "没有标注截图或内置视觉定位接口；外部模型可消费普通截图",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "O08": {
+      "availability": "原生",
+      "detail": "按 selector 读取 text/innerHTML，默认字符预算",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "O09": {
+      "availability": "部分",
+      "detail": "响应 JSONPath/CSS/regex 提取；没有页面 Schema/模型约束提取",
+      "sources": [
+        "AP01",
+        "AP11"
+      ]
+    },
+    "O10": {
+      "availability": "未提供",
+      "detail": "browser_act 接收动作与 ref/selector，不把自然语言变成动作",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "O11": {
+      "availability": "未提供",
+      "detail": "不猜测替换失效 ref，无语义自适应恢复定位",
+      "sources": [
+        "AP03"
+      ]
+    },
+    "O12": {
+      "availability": "未提供",
+      "detail": "可捕获 PDF 附件；没有页面打印 PDF 的公开入口",
+      "sources": [
+        "AP01",
+        "AP12"
+      ]
+    },
+    "N01": {
+      "availability": "原生",
+      "detail": "proxy-only 模式供外部浏览器/客户端显式配置代理",
+      "sources": [
+        "AP01",
+        "AP08"
+      ]
+    },
+    "N02": {
+      "availability": "原生",
+      "detail": "mitmproxy CA 与 HTTPS；可检查/安装浏览器 NSS 信任，Windows 有支持边界",
+      "sources": [
+        "AP21",
+        "AP17"
+      ]
+    },
+    "N03": {
+      "availability": "部分",
+      "detail": "regular mitmproxy 的 HTTP/2 能力；封装未给独立兼容矩阵",
+      "sources": [
+        "AP21"
+      ]
+    },
+    "N04": {
+      "availability": "未提供",
+      "detail": "当前封装仅公开 regular HTTP proxy，无 HTTP/3 所需代理模式入口",
+      "sources": [
+        "AP21",
+        "AP01"
+      ]
+    },
+    "N05": {
+      "availability": "未提供",
+      "detail": "当前记录器只持久 HTTPFlow/SSE/WebSocket，无通用 TCP/UDP 记录模型",
+      "sources": [
+        "AP21",
+        "AP05"
+      ]
+    },
+    "N06": {
+      "availability": "部分",
+      "detail": "regular HTTP/HTTPS 显式代理；未暴露 reverse/transparent/SOCKS/WireGuard 等模式",
+      "sources": [
+        "AP21",
+        "AP09"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "traffic_inspect meta/preview/full，头、状态、正文、cURL",
+      "sources": [
+        "AP01",
+        "AP05"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "字面关键词、hostname/子域、method、limit；scope_set 过滤采集域名",
+      "sources": [
+        "AP05",
+        "AP21",
+        "AP01"
+      ]
+    },
+    "N09": {
+      "availability": "原生",
+      "detail": "数据库保存有序头列表；详情同时提供字典和 ordered 列表",
+      "sources": [
+        "AP05",
+        "AP06"
+      ]
+    },
+    "N10": {
+      "availability": "原生",
+      "detail": "响应压缩由 mitmproxy 解码，按 charset 解正文，二进制附件元数据；SSE 专用增量解码",
+      "sources": [
+        "AP05",
+        "AP04"
+      ]
+    },
+    "N11": {
+      "availability": "部分",
+      "detail": "规则可注入头、正则替换正文和 block；不是完整可配置响应 mock 系统",
+      "sources": [
+        "AP13",
+        "AP21"
+      ]
+    },
+    "N12": {
+      "availability": "未提供",
+      "detail": "现有规则即时执行，无 pause/edit/resume 断点队列",
+      "sources": [
+        "AP21",
+        "AP01"
+      ]
+    },
+    "N13": {
+      "availability": "原生",
+      "detail": "显式请求重发，参数和结果关联；这里只清点已有接口，不增加执行编排",
+      "sources": [
+        "AP01",
+        "AP21"
+      ]
+    },
+    "N14": {
+      "availability": "未提供",
+      "detail": "内部有按主机注入已有会话头的 route，但无通用 browser route/mock 接口",
+      "sources": [
+        "AP02",
+        "AP01"
+      ]
+    },
+    "N15": {
+      "availability": "未提供",
+      "detail": "export_session 仅 openapi/patterns/traffic，不含 HAR",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "N16": {
+      "availability": "原生",
+      "detail": "flow cURL 和客户端代码导出接口",
+      "sources": [
+        "AP01",
+        "AP11"
+      ]
+    },
+    "N17": {
+      "availability": "部分",
+      "detail": "捕获请求模式聚合并导出推断 OpenAPI v3；不等于经过验证的完整服务 schema",
+      "sources": [
+        "AP11",
+        "AP01"
+      ]
+    },
+    "M01": {
+      "availability": "原生",
+      "detail": "WebSocket 重组后的完整应用消息",
+      "sources": [
+        "AP04",
+        "AP21"
+      ]
+    },
+    "M02": {
+      "availability": "原生",
+      "detail": "client/server 方向、opcode，文本 UTF8、二进制 base64",
+      "sources": [
+        "AP04"
+      ]
+    },
+    "M03": {
+      "availability": "未提供",
+      "detail": "仅旁路观察，无公开 WebSocket 修改/注入工具",
+      "sources": [
+        "AP01",
+        "AP21"
+      ]
+    },
+    "M04": {
+      "availability": "原生",
+      "detail": "data 多行、id/event/retry、CR/LF、UTF8 BOM 与 incomplete 尾事件",
+      "sources": [
+        "AP04"
+      ]
+    },
+    "M05": {
+      "availability": "原生",
+      "detail": "gzip/x-gzip、deflate/raw、br、zstd、编码链；原传输字节保持不变",
+      "sources": [
+        "AP04",
+        "AP21"
+      ]
+    },
+    "M06": {
+      "availability": "原生",
+      "detail": "responseheaders安装observer，事件入writer后异步提交；连接开放时可查询已提交记录，不承诺入队即落库",
+      "sources": [
+        "AP21",
+        "AP06",
+        "AP05"
+      ]
+    },
+    "M07": {
+      "availability": "原生",
+      "detail": "SQLite stream_messages，递增 id/after_id/next_after_id，clear 不复用旧 id",
+      "sources": [
+        "AP05",
+        "AP01"
+      ]
+    },
+    "M08": {
+      "availability": "原生",
+      "detail": "SSE original_bytes计解码后data字段UTF8字节；truncated/incomplete和解码/限额诊断；中断只标新保存尾事件，不回改已完成事件",
+      "sources": [
+        "AP04"
+      ]
+    },
+    "W01": {
+      "availability": "未提供",
+      "detail": "MCP 工具内核；任务由外部 Agent 决定，没有内置模型执行循环",
+      "sources": [
+        "AP09",
+        "AP01"
+      ]
+    },
+    "W02": {
+      "availability": "不适用",
+      "detail": "服务自身不接模型；外部 MCP 客户端选择模型",
+      "sources": [
+        "AP09"
+      ]
+    },
+    "W03": {
+      "availability": "部分",
+      "detail": "本地 prompt context Python 扩展；没有正式自定义动作注册产品接口",
+      "sources": [
+        "AP15",
+        "AP01"
+      ]
+    },
+    "W04": {
+      "availability": "部分",
+      "detail": "browse_and_capture 执行显式动作数组，遇 pending 决策停止；不是流程引擎",
+      "sources": [
+        "AP08",
+        "AP01"
+      ]
+    },
+    "W05": {
+      "availability": "未提供",
+      "detail": "公开动作数组不含条件、循环、并行节点",
+      "sources": [
+        "AP08",
+        "AP01"
+      ]
+    },
+    "W06": {
+      "availability": "部分",
+      "detail": "headed/CDP 可人工登录与接管，原生 dialog 显式决策；没有审批工作流节点",
+      "sources": [
+        "AP02",
+        "AP18"
+      ]
+    },
+    "W07": {
+      "availability": "未提供",
+      "detail": "completed 指浏览器原语完成，无调用方定义业务成功条件接口",
+      "sources": [
+        "AP08",
+        "AP01"
+      ]
+    },
+    "W08": {
+      "availability": "部分",
+      "detail": "统一navigate_browser/act_browser链路持久回执；go_back/go_forward/reload/execute_js旧入口不全覆盖",
+      "sources": [
+        "AP08",
+        "AP07",
+        "AP18",
+        "AP01"
+      ]
+    },
+    "W09": {
+      "availability": "部分",
+      "detail": "统一导航/动作链路自动保存前后检查点，不保存输入值；历史跳转、刷新和任意JS入口未经过该链路",
+      "sources": [
+        "AP08",
+        "AP07",
+        "AP01"
+      ]
+    },
+    "W10": {
+      "availability": "部分",
+      "detail": "同库重开保留游标，可重绑唯一匹配活页面；不自动重建登录或导航",
+      "sources": [
+        "AP08",
+        "AP07"
+      ]
+    },
+    "W11": {
+      "availability": "部分",
+      "detail": "统一检查点链路把中断标unknown/needs_review，验证前拒绝为not_started，不自动重放；旧导航/JS入口未全部纳入",
+      "sources": [
+        "AP07",
+        "AP08",
+        "AP01"
+      ]
+    },
+    "W12": {
+      "availability": "未提供",
+      "detail": "恢复不重放业务动作，无已编译动作缓存/任务历史变量重放",
+      "sources": [
+        "AP08"
+      ]
+    },
+    "W13": {
+      "availability": "部分",
+      "detail": "CDP人工登录、storageState、从本人采集流量按主机复用会话；无凭据保险库",
+      "sources": [
+        "AP01",
+        "AP08"
+      ]
+    },
+    "W14": {
+      "availability": "未提供",
+      "detail": "保存 PDF/Office/ZIP/CSV 字节与元数据，不解析文件内容",
+      "sources": [
+        "AP12"
+      ]
+    },
+    "W15": {
+      "availability": "未提供",
+      "detail": "没有任务调度器、webhook 或独立任务运行 API",
+      "sources": [
+        "AP09",
+        "AP01"
+      ]
+    },
+    "T01": {
+      "availability": "部分",
+      "detail": "有限队列记录 console 消息，可查询/clear；未提供独立 pageerror/调试器产品接口",
+      "sources": [
+        "AP02",
+        "AP01"
+      ]
+    },
+    "T02": {
+      "availability": "未提供",
+      "detail": "无性能 trace 或专用时序分析工具",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "T03": {
+      "availability": "未提供",
+      "detail": "无 heap snapshot 或内存诊断工具",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "T04": {
+      "availability": "未提供",
+      "detail": "持久动作回执不是视频或 Playwright trace 产物",
+      "sources": [
+        "AP01",
+        "AP02"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "动作窗口和近期流量用于时间相关排查；没有统一UI和已证实因果归因",
+      "sources": [
+        "AP08",
+        "AP18"
+      ]
+    },
+    "T06": {
+      "availability": "原生",
+      "detail": "已观测响应被动规则、finding/signal 分层、按规则/级别查询；信号不是漏洞确认",
+      "sources": [
+        "AP19",
+        "AP01"
+      ]
+    },
+    "T07": {
+      "availability": "原生",
+      "detail": "仓库已有显式参数化请求测试工具；本报告仅列存在性，不提供操作流程",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "T08": {
+      "availability": "原生",
+      "detail": "请求响应字段/状态/长度差异，Markdown evidence bundle",
+      "sources": [
+        "AP11",
+        "AP01"
+      ]
+    },
+    "S01": {
+      "availability": "原生",
+      "detail": "SQLite WAL，本实例隔离，显式 --db-path 重开旧采集",
+      "sources": [
+        "AP05",
+        "AP08",
+        "AP09"
+      ]
+    },
+    "S02": {
+      "availability": "原生",
+      "detail": "flow tags、notes、显式 links 与链查询；值匹配关联仍为线索",
+      "sources": [
+        "AP05",
+        "AP11",
+        "AP01"
+      ]
+    },
+    "S03": {
+      "availability": "原生",
+      "detail": "响应 PDF/Office/ZIP/CSV 附件和浏览器下载保存",
+      "sources": [
+        "AP12",
+        "AP18"
+      ]
+    },
+    "S04": {
+      "availability": "原生",
+      "detail": "附件和已保存下载的 SHA256、size、path/省略原因",
+      "sources": [
+        "AP12",
+        "AP18"
+      ]
+    },
+    "S05": {
+      "availability": "原生",
+      "detail": "queued/pending/persisted/messages/dropped/write_errors/scan_errors；5000共享队列满丢最旧待写项，drain完成仍需查错误",
+      "sources": [
+        "AP06",
+        "AP08"
+      ]
+    },
+    "S06": {
+      "availability": "部分",
+      "detail": "正文/消息/附件有预算；公开 traffic_clear 清流量、消息、回执和检查点，保留附件/下载文件，无容量/时间保留策略",
+      "sources": [
+        "AP04",
+        "AP05",
+        "AP12",
+        "AP07",
+        "AP08"
+      ]
+    },
+    "S07": {
+      "availability": "部分",
+      "detail": "Markdown/flow JSON/OpenAPI 导出；没有一次导出全部消息、附件与步骤的完整归档包",
+      "sources": [
+        "AP01",
+        "AP11"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "YAML默认与override合并，配置查看；config_add 仅内存运行时变更",
+      "sources": [
+        "AP10",
+        "AP01"
+      ]
+    },
+    "X02": {
+      "availability": "部分",
+      "detail": "可选本地 prompt pack，内部基于 mitmproxy addons；无通用插件管理/市场入口",
+      "sources": [
+        "AP15",
+        "AP21"
+      ]
+    },
+    "X03": {
+      "availability": "部分",
+      "detail": "MCP readOnly/destructive/idempotent 注解提示；不是服务端强制审批策略",
+      "sources": [
+        "AP01"
+      ]
+    },
+    "X04": {
+      "availability": "未提供",
+      "detail": "当前 MCP/代理未实现鉴权、租户或远程RBAC；默认回环",
+      "sources": [
+        "AP09",
+        "AP21"
+      ]
+    },
+    "X05": {
+      "availability": "原生",
+      "detail": "启动停止串行、取消清理、超时预算；借用 CDP Context/页保护，lifespan 清理",
+      "sources": [
+        "AP08",
+        "AP02",
+        "AP09"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "旋转文件日志、阶段异常、session_status 与 writer 可查询状态",
+      "sources": [
+        "AP09",
+        "AP08",
+        "AP06"
+      ]
+    }
+  },
+  "notes": [
+    "这是当前本地代码核对，不把父级依赖所有能力当已暴露功能。",
+    "本轮只调研和编写文档，不执行请求测试、不修改业务代码。",
+    "完成、恢复、关联和完整性均采用当前实现的明确边界；工具数量不作为排名。",
+    "MCP tool 数按 AST 中显式 @mcp.tool 统计；prompt pack 和间接底层 Python 方法不混入。"
+  ]
+}

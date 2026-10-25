@@ -1,0 +1,3603 @@
+{
+  "project": "mitmproxy",
+  "repo": "https://github.com/mitmproxy/mitmproxy",
+  "revision": "7cb38827580fa8a87af28c43441ab11132747e4a",
+  "version": "12.3.0（GitHub 最新正式发布 v12.3.0，2026-10-22；比较源码为 main HEAD）",
+  "license": "MIT",
+  "sources": [
+    {
+      "id": "mitm-repo",
+      "title": "main HEAD 元数据",
+      "url": "https://api.github.com/repos/mitmproxy/mitmproxy/commits/main"
+    },
+    {
+      "id": "mitm-release",
+      "title": "12.3.0 正式发布",
+      "url": "https://github.com/mitmproxy/mitmproxy/releases/tag/v12.3.0"
+    },
+    {
+      "id": "mitm-license",
+      "title": "MIT 许可证",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/LICENSE"
+    },
+    {
+      "id": "mitm-intro",
+      "title": "官方定位与三种界面",
+      "url": "https://docs.mitmproxy.org/stable/"
+    },
+    {
+      "id": "mitm-protocols",
+      "title": "协议及明确限制",
+      "url": "https://docs.mitmproxy.org/stable/concepts/protocols/"
+    },
+    {
+      "id": "mitm-modes",
+      "title": "代理模式与平台限制",
+      "url": "https://docs.mitmproxy.org/stable/concepts/modes/"
+    },
+    {
+      "id": "mitm-features",
+      "title": "内置重放、改写、会话与流式功能",
+      "url": "https://docs.mitmproxy.org/stable/overview/features/"
+    },
+    {
+      "id": "mitm-filters",
+      "title": "过滤表达式",
+      "url": "https://docs.mitmproxy.org/stable/concepts/filters/"
+    },
+    {
+      "id": "mitm-options",
+      "title": "完整运行选项",
+      "url": "https://docs.mitmproxy.org/stable/concepts/options/"
+    },
+    {
+      "id": "mitm-cert",
+      "title": "CA、服务器证书与 mTLS",
+      "url": "https://docs.mitmproxy.org/stable/concepts/certificates/"
+    },
+    {
+      "id": "mitm-addons",
+      "title": "插件事件、配置、命令与热加载",
+      "url": "https://docs.mitmproxy.org/stable/addons/overview/"
+    },
+    {
+      "id": "mitm-commands",
+      "title": "类型化插件命令",
+      "url": "https://docs.mitmproxy.org/stable/addons/commands/"
+    },
+    {
+      "id": "mitm-events",
+      "title": "各协议事件钩子",
+      "url": "https://docs.mitmproxy.org/stable/api/events.html"
+    },
+    {
+      "id": "mitm-install",
+      "title": "各平台与 Docker 安装",
+      "url": "https://docs.mitmproxy.org/stable/overview/installation/"
+    },
+    {
+      "id": "mitm-default-addons",
+      "title": "内置 addon 清单",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/__init__.py"
+    },
+    {
+      "id": "mitm-content",
+      "title": "内容视图注册及编辑接口",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/contentviews/__init__.py"
+    },
+    {
+      "id": "mitm-content-api",
+      "title": "内容视图与交互重编码 API",
+      "url": "https://docs.mitmproxy.org/stable/api/mitmproxy/contentviews.html"
+    },
+    {
+      "id": "mitm-encoding",
+      "title": "正文编码与压缩实现",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/net/encoding.py"
+    },
+    {
+      "id": "mitm-web-api",
+      "title": "mitmweb 内部 HTTP/WebSocket 路由",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/web/app.py"
+    },
+    {
+      "id": "mitm-export",
+      "title": "客户端和原始报文导出",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/export.py"
+    },
+    {
+      "id": "mitm-savehar",
+      "title": "HAR 保存实现",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/savehar.py"
+    },
+    {
+      "id": "mitm-http",
+      "title": "HTTP 头和消息数据模型",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/http.py"
+    },
+    {
+      "id": "mitm-ws",
+      "title": "WebSocket 应用消息数据模型",
+      "url": "https://docs.mitmproxy.org/stable/api/mitmproxy/websocket.html"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_init_py",
+      "title": "固定源码：mitmproxy/addons/__init__.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/__init__.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_anticache_py",
+      "title": "固定源码：mitmproxy/addons/anticache.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/anticache.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_anticomp_py",
+      "title": "固定源码：mitmproxy/addons/anticomp.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/anticomp.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_asgiapp_py",
+      "title": "固定源码：mitmproxy/addons/asgiapp.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/asgiapp.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_block_py",
+      "title": "固定源码：mitmproxy/addons/block.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/block.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_blocklist_py",
+      "title": "固定源码：mitmproxy/addons/blocklist.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/blocklist.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_browser_py",
+      "title": "固定源码：mitmproxy/addons/browser.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/browser.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_clientplayback_py",
+      "title": "固定源码：mitmproxy/addons/clientplayback.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/clientplayback.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_command_history_py",
+      "title": "固定源码：mitmproxy/addons/command_history.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/command_history.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_comment_py",
+      "title": "固定源码：mitmproxy/addons/comment.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/comment.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_core_py",
+      "title": "固定源码：mitmproxy/addons/core.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/core.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_cut_py",
+      "title": "固定源码：mitmproxy/addons/cut.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/cut.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_disable_h2c_py",
+      "title": "固定源码：mitmproxy/addons/disable_h2c.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/disable_h2c.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_dns_resolver_py",
+      "title": "固定源码：mitmproxy/addons/dns_resolver.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/dns_resolver.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_dumper_py",
+      "title": "固定源码：mitmproxy/addons/dumper.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/dumper.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_errorcheck_py",
+      "title": "固定源码：mitmproxy/addons/errorcheck.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/errorcheck.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_eventstore_py",
+      "title": "固定源码：mitmproxy/addons/eventstore.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/eventstore.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_export_py",
+      "title": "固定源码：mitmproxy/addons/export.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/export.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_intercept_py",
+      "title": "固定源码：mitmproxy/addons/intercept.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/intercept.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_keepserving_py",
+      "title": "固定源码：mitmproxy/addons/keepserving.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/keepserving.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_maplocal_py",
+      "title": "固定源码：mitmproxy/addons/maplocal.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/maplocal.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_mapremote_py",
+      "title": "固定源码：mitmproxy/addons/mapremote.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/mapremote.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_modifybody_py",
+      "title": "固定源码：mitmproxy/addons/modifybody.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/modifybody.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_modifyheaders_py",
+      "title": "固定源码：mitmproxy/addons/modifyheaders.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/modifyheaders.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_next_layer_py",
+      "title": "固定源码：mitmproxy/addons/next_layer.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/next_layer.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_onboarding_py",
+      "title": "固定源码：mitmproxy/addons/onboarding.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/onboarding.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_proxyauth_py",
+      "title": "固定源码：mitmproxy/addons/proxyauth.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/proxyauth.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_proxyserver_py",
+      "title": "固定源码：mitmproxy/addons/proxyserver.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/proxyserver.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_readfile_py",
+      "title": "固定源码：mitmproxy/addons/readfile.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/readfile.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_save_py",
+      "title": "固定源码：mitmproxy/addons/save.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/save.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_savehar_py",
+      "title": "固定源码：mitmproxy/addons/savehar.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/savehar.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_script_py",
+      "title": "固定源码：mitmproxy/addons/script.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/script.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_server_side_events_py",
+      "title": "固定源码：mitmproxy/addons/server_side_events.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/server_side_events.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_serverplayback_py",
+      "title": "固定源码：mitmproxy/addons/serverplayback.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/serverplayback.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_stickyauth_py",
+      "title": "固定源码：mitmproxy/addons/stickyauth.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/stickyauth.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_stickycookie_py",
+      "title": "固定源码：mitmproxy/addons/stickycookie.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/stickycookie.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_strip_dns_https_records_py",
+      "title": "固定源码：mitmproxy/addons/strip_dns_https_records.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/strip_dns_https_records.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_termlog_py",
+      "title": "固定源码：mitmproxy/addons/termlog.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/termlog.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_tlsconfig_py",
+      "title": "固定源码：mitmproxy/addons/tlsconfig.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/tlsconfig.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_update_alt_svc_py",
+      "title": "固定源码：mitmproxy/addons/update_alt_svc.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/update_alt_svc.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_upstream_auth_py",
+      "title": "固定源码：mitmproxy/addons/upstream_auth.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/upstream_auth.py"
+    },
+    {
+      "id": "MPX_mitmproxy_addons_view_py",
+      "title": "固定源码：mitmproxy/addons/view.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/addons/view.py"
+    },
+    {
+      "id": "MPX_mitmproxy_tools_console_consoleaddons_py",
+      "title": "固定源码：mitmproxy/tools/console/consoleaddons.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/console/consoleaddons.py"
+    },
+    {
+      "id": "MPX_mitmproxy_tools_console_keymap_py",
+      "title": "固定源码：mitmproxy/tools/console/keymap.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/console/keymap.py"
+    },
+    {
+      "id": "MPX_mitmproxy_proxy_mode_specs_py",
+      "title": "固定源码：mitmproxy/proxy/mode_specs.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/proxy/mode_specs.py"
+    },
+    {
+      "id": "MPX_docs_src_content_concepts_modes_md",
+      "title": "固定源码：docs/src/content/concepts/modes.md",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/docs/src/content/concepts/modes.md"
+    },
+    {
+      "id": "MPX_docs_src_content_concepts_commands_md",
+      "title": "固定源码：docs/src/content/concepts/commands.md",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/docs/src/content/concepts/commands.md"
+    },
+    {
+      "id": "MPX_mitmproxy_tools_dump_py",
+      "title": "固定源码：mitmproxy/tools/dump.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/dump.py"
+    },
+    {
+      "id": "MPX_mitmproxy_tools_web_master_py",
+      "title": "固定源码：mitmproxy/tools/web/master.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/web/master.py"
+    },
+    {
+      "id": "MPX_mitmproxy_tools_console_master_py",
+      "title": "固定源码：mitmproxy/tools/console/master.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/console/master.py"
+    },
+    {
+      "id": "MPX_mitmproxy_master_py",
+      "title": "固定源码：mitmproxy/master.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/master.py"
+    },
+    {
+      "id": "MPX_mitmproxy_tools_web_webaddons_py",
+      "title": "固定源码：mitmproxy/tools/web/webaddons.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/web/webaddons.py"
+    },
+    {
+      "id": "MPX_mitmproxy_tools_web_static_viewer_py",
+      "title": "固定源码：mitmproxy/tools/web/static_viewer.py",
+      "url": "https://github.com/mitmproxy/mitmproxy/blob/7cb38827580fa8a87af28c43441ab11132747e4a/mitmproxy/tools/web/static_viewer.py"
+    }
+  ],
+  "features": [
+    {
+      "id": "mitm-http1",
+      "category": "协议",
+      "name": "HTTP/1.0 与 HTTP/1.1",
+      "availability": "原生",
+      "detail": "自有 HTTP 栈；协议文档仍列 HTTP/1 trailers 限制，不宣称完全覆盖全部 HTTP 扩展。",
+      "sources": [
+        "mitm-protocols"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-http2",
+      "category": "协议",
+      "name": "HTTP/2 与 HTTP/1 转换",
+      "availability": "部分",
+      "detail": "支持 HTTP/2；无 h2c，忽略 PRIORITY，不发布 Push Promise 支持。",
+      "sources": [
+        "mitm-protocols"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-http3",
+      "category": "协议",
+      "name": "HTTP/3 / QUIC",
+      "availability": "部分",
+      "detail": "仅 reverse/local/WireGuard 等公开模式；限 QUIC v1，client replay 已知损坏，兼容性主要验证 cURL。",
+      "sources": [
+        "mitm-protocols"
+      ],
+      "interfaces": [
+        "regular / local / wireguard / reverse / transparent / tun / upstream / socks5 / dns"
+      ]
+    },
+    {
+      "id": "mitm-ws-msg",
+      "category": "实时消息",
+      "name": "WebSocket 应用消息",
+      "availability": "原生",
+      "detail": "支持压缩、双向 text/binary 消息和分片重组；保留时间与来源方向。",
+      "sources": [
+        "mitm-protocols",
+        "mitm-ws"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmweb",
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-ws-limits",
+      "category": "实时消息",
+      "name": "WebSocket 控制帧与重放边界",
+      "availability": "部分",
+      "detail": "PING/PONG 转发但不作为应用消息存储；未知扩展只警告并透传；不支持客户端/服务端 WebSocket 重放。",
+      "sources": [
+        "mitm-protocols"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-dns",
+      "category": "协议",
+      "name": "DNS 代理与可编程解析",
+      "availability": "部分",
+      "detail": "DNS flow 和 DNS 模式；没有 DoT/DoH/DoQ 与 DNS replay。",
+      "sources": [
+        "mitm-protocols",
+        "mitm-modes"
+      ],
+      "interfaces": [
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-tcp",
+      "category": "协议",
+      "name": "通用 TCP/TLS",
+      "availability": "部分",
+      "detail": "可捕获非 HTTP TCP 和自动识别 TLS；无 STARTTLS 检测与 TCP replay。",
+      "sources": [
+        "mitm-protocols"
+      ],
+      "interfaces": [
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-udp",
+      "category": "协议",
+      "name": "通用 UDP/DTLS",
+      "availability": "部分",
+      "detail": "可捕获非 HTTP UDP/DTLS；无消息重放。",
+      "sources": [
+        "mitm-protocols"
+      ],
+      "interfaces": [
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-regular",
+      "category": "接入",
+      "name": "显式 HTTP(S) 与 SOCKS5 代理",
+      "availability": "原生",
+      "detail": "常规代理客户端配置；SOCKS5 服务器模式，不能据此推断 SOCKS 认证可用。",
+      "sources": [
+        "mitm-modes",
+        "mitm-features"
+      ],
+      "interfaces": [
+        "regular / local / wireguard / reverse / transparent / tun / upstream / socks5 / dns"
+      ]
+    },
+    {
+      "id": "mitm-local",
+      "category": "接入",
+      "name": "按进程捕获本机流量",
+      "availability": "部分",
+      "detail": "Windows/Linux/macOS；进程名/PID 筛选，Linux 内核、权限、容器与 WSL 限制见文档。",
+      "sources": [
+        "mitm-modes"
+      ],
+      "interfaces": [
+        "regular / local / wireguard / reverse / transparent / tun / upstream / socks5 / dns"
+      ]
+    },
+    {
+      "id": "mitm-wireguard",
+      "category": "接入",
+      "name": "WireGuard 远程设备",
+      "availability": "部分",
+      "detail": "用户态 VPN 捕获外部设备；IPv6 仍有限，不能直接把代理主机自身全部流量绕回此隧道。",
+      "sources": [
+        "mitm-modes"
+      ],
+      "interfaces": [
+        "regular / local / wireguard / reverse / transparent / tun / upstream / socks5 / dns"
+      ]
+    },
+    {
+      "id": "mitm-reverse",
+      "category": "接入",
+      "name": "多协议反向代理",
+      "availability": "原生",
+      "detail": "公开 HTTP(S)、DNS、HTTP3、QUIC、TCP/TLS、UDP/DTLS；可多监听端口，不自动改写页面绝对 URL。",
+      "sources": [
+        "mitm-modes"
+      ],
+      "interfaces": [
+        "regular / local / wireguard / reverse / transparent / tun / upstream / socks5 / dns"
+      ]
+    },
+    {
+      "id": "mitm-transparent",
+      "category": "接入",
+      "name": "透明代理与 TUN",
+      "availability": "部分",
+      "detail": "透明模式限 Linux/macOS 且不支持 UDP；TUN 模式可用性和路由需求独立于常规代理。",
+      "sources": [
+        "mitm-modes"
+      ],
+      "interfaces": [
+        "regular / local / wireguard / reverse / transparent / tun / upstream / socks5 / dns"
+      ]
+    },
+    {
+      "id": "mitm-upstream",
+      "category": "接入",
+      "name": "上游代理链与认证",
+      "availability": "原生",
+      "detail": "支持链到 HTTP(S) 上游代理，提供 upstream_auth 选项。",
+      "sources": [
+        "mitm-modes",
+        "mitm-options"
+      ],
+      "interfaces": [
+        "mitmdump",
+        "mitmproxy",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-details",
+      "category": "观察",
+      "name": "完整 flow 请求响应",
+      "availability": "原生",
+      "detail": "请求头、状态、正文、连接/TLS 元数据与时序字段；不同工具可显示范围不同。",
+      "sources": [
+        "mitm-http",
+        "mitm-intro"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmweb",
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-headers",
+      "category": "观察",
+      "name": "重复与有序 HTTP 头",
+      "availability": "原生",
+      "detail": "Headers 数据模型提供原始字段序列和 get_all 等多值操作；协议转发可能规范化。",
+      "sources": [
+        "mitm-http"
+      ],
+      "interfaces": [
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-content-views",
+      "category": "观察",
+      "name": "格式化与协议内容视图",
+      "availability": "原生",
+      "detail": "内置 JSON、HTML/XML、GraphQL、MQTT、Socket.IO、表单、multipart、图片、ZIP 等；还加载 Rust contentviews，支持自定义。",
+      "sources": [
+        "mitm-content",
+        "mitm-content-api"
+      ],
+      "interfaces": [
+        "Contentview API"
+      ]
+    },
+    {
+      "id": "mitm-compression",
+      "category": "观察",
+      "name": "正文压缩与字符编码",
+      "availability": "原生",
+      "detail": "编码模块提供 gzip、deflate、Brotli、zstd 等 HTTP 编码；完整正文解码不等于实时 SSE 解析。",
+      "sources": [
+        "mitm-encoding"
+      ],
+      "interfaces": [
+        "Python addon API",
+        "Contentview API"
+      ]
+    },
+    {
+      "id": "mitm-filter",
+      "category": "观察",
+      "name": "表达式过滤与视图选择",
+      "availability": "原生",
+      "detail": "按域名/URL/头/体/方法/状态/错误/协议/元数据/标记及逻辑组合；@focus/@shown 等批量选择。",
+      "sources": [
+        "mitm-filters"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-intercept",
+      "category": "修改",
+      "name": "断点拦截、修改与继续",
+      "availability": "原生",
+      "detail": "交互式拦截 flow；Web UI 内部接口有 resume、kill 和修改请求响应。",
+      "sources": [
+        "mitm-options",
+        "mitm-web-api"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-map",
+      "category": "修改",
+      "name": "本地映射与远程映射",
+      "availability": "原生",
+      "detail": "map_local 返回本地文件/目录，map_remote 对 URL 路由改写。",
+      "sources": [
+        "mitm-features"
+      ],
+      "interfaces": [
+        "内置流量处理 addons"
+      ]
+    },
+    {
+      "id": "mitm-modify",
+      "category": "修改",
+      "name": "头与正文自动改写",
+      "availability": "原生",
+      "detail": "按 filter 和正则规则增删改头、替换正文；常规正文改写不适用于 streaming body。",
+      "sources": [
+        "mitm-features"
+      ],
+      "interfaces": [
+        "内置流量处理 addons"
+      ]
+    },
+    {
+      "id": "mitm-block-cache",
+      "category": "修改",
+      "name": "阻断、禁缓存与禁压缩",
+      "availability": "原生",
+      "detail": "block_list、anticache、anticomp；这些是代理调试选项。",
+      "sources": [
+        "mitm-default-addons",
+        "mitm-features",
+        "mitm-options"
+      ],
+      "interfaces": [
+        "内置流量处理 addons"
+      ]
+    },
+    {
+      "id": "mitm-ws-edit",
+      "category": "实时消息",
+      "name": "WebSocket 消息修改与发送扩展",
+      "availability": "原生",
+      "detail": "WebSocket hook 允许修改/丢弃消息；消息模型记录 dropped/injected。",
+      "sources": [
+        "mitm-events",
+        "mitm-ws"
+      ],
+      "interfaces": [
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-client-replay",
+      "category": "重放",
+      "name": "客户端 HTTP 会话重放",
+      "availability": "部分",
+      "detail": "顺序重发保存的 HTTP 请求；会改变原并发时序，HTTP/3 有已知限制。",
+      "sources": [
+        "mitm-features",
+        "mitm-protocols"
+      ],
+      "interfaces": [
+        "mitmdump",
+        "mitmproxy",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-server-replay",
+      "category": "重放",
+      "name": "服务端回应重放",
+      "availability": "原生",
+      "detail": "基于保存的 HTTP 会话匹配请求并返回响应；可调匹配键和时间/Cookie 刷新。",
+      "sources": [
+        "mitm-features"
+      ],
+      "interfaces": [
+        "内置流量处理 addons"
+      ]
+    },
+    {
+      "id": "mitm-sticky",
+      "category": "会话",
+      "name": "Sticky Authorization 与 Cookie",
+      "availability": "部分",
+      "detail": "复用观察到的 Authorization/Cookie；不是浏览器 storageState，Digest auth replay 尚不支持。",
+      "sources": [
+        "mitm-features"
+      ],
+      "interfaces": [
+        "内置流量处理 addons"
+      ]
+    },
+    {
+      "id": "mitm-ca",
+      "category": "证书",
+      "name": "独立 CA、安装入口与自定义证书",
+      "availability": "原生",
+      "detail": "每安装生成独立 CA；mitm.it 安装指引；可自定义 CA 和指定域名证书。",
+      "sources": [
+        "mitm-cert"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-mtls",
+      "category": "证书",
+      "name": "客户端证书 / mTLS",
+      "availability": "部分",
+      "detail": "可向上游使用客户端证书，并向下游请求证书；后者并不自动验证客户端身份。",
+      "sources": [
+        "mitm-cert"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-auth",
+      "category": "访问控制",
+      "name": "代理和 Web UI 认证",
+      "availability": "部分",
+      "detail": "HTTP Basic proxyauth 与 Web UI 密码/token 等；SOCKS 认证未实现，透明模式有固有限制。",
+      "sources": [
+        "mitm-features",
+        "mitm-options",
+        "mitm-web-api"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-flow-save",
+      "category": "存储",
+      "name": "原生 flow 文件保存与重开",
+      "availability": "原生",
+      "detail": "mitmdump 可边捕获边写入、离线读取与筛选；交互式 UI 默认保留内存 flow。",
+      "sources": [
+        "mitm-intro",
+        "mitm-options"
+      ],
+      "interfaces": [
+        "mitmdump",
+        "mitmproxy",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-har",
+      "category": "导出",
+      "name": "HAR 保存",
+      "availability": "部分",
+      "detail": "内置 savehar addon 输出 HAR；本次没有确认完整 HAR 导入作为同等公共能力。",
+      "sources": [
+        "mitm-savehar"
+      ],
+      "interfaces": [
+        "save / savehar / export / cut"
+      ]
+    },
+    {
+      "id": "mitm-code",
+      "category": "导出",
+      "name": "cURL、HTTPie 和原始报文",
+      "availability": "原生",
+      "detail": "export 可输出客户端表示、原始请求/响应到文件/剪贴板；cut 可提取字段。",
+      "sources": [
+        "mitm-export",
+        "mitm-default-addons"
+      ],
+      "interfaces": [
+        "save / savehar / export / cut"
+      ]
+    },
+    {
+      "id": "mitm-labels",
+      "category": "存储",
+      "name": "标记、注释与筛选",
+      "availability": "原生",
+      "detail": "flow marker/comment，可用过滤表达式查找；未声称自动构建浏览器业务因果图。",
+      "sources": [
+        "mitm-filters",
+        "mitm-default-addons"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-streaming",
+      "category": "实时消息",
+      "name": "HTTP 流式转发与可选正文保留",
+      "availability": "部分",
+      "detail": "stream_large_bodies、stream callback 和 store_streamed_bodies；保留会增加内存，不提供已证实的事件表+增量游标合同。",
+      "sources": [
+        "mitm-features",
+        "mitm-options"
+      ],
+      "interfaces": [
+        "Python addon API",
+        "mitmdump"
+      ]
+    },
+    {
+      "id": "mitm-events-ext",
+      "category": "扩展",
+      "name": "协议事件与生命周期插件",
+      "availability": "原生",
+      "detail": "可扩展 HTTP、WebSocket、DNS、TCP/UDP、TLS 和进程生命周期，插件脚本支持热加载。",
+      "sources": [
+        "mitm-events",
+        "mitm-addons"
+      ],
+      "interfaces": [
+        "Python addon API"
+      ]
+    },
+    {
+      "id": "mitm-command-ext",
+      "category": "扩展",
+      "name": "类型化命令、选项与内容视图",
+      "availability": "原生",
+      "detail": "插件可新增命令、配置和内容视图；类型检查、补全、快捷键及运行时配置。",
+      "sources": [
+        "mitm-commands",
+        "mitm-content-api",
+        "mitm-addons"
+      ],
+      "interfaces": [
+        "Commands / Options API",
+        "Contentview API"
+      ]
+    },
+    {
+      "id": "mitm-runtime",
+      "category": "运行",
+      "name": "配置文件与运行状态",
+      "availability": "原生",
+      "detail": "YAML/命令行配置，事件日志、运行时选项和 mitmweb state/processes；没有将其描述为完整 storage health 仪表板。",
+      "sources": [
+        "mitm-options",
+        "mitm-web-api"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    },
+    {
+      "id": "mitm-delivery",
+      "category": "运行",
+      "name": "跨平台、Python 与 Docker",
+      "availability": "原生",
+      "detail": "官方 macOS/Linux/Windows 安装路径、PyPI/uv 和 Docker 镜像；无本次核实的官方托管 SaaS。",
+      "sources": [
+        "mitm-install"
+      ],
+      "interfaces": [
+        "mitmproxy",
+        "mitmdump",
+        "mitmweb"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "mitmproxy",
+      "category": "CLI/TUI",
+      "purpose": "交互式终端；查看、筛选、编辑、拦截、保存流量。",
+      "availability": "原生",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    {
+      "name": "mitmdump",
+      "category": "CLI",
+      "purpose": "无 UI 捕获、读写 flow 文件、HTTP 重放和运行 addon。",
+      "availability": "原生",
+      "sources": [
+        "mitm-intro",
+        "mitm-features"
+      ]
+    },
+    {
+      "name": "mitmweb",
+      "category": "Web UI",
+      "purpose": "交互式流量查看和修改；官方注明覆盖的功能少于终端版。",
+      "availability": "部分",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    {
+      "name": "Python addon API",
+      "category": "插件 API",
+      "purpose": "HTTP/WebSocket/TCP/UDP/DNS/TLS 事件、生命周期、flow 对象。",
+      "availability": "原生",
+      "sources": [
+        "mitm-events",
+        "mitm-addons"
+      ]
+    },
+    {
+      "name": "Commands / Options API",
+      "category": "插件 API",
+      "purpose": "类型化命令、自定义选项、键绑定和运行时查询。",
+      "availability": "原生",
+      "sources": [
+        "mitm-commands",
+        "mitm-addons"
+      ]
+    },
+    {
+      "name": "Contentview API",
+      "category": "插件 API",
+      "purpose": "格式化、语法着色、自动选择和部分格式的交互重编码。",
+      "availability": "原生",
+      "sources": [
+        "mitm-content-api"
+      ]
+    },
+    {
+      "name": "mitmweb HTTP routes",
+      "category": "内部 HTTP API",
+      "purpose": "flows/content、replay/resume/kill、options/state、commands、events/processes。",
+      "availability": "部分",
+      "sources": [
+        "mitm-web-api"
+      ]
+    },
+    {
+      "name": "mitmweb /updates",
+      "category": "内部 WebSocket API",
+      "purpose": "向 Web UI 推送 flow、事件和状态更新。",
+      "availability": "部分",
+      "sources": [
+        "mitm-web-api"
+      ]
+    },
+    {
+      "name": "内置流量处理 addons",
+      "category": "内置插件组",
+      "purpose": "map_local/map_remote、改头改体、blocklist、anticache/anticomp、HTTP 重放、sticky auth/cookie。",
+      "availability": "原生",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    {
+      "name": "save / savehar / export / cut",
+      "category": "内置插件组",
+      "purpose": "flow/HAR 保存，cURL/HTTPie/原始报文、字段导出。",
+      "availability": "原生",
+      "sources": [
+        "mitm-default-addons",
+        "mitm-export",
+        "mitm-savehar"
+      ]
+    },
+    {
+      "name": "regular / local / wireguard / reverse / transparent / tun / upstream / socks5 / dns",
+      "category": "代理模式",
+      "purpose": "不同设备、网络拓扑和协议接入，平台限制见对应功能。",
+      "availability": "原生",
+      "sources": [
+        "mitm-modes"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.core.Core",
+      "category": "默认加载 addon",
+      "purpose": "全局选项及流记录的标记、修改、解编码和恢复命令；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_core_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.browser.Browser",
+      "category": "默认加载 addon",
+      "purpose": "启动配置为使用本代理的浏览器；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_browser_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.block.Block",
+      "category": "默认加载 addon",
+      "purpose": "依据本地/公网访问选项限制客户端连接；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_block_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.strip_dns_https_records.StripDnsHttpsRecords",
+      "category": "默认加载 addon",
+      "purpose": "按选项移除 DNS HTTPS 中的 ECH 和关闭的 HTTP/3 ALPN；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_strip_dns_https_records_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.blocklist.BlockList",
+      "category": "默认加载 addon",
+      "purpose": "按 flow 过滤条件拒绝请求；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_blocklist_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.anticache.AntiCache",
+      "category": "默认加载 addon",
+      "purpose": "可选移除条件缓存请求头；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_anticache_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.anticomp.AntiComp",
+      "category": "默认加载 addon",
+      "purpose": "可选要求上游不要压缩响应；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_anticomp_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.clientplayback.ClientPlayback",
+      "category": "默认加载 addon",
+      "purpose": "排队重放已记录客户端请求并查询队列；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_clientplayback_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.command_history.CommandHistory",
+      "category": "默认加载 addon",
+      "purpose": "保存和过滤交互命令历史；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_command_history_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.comment.Comment",
+      "category": "默认加载 addon",
+      "purpose": "给流记录添加评论；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_comment_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.cut.Cut",
+      "category": "默认加载 addon",
+      "purpose": "按属性路径抽取流数据并保存文件或剪贴板；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_cut_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.disable_h2c.DisableH2C",
+      "category": "默认加载 addon",
+      "purpose": "处理不支持的明文 HTTP/2 升级与连接前言；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_disable_h2c_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.export.Export",
+      "category": "默认加载 addon",
+      "purpose": "将流记录转换为 cURL 等支持的客户端表示；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_export_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.onboarding.Onboarding",
+      "category": "默认加载 addon",
+      "purpose": "提供证书安装引导站点；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_onboarding_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.proxyauth.ProxyAuth",
+      "category": "默认加载 addon",
+      "purpose": "可选客户端代理认证，包含本地账户配置或外部凭据后端；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_proxyauth_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.proxyserver.Proxyserver",
+      "category": "默认加载 addon",
+      "purpose": "按 proxy mode 管理监听实例和活动连接；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_proxyserver_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.script.ScriptLoader",
+      "category": "默认加载 addon",
+      "purpose": "加载及更新 Python addon 脚本；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_script_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.dns_resolver.DnsResolver",
+      "category": "默认加载 addon",
+      "purpose": "为 DNS flow 提供解析器和系统解析回退；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_dns_resolver_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.next_layer.NextLayer",
+      "category": "默认加载 addon",
+      "purpose": "按连接内容与配置选择后续协议处理层；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_next_layer_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.serverplayback.ServerPlayback",
+      "category": "默认加载 addon",
+      "purpose": "用已记录响应服务后续匹配请求；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_serverplayback_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.mapremote.MapRemote",
+      "category": "默认加载 addon",
+      "purpose": "按配置将请求映射到远端目标；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_mapremote_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.maplocal.MapLocal",
+      "category": "默认加载 addon",
+      "purpose": "按配置将请求映射到本地文件回应；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_maplocal_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.modifybody.ModifyBody",
+      "category": "默认加载 addon",
+      "purpose": "按条件替换请求或响应正文；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_modifybody_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.modifyheaders.ModifyHeaders",
+      "category": "默认加载 addon",
+      "purpose": "按条件设置、移除或替换消息头；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_modifyheaders_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.stickyauth.StickyAuth",
+      "category": "默认加载 addon",
+      "purpose": "可选记忆并复用 HTTP 认证头；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_stickyauth_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.stickycookie.StickyCookie",
+      "category": "默认加载 addon",
+      "purpose": "可选记忆并复用匹配域名和路径的 Cookie；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_stickycookie_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.save.Save",
+      "category": "默认加载 addon",
+      "purpose": "将流记录写入本机持久文件；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_save_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.savehar.SaveHar",
+      "category": "默认加载 addon",
+      "purpose": "将流记录导出为 HAR 文件；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_savehar_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.tlsconfig.TlsConfig",
+      "category": "默认加载 addon",
+      "purpose": "配置 TLS、证书生成与连接密钥日志相关行为；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_tlsconfig_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.upstream_auth.UpstreamAuth",
+      "category": "默认加载 addon",
+      "purpose": "为上游 HTTP 代理配置认证头；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_upstream_auth_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.update_alt_svc.UpdateAltSvc",
+      "category": "默认加载 addon",
+      "purpose": "在反向代理回应中调整 Alt-Svc 端口指向；默认加载该组件不代表可选行为已开启",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_init_py",
+        "MPX_mitmproxy_addons_update_alt_svc_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.asgiapp.ASGIApp",
+      "category": "辅助或前端 addon",
+      "purpose": "挂接本地 ASGI 应用作为指定主机服务",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_asgiapp_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.asgiapp.WSGIApp",
+      "category": "辅助或前端 addon",
+      "purpose": "挂接 WSGI 应用",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_asgiapp_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.dumper.Dumper",
+      "category": "辅助或前端 addon",
+      "purpose": "mitmdump 的流量文本输出",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_dumper_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.errorcheck.ErrorCheck",
+      "category": "辅助或前端 addon",
+      "purpose": "启动/运行阶段错误汇总与退出检查",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_errorcheck_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.eventstore.EventStore",
+      "category": "辅助或前端 addon",
+      "purpose": "前端事件日志存储和通知",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_eventstore_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.intercept.Intercept",
+      "category": "辅助或前端 addon",
+      "purpose": "前端流量拦截条件处理",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_intercept_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.keepserving.KeepServing",
+      "category": "辅助或前端 addon",
+      "purpose": "控制文件重放结束后是否继续服务",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_keepserving_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.readfile.ReadFile",
+      "category": "辅助或前端 addon",
+      "purpose": "读取保存的 flow 文件",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_readfile_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.readfile.ReadFileStdin",
+      "category": "辅助或前端 addon",
+      "purpose": "读取文件或标准输入的 flow",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_readfile_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.termlog.TermLog",
+      "category": "辅助或前端 addon",
+      "purpose": "向终端输出日志",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_termlog_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.view.View",
+      "category": "辅助或前端 addon",
+      "purpose": "前端流记录存储、过滤、排序、焦点与设置",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.addons.server_side_events.ServerSideEvents",
+      "category": "辅助或前端 addon",
+      "purpose": "遗留 SSE 未 streaming 的警告器，不是事件解析或存储模块",
+      "availability": "部分",
+      "sources": [
+        "MPX_mitmproxy_addons_server_side_events_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.tools.console.consoleaddons.ConsoleAddon",
+      "category": "前端专用 addon",
+      "purpose": "终端 UI 命令集",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.tools.console.keymap.KeymapConfig",
+      "category": "前端专用 addon",
+      "purpose": "终端快捷键配置与重载",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_keymap_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.tools.web.webaddons.WebAddon",
+      "category": "前端专用 addon",
+      "purpose": "Web 前端配置及生命周期",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_web_webaddons_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.tools.web.webaddons.WebAuth",
+      "category": "前端专用 addon",
+      "purpose": "Web UI 访问令牌或密码认证",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_web_webaddons_py"
+      ]
+    },
+    {
+      "name": "mitmproxy.tools.web.static_viewer.StaticViewer",
+      "category": "前端专用 addon",
+      "purpose": "静态流量查看产物",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_web_static_viewer_py"
+      ]
+    },
+    {
+      "name": "regular",
+      "category": "Proxy mode",
+      "purpose": "显式 HTTP/HTTPS CONNECT 代理",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "transparent",
+      "category": "Proxy mode",
+      "purpose": "透明转发代理，依系统流量重定向配置",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "upstream",
+      "category": "Proxy mode",
+      "purpose": "将显式代理流量继续转发到上游 HTTP/HTTPS 代理",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "reverse",
+      "category": "Proxy mode",
+      "purpose": "面向固定目标的反向代理，支持 HTTP/HTTPS/HTTP3/TCP/TLS/UDP/DTLS/DNS/QUIC 目标种类",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "socks5",
+      "category": "Proxy mode",
+      "purpose": "SOCKS v5 代理",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "dns",
+      "category": "Proxy mode",
+      "purpose": "DNS 服务器，TCP 与 UDP",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "wireguard",
+      "category": "Proxy mode",
+      "purpose": "以 WireGuard 接收流量的 UDP 模式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "local",
+      "category": "Proxy mode",
+      "purpose": "本机进程流量捕获，依操作系统支持",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "tun",
+      "category": "Proxy mode",
+      "purpose": "TUN 网络接口接入，依平台与权限支持",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py",
+        "MPX_docs_src_content_concepts_modes_md"
+      ]
+    },
+    {
+      "name": "osproxy",
+      "category": "已移除的模式别名",
+      "purpose": "旧 local 模式名；本 SHA 的解析器明确拒绝并提示改用 local，不算可运行模式",
+      "availability": "未提供",
+      "sources": [
+        "MPX_mitmproxy_proxy_mode_specs_py"
+      ]
+    },
+    {
+      "name": "browser.start",
+      "category": "Command / browser",
+      "purpose": "启动配置为经过代理的浏览器",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_browser_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.client.count",
+      "category": "Command / replay",
+      "purpose": "读取客户端重放待处理数量",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_clientplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.client.stop",
+      "category": "Command / replay",
+      "purpose": "清空客户端重放队列",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_clientplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.client",
+      "category": "Command / replay",
+      "purpose": "将指定记录加入客户端重放队列",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_clientplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.client.file",
+      "category": "Command / replay",
+      "purpose": "从文件读取客户端重放记录",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_clientplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "commands.history.add",
+      "category": "Command / commands",
+      "purpose": "增加交互命令历史",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_command_history_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "commands.history.get",
+      "category": "Command / commands",
+      "purpose": "读取全部命令历史",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_command_history_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "commands.history.clear",
+      "category": "Command / commands",
+      "purpose": "清空命令历史",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_command_history_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "commands.history.filter",
+      "category": "Command / commands",
+      "purpose": "设置历史过滤",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_command_history_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "commands.history.next",
+      "category": "Command / commands",
+      "purpose": "读取下一条历史",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_command_history_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "commands.history.prev",
+      "category": "Command / commands",
+      "purpose": "读取上一条历史",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_command_history_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.comment",
+      "category": "Command / flow",
+      "purpose": "保存流记录评论",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_comment_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "set",
+      "category": "Command / set",
+      "purpose": "设置运行时选项",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.resume",
+      "category": "Command / flow",
+      "purpose": "继续已暂停的流",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.mark",
+      "category": "Command / flow",
+      "purpose": "标记流",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.mark.toggle",
+      "category": "Command / flow",
+      "purpose": "切换流标记",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.kill",
+      "category": "Command / flow",
+      "purpose": "结束活动流",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.revert",
+      "category": "Command / flow",
+      "purpose": "恢复流修改前的备份",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.set.options",
+      "category": "Command / flow",
+      "purpose": "列出流快速修改字段",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.set",
+      "category": "Command / flow",
+      "purpose": "修改流常用字段",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.decode",
+      "category": "Command / flow",
+      "purpose": "解码流正文",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.encode.toggle",
+      "category": "Command / flow",
+      "purpose": "切换正文压缩",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.encode",
+      "category": "Command / flow",
+      "purpose": "按指定编码压缩正文",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "flow.encode.options",
+      "category": "Command / flow",
+      "purpose": "列出可用编码",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "options.load",
+      "category": "Command / options",
+      "purpose": "从文件加载选项",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "options.save",
+      "category": "Command / options",
+      "purpose": "保存当前选项",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "options.reset",
+      "category": "Command / options",
+      "purpose": "重置全部选项",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "options.reset.one",
+      "category": "Command / options",
+      "purpose": "重置单个选项",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_core_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "cut",
+      "category": "Command / cut",
+      "purpose": "按属性抽取流记录数据",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_cut_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "cut.save",
+      "category": "Command / cut",
+      "purpose": "将抽取字段写入文件",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_cut_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "cut.clip",
+      "category": "Command / cut",
+      "purpose": "将抽取字段写入剪贴板",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_cut_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "eventstore.clear",
+      "category": "Command / eventstore",
+      "purpose": "清空前端事件日志",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_eventstore_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "export.formats",
+      "category": "Command / export",
+      "purpose": "列出导出格式",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_export_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "export.file",
+      "category": "Command / export",
+      "purpose": "将请求客户端表示导出到文件",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_export_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "export.clip",
+      "category": "Command / export",
+      "purpose": "将请求客户端表示导出到剪贴板",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_export_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "export",
+      "category": "Command / export",
+      "purpose": "返回请求的客户端表示",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_export_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "proxyserver.active_connections",
+      "category": "Command / proxyserver",
+      "purpose": "读取活动代理连接数量",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_proxyserver_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "inject.websocket",
+      "category": "Command / inject",
+      "purpose": "向已有 WebSocket 流发送消息，仅记录产品存在性",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_proxyserver_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "inject.tcp",
+      "category": "Command / inject",
+      "purpose": "向已有 TCP 流发送数据，仅记录产品存在性",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_proxyserver_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "inject.udp",
+      "category": "Command / inject",
+      "purpose": "向已有 UDP 流发送数据，仅记录产品存在性",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_proxyserver_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "readfile.reading",
+      "category": "Command / readfile",
+      "purpose": "查询是否正在读取记录文件",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_readfile_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "save.file",
+      "category": "Command / save",
+      "purpose": "保存流记录文件",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_save_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "save.har",
+      "category": "Command / save",
+      "purpose": "保存 HAR",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_savehar_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "script.run",
+      "category": "Command / script",
+      "purpose": "对选定记录调用用户脚本",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_script_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.server",
+      "category": "Command / replay",
+      "purpose": "载入服务端响应重放记录",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_serverplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.server.add",
+      "category": "Command / replay",
+      "purpose": "追加服务端响应重放记录",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_serverplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.server.file",
+      "category": "Command / replay",
+      "purpose": "从文件加载服务端响应记录",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_serverplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.server.stop",
+      "category": "Command / replay",
+      "purpose": "清除服务端响应重放集合",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_serverplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "replay.server.count",
+      "category": "Command / replay",
+      "purpose": "读取响应重放记录数量",
+      "availability": "原生",
+      "sources": [
+        "MPX_mitmproxy_addons_serverplayback_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.focus.go",
+      "category": "Command / view",
+      "purpose": "将焦点移到指定位置",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.focus.next",
+      "category": "Command / view",
+      "purpose": "将焦点移到下一记录",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.focus.prev",
+      "category": "Command / view",
+      "purpose": "将焦点移到上一记录",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.order.options",
+      "category": "Command / view",
+      "purpose": "列出排序方式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.order.reverse",
+      "category": "Command / view",
+      "purpose": "设置反向排序",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.order.set",
+      "category": "Command / view",
+      "purpose": "设置排序方式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.order",
+      "category": "Command / view",
+      "purpose": "读取排序方式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.filter.set",
+      "category": "Command / view",
+      "purpose": "设置前端记录过滤",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.clear",
+      "category": "Command / view",
+      "purpose": "清空前端记录存储与视图",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.clear_unmarked",
+      "category": "Command / view",
+      "purpose": "清理未标记记录",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.settings.getval",
+      "category": "Command / view",
+      "purpose": "读取指定记录的界面设置",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.settings.setval.toggle",
+      "category": "Command / view",
+      "purpose": "切换记录设置的布尔值",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.settings.setval",
+      "category": "Command / view",
+      "purpose": "设置记录界面属性",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.flows.duplicate",
+      "category": "Command / view",
+      "purpose": "复制记录并聚焦副本",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.flows.remove",
+      "category": "Command / view",
+      "purpose": "删除前端存储记录",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.flows.resolve",
+      "category": "Command / view",
+      "purpose": "解析记录选择表达式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.flows.create",
+      "category": "Command / view",
+      "purpose": "创建前端请求记录",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.flows.load",
+      "category": "Command / view",
+      "purpose": "读取记录但不触发 addon 处理",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.properties.length",
+      "category": "Command / view",
+      "purpose": "读取当前视图记录数量",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.properties.marked",
+      "category": "Command / view",
+      "purpose": "查询是否仅显示标记记录",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.properties.marked.toggle",
+      "category": "Command / view",
+      "purpose": "切换仅标记记录模式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "view.properties.inbounds",
+      "category": "Command / view",
+      "purpose": "检查视图序号是否有效",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_addons_view_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.layout.options",
+      "category": "Command / console",
+      "purpose": "列出终端布局",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.layout.cycle",
+      "category": "Command / console",
+      "purpose": "切换终端布局",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.panes.next",
+      "category": "Command / console",
+      "purpose": "切换下一面板",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.panes.prev",
+      "category": "Command / console",
+      "purpose": "切换上一面板",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.options.reset.focus",
+      "category": "Command / console",
+      "purpose": "重置当前配置项",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.start",
+      "category": "Command / console",
+      "purpose": "移动到列表开头",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.end",
+      "category": "Command / console",
+      "purpose": "移动到列表结尾",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.next",
+      "category": "Command / console",
+      "purpose": "移动到下一可操作项",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.select",
+      "category": "Command / console",
+      "purpose": "查看或编辑当前项目",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.up",
+      "category": "Command / console",
+      "purpose": "向上移动",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.down",
+      "category": "Command / console",
+      "purpose": "向下移动",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.pageup",
+      "category": "Command / console",
+      "purpose": "向上翻页",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.pagedown",
+      "category": "Command / console",
+      "purpose": "向下翻页",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.left",
+      "category": "Command / console",
+      "purpose": "向左移动",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.nav.right",
+      "category": "Command / console",
+      "purpose": "向右移动",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.choose",
+      "category": "Command / console",
+      "purpose": "显示人工选择列表",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.choose.cmd",
+      "category": "Command / console",
+      "purpose": "从命令结果构造人工选择",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.command",
+      "category": "Command / console",
+      "purpose": "编辑交互命令",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.command.confirm",
+      "category": "Command / console",
+      "purpose": "确认后执行交互命令",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.command.set",
+      "category": "Command / console",
+      "purpose": "交互设置选项",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.view.keybindings",
+      "category": "Command / console",
+      "purpose": "查看快捷键绑定",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.view.commands",
+      "category": "Command / console",
+      "purpose": "查看命令列表",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.view.options",
+      "category": "Command / console",
+      "purpose": "查看选项编辑器",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.view.eventlog",
+      "category": "Command / console",
+      "purpose": "查看事件日志",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.view.help",
+      "category": "Command / console",
+      "purpose": "查看帮助",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.view.flow",
+      "category": "Command / console",
+      "purpose": "查看流记录",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.exit",
+      "category": "Command / console",
+      "purpose": "退出终端程序",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.view.pop",
+      "category": "Command / console",
+      "purpose": "返回上一视图",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.bodyview",
+      "category": "Command / console",
+      "purpose": "用外部查看器打开正文",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.bodyview.options",
+      "category": "Command / console",
+      "purpose": "列出可查看正文部分",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.edit.focus.options",
+      "category": "Command / console",
+      "purpose": "列出流可编辑组件",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.edit.focus",
+      "category": "Command / console",
+      "purpose": "编辑焦点记录组件",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.grideditor.add",
+      "category": "Command / console",
+      "purpose": "在光标后增加表格行",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.grideditor.insert",
+      "category": "Command / console",
+      "purpose": "在光标前插入表格行",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.grideditor.delete",
+      "category": "Command / console",
+      "purpose": "删除表格行",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.grideditor.load",
+      "category": "Command / console",
+      "purpose": "从文件填充单元格",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.grideditor.load_escaped",
+      "category": "Command / console",
+      "purpose": "从转义文本文件填充单元格",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.grideditor.save",
+      "category": "Command / console",
+      "purpose": "将表格写为 CSV",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.grideditor.editor",
+      "category": "Command / console",
+      "purpose": "用外部编辑器编辑单元格",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.flowview.mode.set",
+      "category": "Command / console",
+      "purpose": "设置流正文显示模式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.flowview.mode.options",
+      "category": "Command / console",
+      "purpose": "列出正文显示模式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.flowview.mode",
+      "category": "Command / console",
+      "purpose": "读取正文显示模式",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.key.contexts",
+      "category": "Command / console",
+      "purpose": "列出快捷键上下文",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.key.bind",
+      "category": "Command / console",
+      "purpose": "绑定快捷键",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.key.unbind",
+      "category": "Command / console",
+      "purpose": "删除快捷键绑定",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.key.unbind.focus",
+      "category": "Command / console",
+      "purpose": "删除当前焦点快捷键",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.key.execute.focus",
+      "category": "Command / console",
+      "purpose": "执行当前焦点快捷键",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.key.edit.focus",
+      "category": "Command / console",
+      "purpose": "编辑当前焦点快捷键",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_consoleaddons_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    },
+    {
+      "name": "console.keymap.load",
+      "category": "Command / console",
+      "purpose": "加载快捷键文件",
+      "availability": "可选",
+      "sources": [
+        "MPX_mitmproxy_tools_console_keymap_py",
+        "MPX_docs_src_content_concepts_commands_md"
+      ]
+    }
+  ],
+  "notes": [
+    "只读资料核验日期：2026-10-25（Asia/Shanghai）。默认分支 main；HEAD 为记录的 SHA，不把最新发布标签等同于此 HEAD。",
+    "功能范围是官方项目及其内置 addons。第三方 MCP 包装、安全扫描脚本或上游库的潜在能力均不算原生功能。",
+    "stable 文档为可变页面；源码证据固定到记录的 commit。源码与文档对 HTTP/1 trailers、streamed body 等描述可能有差异，矩阵保留公开限制，未做实测。",
+    "mitmproxy 是 AgentProxy 的底层依赖。它支持的全部代理模式、协议、内容视图和 UI，不能直接算成 AgentProxy 已开放的 MCP 产品能力。",
+    "浏览器业务流程、模型规划与页面元素引用属于本项目定位以外；HTTP 重放明确区别于浏览器动作恢复。",
+    "mitmweb 自带 HTTP/WebSocket 路由属于 Web UI 实现接口，本报告不把它表述为保证向后兼容的公共 REST SDK。",
+    "只读固定 SHA，未运行下载代码或测试。",
+    "default_addons() 精确 31 项，已全部列出；默认加载 addon 不代表其可选行为默认开启。",
+    "另列17项辅助或前端专用 addon，区别于默认31项。辅助 ServerSideEvents 仅警告，不是 SSE 事件解析器。",
+    "ProxyMode 支持9个可运行模式；osproxy为明确拒绝的旧别名，Http3Mode仅注释。HTTP/3 可用范围应结合 reverse/local/WireGuard 等模式和协议文档，不宣称 regular 直接提供 HTTP/3。",
+    "命令目录来自 addons/*.py、consoleaddons.py 与 keymap.py 中公开 @command.command 的固定名称；用户 addon 动态注册命令不能静态穷举。",
+    "未枚举所有 option 参数和 Web REST 路由"
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "D02": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "D03": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "D04": {
+      "availability": "部分",
+      "detail": "mitmweb 内部 HTTP/WebSocket API，非承诺稳定的公共远程 SDK。",
+      "sources": [
+        "mitm-web-api"
+      ]
+    },
+    "D05": {
+      "availability": "原生",
+      "detail": "mitmdump 捕获/离线过滤/重放；交互式命令可操作 flow。",
+      "sources": [
+        "mitm-intro",
+        "mitm-commands"
+      ]
+    },
+    "D06": {
+      "availability": "原生",
+      "detail": "TUI 与 mitmweb；Web UI 官方注明功能覆盖较少。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "Python addons、命令、选项和 contentview API。",
+      "sources": [
+        "mitm-addons",
+        "mitm-content-api"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "核心本地运行，不需要模型。",
+      "sources": [
+        "mitm-install"
+      ]
+    },
+    "D09": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "D10": {
+      "availability": "原生",
+      "detail": "官方 DockerHub 镜像。",
+      "sources": [
+        "mitm-install"
+      ]
+    },
+    "D11": {
+      "availability": "部分",
+      "detail": "事件日志、state/processes 与连接故障排查，非一键 doctor。",
+      "sources": [
+        "mitm-web-api",
+        "mitm-modes"
+      ]
+    },
+    "D12": {
+      "availability": "部分",
+      "detail": "可选择/配置 addons；未确认按 MCP tool group 暴露。",
+      "sources": [
+        "mitm-addons",
+        "mitm-default-addons"
+      ]
+    },
+    "B01": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B02": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B03": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B04": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B05": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B06": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B07": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B08": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B09": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B10": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B11": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B12": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B13": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B14": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B15": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B16": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B17": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B18": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B19": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B20": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "B21": {
+      "availability": "部分",
+      "detail": "可阻断、脚本延迟/流式处理；不是浏览器 emulation API。",
+      "sources": [
+        "mitm-features",
+        "mitm-events"
+      ]
+    },
+    "O01": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O02": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O03": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O04": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O05": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O06": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O07": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O08": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O09": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O10": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O11": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "O12": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "N01": {
+      "availability": "原生",
+      "detail": "独立代理支持外部客户端。",
+      "sources": [
+        "mitm-modes"
+      ]
+    },
+    "N02": {
+      "availability": "原生",
+      "detail": "MITM CA、自定义证书与 mTLS 配置。",
+      "sources": [
+        "mitm-cert"
+      ]
+    },
+    "N03": {
+      "availability": "部分",
+      "detail": "原生 HTTP/2；无 h2c，PRIORITY/Push 有限制。",
+      "sources": [
+        "mitm-protocols"
+      ]
+    },
+    "N04": {
+      "availability": "部分",
+      "detail": "reverse/local/WireGuard 中 HTTP/3，QUIC v1 与兼容性限制。",
+      "sources": [
+        "mitm-protocols"
+      ]
+    },
+    "N05": {
+      "availability": "部分",
+      "detail": "TCP/TLS、UDP/DTLS、DNS，重放和 STARTTLS 有限制。",
+      "sources": [
+        "mitm-protocols"
+      ]
+    },
+    "N06": {
+      "availability": "原生",
+      "detail": "regular/local/WireGuard/reverse/transparent/TUN/upstream/SOCKS5/DNS。",
+      "sources": [
+        "mitm-modes"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "flow 头体、连接、TLS 和时间数据。",
+      "sources": [
+        "mitm-http",
+        "mitm-intro"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "表达式及协议/元数据/标记过滤。",
+      "sources": [
+        "mitm-filters"
+      ]
+    },
+    "N09": {
+      "availability": "原生",
+      "detail": "Headers 字段序列和多值操作；不保证协议转发逐字保真。",
+      "sources": [
+        "mitm-http"
+      ]
+    },
+    "N10": {
+      "availability": "原生",
+      "detail": "压缩/字符编码与自动选择 contentviews。",
+      "sources": [
+        "mitm-encoding",
+        "mitm-content"
+      ]
+    },
+    "N11": {
+      "availability": "原生",
+      "detail": "map_local/map_remote、改头改体、脚本回应和 server replay。",
+      "sources": [
+        "mitm-features"
+      ]
+    },
+    "N12": {
+      "availability": "原生",
+      "detail": "交互拦截及 resume/kill。",
+      "sources": [
+        "mitm-options",
+        "mitm-web-api"
+      ]
+    },
+    "N13": {
+      "availability": "原生",
+      "detail": "HTTP 客户端重放及 UI 编辑，非浏览器动作重放。",
+      "sources": [
+        "mitm-features",
+        "mitm-web-api"
+      ]
+    },
+    "N14": {
+      "availability": "不适用",
+      "detail": "提供代理规则；不把代理映射等价成浏览器 route API。",
+      "sources": [
+        "mitm-features"
+      ]
+    },
+    "N15": {
+      "availability": "部分",
+      "detail": "已确认 HAR 导出；完整 HAR 导入未在本次资料核验中确认。",
+      "sources": [
+        "mitm-savehar"
+      ]
+    },
+    "N16": {
+      "availability": "原生",
+      "detail": "cURL/HTTPie 与原始 HTTP 消息导出。",
+      "sources": [
+        "mitm-export"
+      ]
+    },
+    "N17": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "M01": {
+      "availability": "原生",
+      "detail": "WebSocket 应用消息可观察。",
+      "sources": [
+        "mitm-ws"
+      ]
+    },
+    "M02": {
+      "availability": "原生",
+      "detail": "方向、时间、TEXT/BINARY；分片已重组。",
+      "sources": [
+        "mitm-ws"
+      ]
+    },
+    "M03": {
+      "availability": "原生",
+      "detail": "hook 可修改、丢弃，模型保留 injected 状态。",
+      "sources": [
+        "mitm-events",
+        "mitm-ws"
+      ]
+    },
+    "M04": {
+      "availability": "未证实",
+      "detail": "HTTP streaming 可编程；官方注册视图未证实 SSE 事件表/字段查询接口。",
+      "sources": [
+        "mitm-content",
+        "mitm-features"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "完整正文压缩解码已确认，不能据此推断开放 SSE 的增量事件解码。",
+      "sources": [
+        "mitm-encoding",
+        "mitm-features"
+      ]
+    },
+    "M06": {
+      "availability": "原生",
+      "detail": "WebSocket hook 与 UI 可看到连接开放期间应用消息。",
+      "sources": [
+        "mitm-events",
+        "mitm-web-api"
+      ]
+    },
+    "M07": {
+      "availability": "部分",
+      "detail": "flow 文件可存消息；未核实独立持久消息增量游标接口。",
+      "sources": [
+        "mitm-options",
+        "mitm-ws",
+        "mitm-web-api"
+      ]
+    },
+    "M08": {
+      "availability": "部分",
+      "detail": "WebSocket dropped/injected 有元数据；通用 SSE 解码/截断标记未证实。",
+      "sources": [
+        "mitm-ws"
+      ]
+    },
+    "W01": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W02": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W03": {
+      "availability": "部分",
+      "detail": "自定义代理 addon/命令；不是内置业务 Agent 动作系统。",
+      "sources": [
+        "mitm-addons",
+        "mitm-commands"
+      ]
+    },
+    "W04": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W05": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W06": {
+      "availability": "部分",
+      "detail": "支持暂停流量人工编辑继续；不是业务工作流审批节点。",
+      "sources": [
+        "mitm-web-api"
+      ]
+    },
+    "W07": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W08": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W09": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W10": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W11": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W12": {
+      "availability": "部分",
+      "detail": "HTTP client/server replay；不恢复浏览器步骤或未知动作。",
+      "sources": [
+        "mitm-features"
+      ]
+    },
+    "W13": {
+      "availability": "部分",
+      "detail": "sticky cookie/auth、客户端证书；无浏览器登录编排。",
+      "sources": [
+        "mitm-features",
+        "mitm-cert"
+      ]
+    },
+    "W14": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "W15": {
+      "availability": "不适用",
+      "detail": "本项目提供流量代理与调试，不以浏览器业务 Agent 为产品合同。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "T01": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "T02": {
+      "availability": "部分",
+      "detail": "flow 有网络时序；没有据此认定浏览器性能 trace。",
+      "sources": [
+        "mitm-http"
+      ]
+    },
+    "T03": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "T04": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "T05": {
+      "availability": "不适用",
+      "detail": "flow 记录代理流量；没有浏览器动作层作为关联对象。",
+      "sources": [
+        "mitm-intro"
+      ]
+    },
+    "T06": {
+      "availability": "部分",
+      "detail": "协议错误和连接诊断；不把通用代理视为内置漏洞规则库。",
+      "sources": [
+        "mitm-events",
+        "mitm-protocols"
+      ]
+    },
+    "T07": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "T08": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "S01": {
+      "availability": "原生",
+      "detail": "原生 flow dump 可重开；交互 UI 默认在内存。",
+      "sources": [
+        "mitm-intro",
+        "mitm-options"
+      ]
+    },
+    "S02": {
+      "availability": "部分",
+      "detail": "marker/comment 原生；业务链条关联未证实。",
+      "sources": [
+        "mitm-filters"
+      ]
+    },
+    "S03": {
+      "availability": "原生",
+      "detail": "flow/body 和原始二进制消息可保存。",
+      "sources": [
+        "mitm-http",
+        "mitm-export"
+      ]
+    },
+    "S04": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "S05": {
+      "availability": "未证实",
+      "detail": "已查官方功能、选项、插件和数据模型；未找到此维度的明确一等功能合同。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "S06": {
+      "availability": "部分",
+      "detail": "body_size_limit/stream_large_bodies 等选项与清空；不是完整长期保留策略。",
+      "sources": [
+        "mitm-options",
+        "mitm-web-api"
+      ]
+    },
+    "S07": {
+      "availability": "原生",
+      "detail": "flow/HAR、原始报文与代码导出。",
+      "sources": [
+        "mitm-savehar",
+        "mitm-export"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "配置文件、CLI 和运行时 options。",
+      "sources": [
+        "mitm-options",
+        "mitm-addons"
+      ]
+    },
+    "X02": {
+      "availability": "原生",
+      "detail": "Python addons、contentview、commands。",
+      "sources": [
+        "mitm-addons",
+        "mitm-content-api"
+      ]
+    },
+    "X03": {
+      "availability": "不适用",
+      "detail": "本次未核实官方 MCP server；Web UI 权限不等价 MCP 注解。",
+      "sources": [
+        "mitm-default-addons"
+      ]
+    },
+    "X04": {
+      "availability": "部分",
+      "detail": "Web UI 密码/token、HTTP Basic proxyauth；SOCKS 认证未实现。",
+      "sources": [
+        "mitm-options",
+        "mitm-features"
+      ]
+    },
+    "X05": {
+      "availability": "部分",
+      "detail": "addon 生命周期事件、工具退出清理；未证实借用浏览器资源合同。",
+      "sources": [
+        "mitm-events"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "事件日志、flow 错误、Web UI state/options/processes。",
+      "sources": [
+        "mitm-web-api",
+        "mitm-events"
+      ]
+    }
+  }
+}

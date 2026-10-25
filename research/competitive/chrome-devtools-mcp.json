@@ -1,0 +1,3268 @@
+{
+  "project": "Chrome DevTools MCP",
+  "repo": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+  "revision": "ada7963246c0c91eae185125a57aecd13cbe0376",
+  "version": "1.12.0（package.json；正式发布 chrome-devtools-mcp-v1.12.0 于 2026-10-22）",
+  "license": "Apache-2.0",
+  "sources": [
+    {
+      "id": "readme",
+      "title": "固定版本 README",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/README.md"
+    },
+    {
+      "id": "tools",
+      "title": "完整 MCP 工具目录",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/tool-reference.md"
+    },
+    {
+      "id": "slim",
+      "title": "Slim 三工具目录",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/slim-tool-reference.md"
+    },
+    {
+      "id": "config",
+      "title": "全部运行配置与热更新边界",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/configuration.md"
+    },
+    {
+      "id": "advanced",
+      "title": "并发、持久配置与已有浏览器连接",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/advanced-usage.md"
+    },
+    {
+      "id": "cli",
+      "title": "CLI 使用与生命周期",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/cli.md"
+    },
+    {
+      "id": "cli_generator",
+      "title": "CLI 生成时的明确排除规则",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/scripts/generate-cli.ts"
+    },
+    {
+      "id": "third_party",
+      "title": "页面第三方开发工具扩展协议",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/third-party-developer-tools.md"
+    },
+    {
+      "id": "network_source",
+      "title": "网络读取和正文文件保存实现",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/src/tools/network.ts"
+    },
+    {
+      "id": "tool_filter",
+      "title": "公开工具收集与隐藏开关过滤",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/src/tools/tools.ts"
+    },
+    {
+      "id": "package",
+      "title": "包版本和 Node 约束",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/package.json"
+    },
+    {
+      "id": "android",
+      "title": "Android Chrome 连接",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/debugging-android.md"
+    },
+    {
+      "id": "design",
+      "title": "输出和产品取舍说明",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/blob/ada7963246c0c91eae185125a57aecd13cbe0376/docs/design-principles.md"
+    },
+    {
+      "id": "release",
+      "title": "正式发布 v1.12.0",
+      "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/releases/tag/chrome-devtools-mcp-v1.12.0"
+    }
+  ],
+  "features": [
+    {
+      "id": "mcp",
+      "category": "接入",
+      "name": "MCP 与持久 CLI",
+      "availability": "原生",
+      "detail": "本地 stdio MCP；chrome-devtools CLI 复用后台 daemon，以 Unix socket/Windows named pipe 通信。",
+      "sources": [
+        "readme",
+        "cli"
+      ],
+      "interfaces": [
+        "chrome-devtools start",
+        "chrome-devtools stop",
+        "chrome-devtools status"
+      ]
+    },
+    {
+      "id": "slim",
+      "category": "接入",
+      "name": "按类别和 Slim 缩小工具集",
+      "availability": "原生",
+      "detail": "可关闭类别；--slim 仅保留 navigate/evaluate/screenshot。可选类别与条件工具需另开。",
+      "sources": [
+        "tools",
+        "slim",
+        "config"
+      ],
+      "interfaces": [
+        "--slim",
+        "--categoryNetwork",
+        "--categoryExtensions"
+      ]
+    },
+    {
+      "id": "cli_parity",
+      "category": "接入",
+      "name": "CLI 覆盖边界",
+      "availability": "部分",
+      "detail": "CLI 生成器排除 fill_form、wait_for、Slim 工具和隐藏开关工具；README 的全部支持概述应按这些明确排除理解。",
+      "sources": [
+        "cli",
+        "cli_generator"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "chrome",
+      "category": "浏览器",
+      "name": "Chrome 启动与发布渠道",
+      "availability": "原生",
+      "detail": "正式支持 Google Chrome/Chrome for Testing；stable/beta/dev/canary 是渠道，不是跨引擎。MCP 默认 headed，CLI 启动默认 headless。",
+      "sources": [
+        "readme",
+        "config",
+        "cli"
+      ],
+      "interfaces": [
+        "--headless",
+        "--channel",
+        "--executablePath"
+      ]
+    },
+    {
+      "id": "attach",
+      "category": "浏览器",
+      "name": "已有 Chrome 与 Android",
+      "availability": "可选",
+      "detail": "browserUrl/wsEndpoint、连接头、Chrome 144+ autoConnect；另有 Android Chrome 远程调试路径。",
+      "sources": [
+        "advanced",
+        "config",
+        "android"
+      ],
+      "interfaces": [
+        "--browserUrl",
+        "--wsEndpoint",
+        "--wsHeaders",
+        "--autoConnect"
+      ]
+    },
+    {
+      "id": "sessions",
+      "category": "状态",
+      "name": "持久配置与多页面路由",
+      "availability": "原生",
+      "detail": "持久用户目录或 isolated 临时目录；pageIdRouting 默认开启，用于同 Server 并发页面路由，不等同于每调用方独立 Context。",
+      "sources": [
+        "advanced",
+        "config"
+      ],
+      "interfaces": [
+        "--userDataDir",
+        "--isolated",
+        "--pageIdRouting"
+      ]
+    },
+    {
+      "id": "navigation",
+      "category": "交互",
+      "name": "页面导航与标签页",
+      "availability": "原生",
+      "detail": "导航含历史前进后退和刷新；可新建、选择、关闭页面；最后一页不可关闭。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "navigate_page",
+        "new_page",
+        "list_pages",
+        "select_page",
+        "close_page"
+      ]
+    },
+    {
+      "id": "forms",
+      "category": "交互",
+      "name": "输入和表单",
+      "availability": "原生",
+      "detail": "UID 点击、hover、拖动、按键、当前焦点逐字输入，以及批量填写表单控件。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "click",
+        "hover",
+        "drag",
+        "fill",
+        "fill_form",
+        "press_key",
+        "type_text"
+      ]
+    },
+    {
+      "id": "coordinate",
+      "category": "交互",
+      "name": "视觉坐标点击",
+      "availability": "可选",
+      "detail": "click_at 需 experimentalVision；由模型或调用方提供坐标。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "click_at",
+        "--experimentalVision"
+      ]
+    },
+    {
+      "id": "dialogs",
+      "category": "交互",
+      "name": "对话框、上传与等待",
+      "availability": "原生",
+      "detail": "显式处理原生对话框、文件上传和文本等待。没有把通用脚本执行冒充独立下载跟踪工具。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "handle_dialog",
+        "upload_file",
+        "wait_for"
+      ]
+    },
+    {
+      "id": "snapshot",
+      "category": "观察",
+      "name": "无障碍树 UID",
+      "availability": "原生",
+      "detail": "take_snapshot 提供 UID、可选 verbose 及文件输出，并标记 DevTools 选中元素；调用方应使用最新快照。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "take_snapshot"
+      ]
+    },
+    {
+      "id": "css",
+      "category": "观察",
+      "name": "CSS 层叠诊断",
+      "availability": "原生",
+      "detail": "get_css_styles 返回匹配规则、内联/继承样式、自定义属性和层叠包装及源码位置。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "get_css_styles"
+      ]
+    },
+    {
+      "id": "screenshot",
+      "category": "观察",
+      "name": "页面截图与缩放预算",
+      "availability": "原生",
+      "detail": "页面/元素截图，PNG/JPEG/WebP、质量和宽高上限，可写文件。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "take_screenshot",
+        "--screenshotFormat",
+        "--screenshotQuality",
+        "--screenshotMaxWidth",
+        "--screenshotMaxHeight"
+      ]
+    },
+    {
+      "id": "evaluate",
+      "category": "调试",
+      "name": "页面与 Service Worker 脚本",
+      "availability": "原生",
+      "detail": "可内联或从本地文件执行并返回可 JSON 序列化结果；扩展目标路由另需扩展开关。",
+      "sources": [
+        "tools",
+        "cli"
+      ],
+      "interfaces": [
+        "evaluate_script"
+      ]
+    },
+    {
+      "id": "emulation",
+      "category": "环境",
+      "name": "设备、网络与运行环境模拟",
+      "availability": "原生",
+      "detail": "emulate 与 resize_page 提供环境模拟；每次 emulate 替换大部分旧配置，extraHttpHeaders 例外。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "emulate",
+        "resize_page"
+      ]
+    },
+    {
+      "id": "network",
+      "category": "网络",
+      "name": "浏览器请求查询",
+      "availability": "原生",
+      "detail": "请求列表分页/类型过滤和请求详情、头、正文；可保存请求/响应体。不是外部客户端 MITM。",
+      "sources": [
+        "tools",
+        "network_source"
+      ],
+      "interfaces": [
+        "list_network_requests",
+        "get_network_request"
+      ]
+    },
+    {
+      "id": "retention",
+      "category": "网络",
+      "name": "有限导航历史",
+      "availability": "原生",
+      "detail": "maxNavigationSaved 默认 3，可设 1-25；旧导航的 URL/状态/头可保留，响应体通常不再可得。",
+      "sources": [
+        "config"
+      ],
+      "interfaces": [
+        "--maxNavigationSaved"
+      ]
+    },
+    {
+      "id": "performance",
+      "category": "性能",
+      "name": "Trace 与 Core Web Vitals 洞察",
+      "availability": "原生",
+      "detail": "录制/停止性能 trace，解释特定 insight；性能工具与 Lighthouse 非性能审计分工明确。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "performance_start_trace",
+        "performance_stop_trace",
+        "performance_analyze_insight"
+      ]
+    },
+    {
+      "id": "crux",
+      "category": "性能",
+      "name": "CrUX 现场数据",
+      "availability": "可选",
+      "detail": "默认允许向 CrUX 发送 trace URL 以获取现场体验数据；可关闭，属于外部服务。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--performanceCrux"
+      ]
+    },
+    {
+      "id": "lighthouse",
+      "category": "分析",
+      "name": "Lighthouse 报告",
+      "availability": "原生",
+      "detail": "无障碍、SEO、最佳实践与 agentic browsing 审计，保存完整报告，不包含性能审计。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "lighthouse_audit"
+      ]
+    },
+    {
+      "id": "heap_capture",
+      "category": "内存",
+      "name": "堆快照捕获",
+      "availability": "原生",
+      "detail": "take_heapsnapshot 保存 .heapsnapshot。",
+      "sources": [
+        "tools"
+      ],
+      "interfaces": [
+        "take_heapsnapshot"
+      ]
+    },
+    {
+      "id": "heap_analysis",
+      "category": "内存",
+      "name": "堆对象分析",
+      "availability": "可选",
+      "detail": "memoryDebugging 提供摘要、对象过滤、类实例、引用/持有者/保留路径、支配链、重复字符串、上下文分析与快照比较。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "analyze_heapsnapshot_contexts",
+        "close_heapsnapshot",
+        "compare_heapsnapshots",
+        "get_heapsnapshot_class_nodes",
+        "get_heapsnapshot_details",
+        "get_heapsnapshot_dominators",
+        "get_heapsnapshot_duplicate_strings",
+        "get_heapsnapshot_edges",
+        "get_heapsnapshot_object_details",
+        "get_heapsnapshot_retainers",
+        "get_heapsnapshot_retaining_paths",
+        "get_heapsnapshot_summary",
+        "query_heapsnapshot_objects"
+      ]
+    },
+    {
+      "id": "console",
+      "category": "调试",
+      "name": "控制台和 source map",
+      "availability": "原生",
+      "detail": "单条或列表控制台记录，支持扩展 content script 消息；source map 可关闭。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "get_console_message",
+        "list_console_messages",
+        "--sourceMaps"
+      ]
+    },
+    {
+      "id": "video",
+      "category": "产物",
+      "name": "浏览器视频",
+      "availability": "原生",
+      "detail": "screencast_start/stop 默认使用 Chrome 内建录制；旧 ffmpeg 模式可选且已弃用。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "screencast_start",
+        "screencast_stop",
+        "--screencastFps",
+        "--experimentalScreencast"
+      ]
+    },
+    {
+      "id": "extensions",
+      "category": "扩展",
+      "name": "浏览器扩展管理",
+      "availability": "可选",
+      "detail": "安装、列出、重载、触发扩展 action 和卸载；需 categoryExtensions。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "install_extension",
+        "list_extensions",
+        "reload_extension",
+        "trigger_extension_action",
+        "uninstall_extension"
+      ]
+    },
+    {
+      "id": "third_party",
+      "category": "扩展",
+      "name": "页面运行时调试协议",
+      "availability": "可选",
+      "detail": "通过 devtoolstooldiscovery 与页面 WebMCP 发现专用调试信息；执行局限于页面能力，不跨源持久。",
+      "sources": [
+        "third_party",
+        "tools"
+      ],
+      "interfaces": [
+        "list_3p_developer_tools",
+        "execute_3p_developer_tool"
+      ]
+    },
+    {
+      "id": "webmcp",
+      "category": "扩展",
+      "name": "页面 WebMCP",
+      "availability": "可选",
+      "detail": "非调试 WebMCP 工具单列；需 Chrome 150+ 与 WebMCP 浏览器功能和 categoryExperimentalWebmcp。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "list_webmcp_tools",
+        "execute_webmcp_tool"
+      ]
+    },
+    {
+      "id": "pwa",
+      "category": "扩展",
+      "name": "PWA 管理",
+      "availability": "可选",
+      "detail": "安装、启动、卸载与 OS 状态；仅 pipe 模式，autoConnect/browserUrl/wsEndpoint 不支持该组。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "install_pwa",
+        "launch_pwa",
+        "uninstall_pwa",
+        "get_os_app_state"
+      ]
+    },
+    {
+      "id": "webauthn",
+      "category": "验证",
+      "name": "虚拟认证器",
+      "availability": "可选",
+      "detail": "configure_webauthn 配置页面级虚拟认证器，用于正常 passkey/安全密钥流程验证。",
+      "sources": [
+        "tools",
+        "config"
+      ],
+      "interfaces": [
+        "configure_webauthn"
+      ]
+    },
+    {
+      "id": "files",
+      "category": "边界",
+      "name": "本地文件范围",
+      "availability": "原生",
+      "detail": "MCP 无 roots 默认限临时目录；显式 filesystemRoot/workspace 设置范围。CLI 默认不限本地路径，可通过 workspace 约束。",
+      "sources": [
+        "config",
+        "cli"
+      ],
+      "interfaces": [
+        "--filesystemRoot",
+        "--allowUnrestrictedPaths"
+      ]
+    },
+    {
+      "id": "network_policy",
+      "category": "边界",
+      "name": "网络与脚本入口限制",
+      "availability": "部分",
+      "detail": "URLPattern 允许/拒绝规则有 Chrome 版本和模式限制；关闭 javascriptEvaluation 或 fileNavigations 不是 OS 或页面 JS 沙箱。",
+      "sources": [
+        "config"
+      ],
+      "interfaces": [
+        "--allowedUrlPattern",
+        "--blockedUrlPattern",
+        "--javascriptEvaluation",
+        "--fileNavigations"
+      ]
+    },
+    {
+      "id": "config",
+      "category": "运行",
+      "name": "配置发现与热更新",
+      "availability": "原生",
+      "detail": "支持 JSON、用户配置及插件位置发现；watchConfig 可热更新工具和网络约束，浏览器启动/扩展开关仍需重启。",
+      "sources": [
+        "config"
+      ],
+      "interfaces": [
+        "--config",
+        "--watchConfig"
+      ]
+    },
+    {
+      "id": "telemetry",
+      "category": "运行",
+      "name": "遥测和日志",
+      "availability": "原生",
+      "detail": "诊断日志、usageStatistics 与自动更新检查可配置；Google 工具遥测默认开启，可独立关闭。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--logFile",
+        "--usageStatistics"
+      ]
+    },
+    {
+      "id": "skills",
+      "category": "交付",
+      "name": "Agent 插件与技能",
+      "availability": "原生",
+      "detail": "提供 MCP、CLI、a11y、Cookie、LCP、内存与故障排查技能；插件入口覆盖多个客户端。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "structured",
+      "category": "输出",
+      "name": "可选结构化返回与正文文件",
+      "availability": "可选",
+      "detail": "experimentalStructuredContent 提供结构化输出；大产物可返回文件；网络头脱敏需显式开启。",
+      "sources": [
+        "config",
+        "tools",
+        "design"
+      ],
+      "interfaces": [
+        "--experimentalStructuredContent",
+        "--redactNetworkHeaders"
+      ]
+    },
+    {
+      "id": "scope",
+      "category": "边界",
+      "name": "缺少专用代理和消息查询接口的范围",
+      "availability": "未证实",
+      "detail": "已查完整固定 MCP、CLI 生成器与网络工具；未证实 SSE/WS 消息级持久化、代理 CA、独立代理规则或重开流量库。不要把 CDP WebSocket 连接和应用 WS 抓取混淆。",
+      "sources": [
+        "tools",
+        "config",
+        "network_source"
+      ],
+      "interfaces": []
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "click",
+      "category": "MCP / Input automation",
+      "purpose": "按快照 UID 点击元素",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "drag",
+      "category": "MCP / Input automation",
+      "purpose": "在两个元素间拖拽",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "fill",
+      "category": "MCP / Input automation",
+      "purpose": "填写输入框或选择控件",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "fill_form",
+      "category": "MCP / Input automation",
+      "purpose": "一次填写多个表单控件",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "handle_dialog",
+      "category": "MCP / Input automation",
+      "purpose": "显式决定原生对话框",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "hover",
+      "category": "MCP / Input automation",
+      "purpose": "悬停元素",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "press_key",
+      "category": "MCP / Input automation",
+      "purpose": "发送键盘组合",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "type_text",
+      "category": "MCP / Input automation",
+      "purpose": "向当前焦点逐字输入",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "upload_file",
+      "category": "MCP / Input automation",
+      "purpose": "向文件控件上传文件",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "click_at",
+      "category": "MCP / Input automation",
+      "purpose": "按页面坐标点击；启用条件 --experimentalVision=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "close_page",
+      "category": "MCP / Navigation automation",
+      "purpose": "关闭页面且保留最后一个页面",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "list_pages",
+      "category": "MCP / Navigation automation",
+      "purpose": "列出页面及可选扩展 Service Worker",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "navigate_page",
+      "category": "MCP / Navigation automation",
+      "purpose": "URL 导航、后退、前进或刷新",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "new_page",
+      "category": "MCP / Navigation automation",
+      "purpose": "创建页面并导航",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "select_page",
+      "category": "MCP / Navigation automation",
+      "purpose": "选择后续调用页面",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "wait_for",
+      "category": "MCP / Navigation automation",
+      "purpose": "等待文字出现，可指定可见性",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "emulate",
+      "category": "MCP / Emulation",
+      "purpose": "配置网络、设备及浏览环境模拟",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "resize_page",
+      "category": "MCP / Emulation",
+      "purpose": "调整页面窗口尺寸",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "performance_analyze_insight",
+      "category": "MCP / Performance",
+      "purpose": "解释指定性能洞察",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "performance_start_trace",
+      "category": "MCP / Performance",
+      "purpose": "开始性能追踪",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "performance_stop_trace",
+      "category": "MCP / Performance",
+      "purpose": "停止并处理性能追踪",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_network_request",
+      "category": "MCP / Network",
+      "purpose": "读取请求和响应详情，可另存正文",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "list_network_requests",
+      "category": "MCP / Network",
+      "purpose": "列出并筛选页面请求",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "evaluate_script",
+      "category": "MCP / Debugging",
+      "purpose": "在页面或 Service Worker 执行脚本",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_console_message",
+      "category": "MCP / Debugging",
+      "purpose": "读取单条控制台记录",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_css_styles",
+      "category": "MCP / Debugging",
+      "purpose": "读取匹配样式、继承与层叠结果",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "lighthouse_audit",
+      "category": "MCP / Debugging",
+      "purpose": "生成无障碍、SEO、最佳实践等审计报告，不含性能审计",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "list_console_messages",
+      "category": "MCP / Debugging",
+      "purpose": "列出页面控制台记录",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "screencast_start",
+      "category": "MCP / Debugging",
+      "purpose": "开始页面视频录制",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "screencast_stop",
+      "category": "MCP / Debugging",
+      "purpose": "停止视频录制",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "take_screenshot",
+      "category": "MCP / Debugging",
+      "purpose": "捕获页面或元素截图",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "take_snapshot",
+      "category": "MCP / Debugging",
+      "purpose": "读取带元素 UID 的无障碍树",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "take_heapsnapshot",
+      "category": "MCP / Memory",
+      "purpose": "保存堆快照",
+      "availability": "原生",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "analyze_heapsnapshot_contexts",
+      "category": "MCP / Memory",
+      "purpose": "分析闭包上下文中保留的失效捕获字段；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "close_heapsnapshot",
+      "category": "MCP / Memory",
+      "purpose": "释放已缓存堆快照；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "compare_heapsnapshots",
+      "category": "MCP / Memory",
+      "purpose": "比较两个堆快照；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_class_nodes",
+      "category": "MCP / Memory",
+      "purpose": "列出某类的对象实例；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_details",
+      "category": "MCP / Memory",
+      "purpose": "读取堆快照聚合详情；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_dominators",
+      "category": "MCP / Memory",
+      "purpose": "查询对象支配链；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_duplicate_strings",
+      "category": "MCP / Memory",
+      "purpose": "查找重复字符串；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_edges",
+      "category": "MCP / Memory",
+      "purpose": "查询对象向外引用；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_object_details",
+      "category": "MCP / Memory",
+      "purpose": "读取指定对象大小与类型等详情；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_retainers",
+      "category": "MCP / Memory",
+      "purpose": "查询对象持有者；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_retaining_paths",
+      "category": "MCP / Memory",
+      "purpose": "查询对象保留路径；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_heapsnapshot_summary",
+      "category": "MCP / Memory",
+      "purpose": "读取堆与上下文统计；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "query_heapsnapshot_objects",
+      "category": "MCP / Memory",
+      "purpose": "按类型、属性和大小筛选对象；启用条件 --memoryDebugging=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "install_extension",
+      "category": "MCP / Extensions",
+      "purpose": "从本地目录安装扩展；启用条件 --categoryExtensions=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "list_extensions",
+      "category": "MCP / Extensions",
+      "purpose": "列出浏览器扩展；启用条件 --categoryExtensions=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "reload_extension",
+      "category": "MCP / Extensions",
+      "purpose": "重新加载未打包扩展；启用条件 --categoryExtensions=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "trigger_extension_action",
+      "category": "MCP / Extensions",
+      "purpose": "触发扩展默认动作；启用条件 --categoryExtensions=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "uninstall_extension",
+      "category": "MCP / Extensions",
+      "purpose": "卸载扩展；启用条件 --categoryExtensions=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "execute_3p_developer_tool",
+      "category": "MCP / Third-party",
+      "purpose": "执行页面提供的第三方调试工具；启用条件 --categoryExperimentalThirdParty=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "list_3p_developer_tools",
+      "category": "MCP / Third-party",
+      "purpose": "发现页面第三方调试工具；启用条件 --categoryExperimentalThirdParty=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "execute_webmcp_tool",
+      "category": "MCP / WebMCP",
+      "purpose": "调用页面 WebMCP 工具；启用条件 --categoryExperimentalWebmcp=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "list_webmcp_tools",
+      "category": "MCP / WebMCP",
+      "purpose": "列出页面 WebMCP 工具；启用条件 --categoryExperimentalWebmcp=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "get_os_app_state",
+      "category": "MCP / Progressive Web Apps",
+      "purpose": "读取已安装 PWA 的操作系统集成状态；启用条件 --categoryPwa=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "install_pwa",
+      "category": "MCP / Progressive Web Apps",
+      "purpose": "安装 PWA；启用条件 --categoryPwa=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "launch_pwa",
+      "category": "MCP / Progressive Web Apps",
+      "purpose": "启动已安装 PWA；启用条件 --categoryPwa=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "uninstall_pwa",
+      "category": "MCP / Progressive Web Apps",
+      "purpose": "卸载 PWA；启用条件 --categoryPwa=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "configure_webauthn",
+      "category": "MCP / WebAuthn",
+      "purpose": "配置用于测试的虚拟 WebAuthn 认证器；启用条件 --categoryWebauthn=true",
+      "availability": "可选",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    {
+      "name": "navigate",
+      "category": "MCP / Slim",
+      "purpose": "Slim 模式页面导航；--slim 模式",
+      "availability": "可选",
+      "sources": [
+        "slim",
+        "config"
+      ]
+    },
+    {
+      "name": "evaluate",
+      "category": "MCP / Slim",
+      "purpose": "Slim 模式脚本执行；--slim 模式",
+      "availability": "可选",
+      "sources": [
+        "slim",
+        "config"
+      ]
+    },
+    {
+      "name": "screenshot",
+      "category": "MCP / Slim",
+      "purpose": "Slim 模式截图；--slim 模式",
+      "availability": "可选",
+      "sources": [
+        "slim",
+        "config"
+      ]
+    },
+    {
+      "name": "chrome-devtools click",
+      "category": "CLI 操作",
+      "purpose": "按快照 UID 点击元素；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools drag",
+      "category": "CLI 操作",
+      "purpose": "在两个元素间拖拽；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools fill",
+      "category": "CLI 操作",
+      "purpose": "填写输入框或选择控件；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools handle_dialog",
+      "category": "CLI 操作",
+      "purpose": "显式决定原生对话框；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools hover",
+      "category": "CLI 操作",
+      "purpose": "悬停元素；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools press_key",
+      "category": "CLI 操作",
+      "purpose": "发送键盘组合；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools type_text",
+      "category": "CLI 操作",
+      "purpose": "向当前焦点逐字输入；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools upload_file",
+      "category": "CLI 操作",
+      "purpose": "向文件控件上传文件；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools click_at",
+      "category": "CLI 操作",
+      "purpose": "按页面坐标点击；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools close_page",
+      "category": "CLI 操作",
+      "purpose": "关闭页面且保留最后一个页面；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools list_pages",
+      "category": "CLI 操作",
+      "purpose": "列出页面及可选扩展 Service Worker；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools navigate_page",
+      "category": "CLI 操作",
+      "purpose": "URL 导航、后退、前进或刷新；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools new_page",
+      "category": "CLI 操作",
+      "purpose": "创建页面并导航；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools select_page",
+      "category": "CLI 操作",
+      "purpose": "选择后续调用页面；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools emulate",
+      "category": "CLI 操作",
+      "purpose": "配置网络、设备及浏览环境模拟；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools resize_page",
+      "category": "CLI 操作",
+      "purpose": "调整页面窗口尺寸；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools performance_analyze_insight",
+      "category": "CLI 操作",
+      "purpose": "解释指定性能洞察；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools performance_start_trace",
+      "category": "CLI 操作",
+      "purpose": "开始性能追踪；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools performance_stop_trace",
+      "category": "CLI 操作",
+      "purpose": "停止并处理性能追踪；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_network_request",
+      "category": "CLI 操作",
+      "purpose": "读取请求和响应详情，可另存正文；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools list_network_requests",
+      "category": "CLI 操作",
+      "purpose": "列出并筛选页面请求；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools evaluate_script",
+      "category": "CLI 操作",
+      "purpose": "在页面或 Service Worker 执行脚本；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_console_message",
+      "category": "CLI 操作",
+      "purpose": "读取单条控制台记录；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_css_styles",
+      "category": "CLI 操作",
+      "purpose": "读取匹配样式、继承与层叠结果；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools lighthouse_audit",
+      "category": "CLI 操作",
+      "purpose": "生成无障碍、SEO、最佳实践等审计报告，不含性能审计；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools list_console_messages",
+      "category": "CLI 操作",
+      "purpose": "列出页面控制台记录；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools screencast_start",
+      "category": "CLI 操作",
+      "purpose": "开始页面视频录制；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools screencast_stop",
+      "category": "CLI 操作",
+      "purpose": "停止视频录制；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools take_screenshot",
+      "category": "CLI 操作",
+      "purpose": "捕获页面或元素截图；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools take_snapshot",
+      "category": "CLI 操作",
+      "purpose": "读取带元素 UID 的无障碍树；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools take_heapsnapshot",
+      "category": "CLI 操作",
+      "purpose": "保存堆快照；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools analyze_heapsnapshot_contexts",
+      "category": "CLI 操作",
+      "purpose": "分析闭包上下文中保留的失效捕获字段；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools close_heapsnapshot",
+      "category": "CLI 操作",
+      "purpose": "释放已缓存堆快照；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools compare_heapsnapshots",
+      "category": "CLI 操作",
+      "purpose": "比较两个堆快照；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_class_nodes",
+      "category": "CLI 操作",
+      "purpose": "列出某类的对象实例；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_details",
+      "category": "CLI 操作",
+      "purpose": "读取堆快照聚合详情；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_dominators",
+      "category": "CLI 操作",
+      "purpose": "查询对象支配链；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_duplicate_strings",
+      "category": "CLI 操作",
+      "purpose": "查找重复字符串；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_edges",
+      "category": "CLI 操作",
+      "purpose": "查询对象向外引用；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_object_details",
+      "category": "CLI 操作",
+      "purpose": "读取指定对象大小与类型等详情；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_retainers",
+      "category": "CLI 操作",
+      "purpose": "查询对象持有者；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_retaining_paths",
+      "category": "CLI 操作",
+      "purpose": "查询对象保留路径；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_heapsnapshot_summary",
+      "category": "CLI 操作",
+      "purpose": "读取堆与上下文统计；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools query_heapsnapshot_objects",
+      "category": "CLI 操作",
+      "purpose": "按类型、属性和大小筛选对象；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools install_extension",
+      "category": "CLI 操作",
+      "purpose": "从本地目录安装扩展；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools list_extensions",
+      "category": "CLI 操作",
+      "purpose": "列出浏览器扩展；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools reload_extension",
+      "category": "CLI 操作",
+      "purpose": "重新加载未打包扩展；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools trigger_extension_action",
+      "category": "CLI 操作",
+      "purpose": "触发扩展默认动作；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools uninstall_extension",
+      "category": "CLI 操作",
+      "purpose": "卸载扩展；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools execute_3p_developer_tool",
+      "category": "CLI 操作",
+      "purpose": "执行页面提供的第三方调试工具；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools list_3p_developer_tools",
+      "category": "CLI 操作",
+      "purpose": "发现页面第三方调试工具；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools execute_webmcp_tool",
+      "category": "CLI 操作",
+      "purpose": "调用页面 WebMCP 工具；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools list_webmcp_tools",
+      "category": "CLI 操作",
+      "purpose": "列出页面 WebMCP 工具；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools get_os_app_state",
+      "category": "CLI 操作",
+      "purpose": "读取已安装 PWA 的操作系统集成状态；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools install_pwa",
+      "category": "CLI 操作",
+      "purpose": "安装 PWA；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools launch_pwa",
+      "category": "CLI 操作",
+      "purpose": "启动已安装 PWA；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools uninstall_pwa",
+      "category": "CLI 操作",
+      "purpose": "卸载 PWA；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools configure_webauthn",
+      "category": "CLI 操作",
+      "purpose": "配置用于测试的虚拟 WebAuthn 认证器；CLI 生成器自动处理公开可选工具所需开关",
+      "availability": "原生",
+      "sources": [
+        "cli",
+        "cli_generator",
+        "tools"
+      ]
+    },
+    {
+      "name": "chrome-devtools start",
+      "category": "CLI 生命周期",
+      "purpose": "显式启动后台浏览器服务",
+      "availability": "原生",
+      "sources": [
+        "cli"
+      ]
+    },
+    {
+      "name": "chrome-devtools stop",
+      "category": "CLI 生命周期",
+      "purpose": "关闭后台浏览器服务",
+      "availability": "原生",
+      "sources": [
+        "cli"
+      ]
+    },
+    {
+      "name": "chrome-devtools status",
+      "category": "CLI 生命周期",
+      "purpose": "读取后台服务运行状态",
+      "availability": "原生",
+      "sources": [
+        "cli"
+      ]
+    },
+    {
+      "name": "--categoryInput",
+      "category": "服务配置",
+      "purpose": "开关输入工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryNavigation",
+      "category": "服务配置",
+      "purpose": "开关导航工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryEmulation",
+      "category": "服务配置",
+      "purpose": "开关环境模拟工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryPerformance",
+      "category": "服务配置",
+      "purpose": "开关性能工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryNetwork",
+      "category": "服务配置",
+      "purpose": "开关网络工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryDebugging",
+      "category": "服务配置",
+      "purpose": "开关调试工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryExtensions",
+      "category": "服务配置",
+      "purpose": "启用扩展管理工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryExperimentalThirdParty",
+      "category": "服务配置",
+      "purpose": "启用页面第三方调试工具",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryMemory",
+      "category": "服务配置",
+      "purpose": "开关内存工具组",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryExperimentalWebmcp",
+      "category": "服务配置",
+      "purpose": "启用页面 WebMCP 工具",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryPwa",
+      "category": "服务配置",
+      "purpose": "启用 PWA 管理，仅支持 pipe 连接",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--categoryWebauthn",
+      "category": "服务配置",
+      "purpose": "启用虚拟 WebAuthn 配置",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--autoConnect",
+      "category": "服务配置",
+      "purpose": "自动连接 Chrome 144+ 已许可调试实例",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--browserUrl",
+      "category": "服务配置",
+      "purpose": "连接已运行 Chrome 调试 HTTP 服务",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--wsEndpoint",
+      "category": "服务配置",
+      "purpose": "连接已运行 Chrome WebSocket 端点",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--wsHeaders",
+      "category": "服务配置",
+      "purpose": "设置 WebSocket 连接头",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--headless",
+      "category": "服务配置",
+      "purpose": "切换无头浏览器",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--executablePath",
+      "category": "服务配置",
+      "purpose": "指定 Chrome 程序",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--isolated",
+      "category": "服务配置",
+      "purpose": "使用临时用户目录",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--userDataDir",
+      "category": "服务配置",
+      "purpose": "指定持久用户目录",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--channel",
+      "category": "服务配置",
+      "purpose": "选择 Chrome 发布渠道",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--proxyServer",
+      "category": "服务配置",
+      "purpose": "配置浏览器上游代理",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--chromeArg",
+      "category": "服务配置",
+      "purpose": "追加 Chrome 参数",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--ignoreDefaultChromeArg",
+      "category": "服务配置",
+      "purpose": "移除默认 Chrome 参数",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--viewport",
+      "category": "服务配置",
+      "purpose": "配置初始视口",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--acceptInsecureCerts",
+      "category": "服务配置",
+      "purpose": "选择忽略不可信证书",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--blockedUrlPattern",
+      "category": "服务配置",
+      "purpose": "配置网络 URL 拒绝模式",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--allowedUrlPattern",
+      "category": "服务配置",
+      "purpose": "配置网络 URL 允许模式，要求 Chrome 149+",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--screenshotFormat",
+      "category": "服务配置",
+      "purpose": "设置截图格式",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--screenshotQuality",
+      "category": "服务配置",
+      "purpose": "设置有损截图质量",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--screenshotMaxWidth",
+      "category": "服务配置",
+      "purpose": "设置截图最大宽度",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--screenshotMaxHeight",
+      "category": "服务配置",
+      "purpose": "设置截图最大高度",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--logFile",
+      "category": "服务配置",
+      "purpose": "设置诊断日志文件",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--pageIdRouting",
+      "category": "服务配置",
+      "purpose": "控制按页面 ID 路由",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--experimentalDevtools",
+      "category": "服务配置",
+      "purpose": "启用对 DevTools 自身目标的自动化",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--experimentalVision",
+      "category": "服务配置",
+      "purpose": "启用坐标点击",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--memoryDebugging",
+      "category": "服务配置",
+      "purpose": "启用堆快照分析工具",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--experimentalStructuredContent",
+      "category": "服务配置",
+      "purpose": "选择结构化返回",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--experimentalIncludeAllPages",
+      "category": "服务配置",
+      "purpose": "包含 webview 等非普通页面",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--experimentalScreencast",
+      "category": "服务配置",
+      "purpose": "选择已弃用的 ffmpeg 录制路径",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--experimentalFfmpegPath",
+      "category": "服务配置",
+      "purpose": "指定旧录制后端的 ffmpeg",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--screencastFps",
+      "category": "服务配置",
+      "purpose": "设置录制帧率",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--performanceCrux",
+      "category": "服务配置",
+      "purpose": "控制性能 URL 是否发送给 CrUX",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--usageStatistics",
+      "category": "服务配置",
+      "purpose": "控制工具遥测收集",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--javascriptEvaluation",
+      "category": "服务配置",
+      "purpose": "关闭调用方脚本入口；不等同于页面脚本沙箱",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--fileNavigations",
+      "category": "服务配置",
+      "purpose": "限制服务发起的 file URL 导航；不是文件系统沙箱",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--sourceMaps",
+      "category": "服务配置",
+      "purpose": "控制 source map 加载",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--maxNavigationSaved",
+      "category": "服务配置",
+      "purpose": "设置内存保留导航数量",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--slim",
+      "category": "服务配置",
+      "purpose": "仅暴露三个简化工具",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--redactNetworkHeaders",
+      "category": "服务配置",
+      "purpose": "脱敏部分敏感网络头",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--allowUnrestrictedPaths",
+      "category": "服务配置",
+      "purpose": "解除无 MCP roots 时的临时目录范围",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--filesystemRoot",
+      "category": "服务配置",
+      "purpose": "配置允许读写的目录",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--config",
+      "category": "服务配置",
+      "purpose": "加载 JSON 配置",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    },
+    {
+      "name": "--watchConfig",
+      "category": "服务配置",
+      "purpose": "热更新允许变更的配置",
+      "availability": "可选",
+      "sources": [
+        "config"
+      ]
+    }
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "原生",
+      "detail": "本地 stdio MCP 及可执行操作的 chrome-devtools CLI。",
+      "sources": [
+        "readme",
+        "cli"
+      ]
+    },
+    "D02": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "D03": {
+      "availability": "原生",
+      "detail": "本地 stdio MCP 及可执行操作的 chrome-devtools CLI。",
+      "sources": [
+        "readme",
+        "cli"
+      ]
+    },
+    "D04": {
+      "availability": "部分",
+      "detail": "可连接远程 Chrome CDP；MCP/daemon 的 HTTP 服务接口未证实，不能把 CDP 当远程 MCP。",
+      "sources": [
+        "config",
+        "cli"
+      ]
+    },
+    "D05": {
+      "availability": "原生",
+      "detail": "本地 stdio MCP 及可执行操作的 chrome-devtools CLI。",
+      "sources": [
+        "readme",
+        "cli"
+      ]
+    },
+    "D06": {
+      "availability": "未提供",
+      "detail": "MCP/CLI 本体无独立操作工作台；Chrome headed/DevTools 不按独立 UI 计。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "D07": {
+      "availability": "可选",
+      "detail": "页面第三方调试工具协议和 WebMCP，可注册页面运行时接口。",
+      "sources": [
+        "third_party"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "本地 stdio MCP 及可执行操作的 chrome-devtools CLI。",
+      "sources": [
+        "readme",
+        "cli"
+      ]
+    },
+    "D09": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "D10": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "D11": {
+      "availability": "原生",
+      "detail": "CLI status 读取 daemon 状态；并有连接排查文档，不等于全面安装 doctor。",
+      "sources": [
+        "cli"
+      ]
+    },
+    "D12": {
+      "availability": "原生",
+      "detail": "类别开关和 --slim 三工具模式。",
+      "sources": [
+        "config",
+        "slim"
+      ]
+    },
+    "B01": {
+      "availability": "原生",
+      "detail": "自启 Chrome、持久目录、可选临时目录；MCP/CLI headless 默认不同。",
+      "sources": [
+        "config",
+        "cli"
+      ]
+    },
+    "B02": {
+      "availability": "可选",
+      "detail": "已有 Chrome HTTP/WS、autoConnect 及 Android 调试。",
+      "sources": [
+        "config",
+        "advanced",
+        "android"
+      ]
+    },
+    "B03": {
+      "availability": "未提供",
+      "detail": "正式支持范围仅 Google Chrome/Chrome for Testing；Chrome 渠道不算跨引擎。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B04": {
+      "availability": "原生",
+      "detail": "自启 Chrome、持久目录、可选临时目录；MCP/CLI headless 默认不同。",
+      "sources": [
+        "config",
+        "cli"
+      ]
+    },
+    "B05": {
+      "availability": "部分",
+      "detail": "isolated 为 Server 实例临时 profile；pageIdRouting 分流页面，不是调用方独立 Context API。",
+      "sources": [
+        "advanced",
+        "config"
+      ]
+    },
+    "B06": {
+      "availability": "原生",
+      "detail": "自启 Chrome、持久目录、可选临时目录；MCP/CLI headless 默认不同。",
+      "sources": [
+        "config",
+        "cli"
+      ]
+    },
+    "B07": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B08": {
+      "availability": "部分",
+      "detail": "跨 frame 可访问树 UID 交互；没有独立 frame 切换工具。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B09": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B10": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B11": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B12": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B13": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B14": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B15": {
+      "availability": "未提供",
+      "detail": "完整固定 MCP 目录无 download wait/status 工具；保存网络正文不是浏览器下载跟踪。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "B16": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B17": {
+      "availability": "原生",
+      "detail": "公开页面、输入、对话框、上传、脚本和等待工具；具体动作范围见接口目录。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B18": {
+      "availability": "未提供",
+      "detail": "固定工具目录没有 Cookie/Web Storage 独立 CRUD 或 storage-state 导入导出；持久用户目录另计。",
+      "sources": [
+        "tools",
+        "tool_filter"
+      ]
+    },
+    "B19": {
+      "availability": "未提供",
+      "detail": "固定工具目录没有 Cookie/Web Storage 独立 CRUD 或 storage-state 导入导出；持久用户目录另计。",
+      "sources": [
+        "tools",
+        "tool_filter"
+      ]
+    },
+    "B20": {
+      "availability": "原生",
+      "detail": "emulate 提供设备/环境与网络模拟，resize_page 调整视口。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "B21": {
+      "availability": "原生",
+      "detail": "emulate 提供设备/环境与网络模拟，resize_page 调整视口。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O01": {
+      "availability": "原生",
+      "detail": "ARIA 快照 UID 和页面/元素截图。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O02": {
+      "availability": "原生",
+      "detail": "ARIA 快照 UID 和页面/元素截图。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O03": {
+      "availability": "未提供",
+      "detail": "固定 take_snapshot 参数无页面 delta/base 接口，不能把分页列表当快照增量。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O04": {
+      "availability": "部分",
+      "detail": "快照 verbose 开关；没有与 Playwright browser_find 等同的快照搜索接口。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O05": {
+      "availability": "部分",
+      "detail": "文档要求使用最新 snapshot；未证明版本 ID 及跨步骤引用恢复合同。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O06": {
+      "availability": "原生",
+      "detail": "ARIA 快照 UID 和页面/元素截图。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O07": {
+      "availability": "可选",
+      "detail": "experimentalVision 坐标点击，坐标由调用方提供。",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    "O08": {
+      "availability": "部分",
+      "detail": "ARIA/CSS 正式读取；任意 HTML/文本可经 evaluate，但不是独立文本提取产品工具。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "O09": {
+      "availability": "未提供",
+      "detail": "完整固定工具目录无 schema 页面提取、模型 act/语义恢复或页面 PDF 工具；不借通用 JS 推导。",
+      "sources": [
+        "tools",
+        "tool_filter"
+      ]
+    },
+    "O10": {
+      "availability": "未提供",
+      "detail": "完整固定工具目录无 schema 页面提取、模型 act/语义恢复或页面 PDF 工具；不借通用 JS 推导。",
+      "sources": [
+        "tools",
+        "tool_filter"
+      ]
+    },
+    "O11": {
+      "availability": "未提供",
+      "detail": "完整固定工具目录无 schema 页面提取、模型 act/语义恢复或页面 PDF 工具；不借通用 JS 推导。",
+      "sources": [
+        "tools",
+        "tool_filter"
+      ]
+    },
+    "O12": {
+      "availability": "未提供",
+      "detail": "完整固定工具目录无 schema 页面提取、模型 act/语义恢复或页面 PDF 工具；不借通用 JS 推导。",
+      "sources": [
+        "tools",
+        "tool_filter"
+      ]
+    },
+    "N01": {
+      "availability": "不适用",
+      "detail": "受控浏览器调试工具，不是独立流量代理。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N02": {
+      "availability": "不适用",
+      "detail": "受控浏览器调试工具，不是独立流量代理。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N03": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "N04": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "N05": {
+      "availability": "不适用",
+      "detail": "受控浏览器调试工具，不是独立流量代理。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N06": {
+      "availability": "部分",
+      "detail": "可指定 Chrome proxyServer；不含独立 regular/reverse/SOCKS 代理服务。",
+      "sources": [
+        "config"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "浏览器请求列表过滤、详情、头和正文文件。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "浏览器请求列表过滤、详情、头和正文文件。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N09": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "N10": {
+      "availability": "部分",
+      "detail": "通过 Chrome 读取响应正文；原压缩字节/编码完整性未单独保证。",
+      "sources": [
+        "network_source"
+      ]
+    },
+    "N11": {
+      "availability": "未提供",
+      "detail": "固定公开网络工具仅列表与详情；未暴露专用代理修改、断点、重发、HAR 或 OpenAPI 工具。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N12": {
+      "availability": "未提供",
+      "detail": "固定公开网络工具仅列表与详情；未暴露专用代理修改、断点、重发、HAR 或 OpenAPI 工具。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N13": {
+      "availability": "未提供",
+      "detail": "固定公开网络工具仅列表与详情；未暴露专用代理修改、断点、重发、HAR 或 OpenAPI 工具。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N14": {
+      "availability": "未提供",
+      "detail": "固定公开网络工具仅列表与详情；未暴露专用代理修改、断点、重发、HAR 或 OpenAPI 工具。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N15": {
+      "availability": "未提供",
+      "detail": "固定公开网络工具仅列表与详情；未暴露专用代理修改、断点、重发、HAR 或 OpenAPI 工具。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N16": {
+      "availability": "未提供",
+      "detail": "固定公开网络工具仅列表与详情；未暴露专用代理修改、断点、重发、HAR 或 OpenAPI 工具。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "N17": {
+      "availability": "未提供",
+      "detail": "固定公开网络工具仅列表与详情；未暴露专用代理修改、断点、重发、HAR 或 OpenAPI 工具。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "M01": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "M02": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "M03": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "M04": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "M06": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "M07": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "M08": {
+      "availability": "未证实",
+      "detail": "已查完整网络接口和输出合同，未证实应用 WS/SSE 消息级持久查询；wsEndpoint 是浏览器连接。",
+      "sources": [
+        "tools",
+        "network_source",
+        "config"
+      ]
+    },
+    "W01": {
+      "availability": "未提供",
+      "detail": "MCP/CLI 提供确定性工具，由外部 Agent 调用；本体无模型任务执行循环。",
+      "sources": [
+        "readme",
+        "design"
+      ]
+    },
+    "W02": {
+      "availability": "不适用",
+      "detail": "模型属于外部 Agent。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W03": {
+      "availability": "可选",
+      "detail": "页面可用第三方调试工具协议/WebMCP 扩展运行时能力。",
+      "sources": [
+        "third_party"
+      ]
+    },
+    "W04": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "W05": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "W06": {
+      "availability": "部分",
+      "detail": "可自动连接经人工许可的现有 Chrome，共用浏览状态；没有流程审批节点 API。",
+      "sources": [
+        "advanced"
+      ]
+    },
+    "W07": {
+      "availability": "部分",
+      "detail": "可等待文本并运行 Lighthouse；没有通用业务目标成功 schema。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "W08": {
+      "availability": "部分",
+      "detail": "CLI 输出、Console、trace、视频可保存；不是持久步骤游标。",
+      "sources": [
+        "tools",
+        "cli"
+      ]
+    },
+    "W09": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "W10": {
+      "availability": "部分",
+      "detail": "用户目录复用和 CLI daemon 复用浏览状态；没有中断步骤重绑恢复合同。",
+      "sources": [
+        "advanced",
+        "cli"
+      ]
+    },
+    "W11": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "W12": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "W13": {
+      "availability": "部分",
+      "detail": "已有登录 Chrome 与持久 profile；无独立凭据 vault。",
+      "sources": [
+        "advanced"
+      ]
+    },
+    "W14": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "W15": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "T01": {
+      "availability": "原生",
+      "detail": "Console/source maps，以及性能 trace、Core Web Vitals/insight 分析。",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    "T02": {
+      "availability": "原生",
+      "detail": "Console/source maps，以及性能 trace、Core Web Vitals/insight 分析。",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    "T03": {
+      "availability": "部分",
+      "detail": "堆快照捕获默认可用，详细对象/保留路径/差异等分析需 memoryDebugging。",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    "T04": {
+      "availability": "原生",
+      "detail": "内建 Chrome 视频与性能 trace；旧 ffmpeg 路径另可选。",
+      "sources": [
+        "tools",
+        "config"
+      ]
+    },
+    "T05": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "T06": {
+      "availability": "原生",
+      "detail": "Lighthouse 页面审计和性能/内存诊断；不是自主攻击模块。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "T07": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "T08": {
+      "availability": "原生",
+      "detail": "Heap 差异和 Lighthouse 报告文件。",
+      "sources": [
+        "tools"
+      ]
+    },
+    "S01": {
+      "availability": "部分",
+      "detail": "可保存请求/响应正文和 trace 等产物；页面请求保留导航数量有限，不是可重开流量库。",
+      "sources": [
+        "network_source",
+        "config"
+      ]
+    },
+    "S02": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "S03": {
+      "availability": "部分",
+      "detail": "网络响应正文可另存二进制/文件；未证实统一下载管理。",
+      "sources": [
+        "network_source"
+      ]
+    },
+    "S04": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "S05": {
+      "availability": "未证实",
+      "detail": "已核对固定 MCP/Slim 目录、CLI 生成器、配置与高级使用文档；未证实该正式产品合同。",
+      "sources": [
+        "tools",
+        "config",
+        "cli_generator"
+      ]
+    },
+    "S06": {
+      "availability": "部分",
+      "detail": "maxNavigationSaved 控制请求内存保留；不是磁盘全会话配额管理。",
+      "sources": [
+        "config"
+      ]
+    },
+    "S07": {
+      "availability": "原生",
+      "detail": "Trace、视频、截图、heap、Lighthouse 和正文文件。",
+      "sources": [
+        "tools",
+        "network_source"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "JSON/CLI/环境配置；watchConfig 仅部分设置可热更新。",
+      "sources": [
+        "config"
+      ]
+    },
+    "X02": {
+      "availability": "可选",
+      "detail": "Agent 安装插件、Chrome 扩展管理和页面第三方工具是不同扩展面。",
+      "sources": [
+        "readme",
+        "tools",
+        "third_party"
+      ]
+    },
+    "X03": {
+      "availability": "部分",
+      "detail": "可限制类别、脚本入口和文件目录；配置文件需受宿主保护，相关限制不等于沙箱。",
+      "sources": [
+        "config"
+      ]
+    },
+    "X04": {
+      "availability": "未证实",
+      "detail": "已查 MCP 配置与高级连接文档；wsHeaders 为出站浏览器认证，未据此认定内建远程 MCP 用户认证。",
+      "sources": [
+        "config",
+        "advanced"
+      ]
+    },
+    "X05": {
+      "availability": "原生",
+      "detail": "CLI start/stop 管理后台实例；isolated 临时目录关闭清理，借用连接前提见高级文档。",
+      "sources": [
+        "cli",
+        "advanced"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "CLI status、logFile 和可选结构化结果。",
+      "sources": [
+        "cli",
+        "config"
+      ]
+    }
+  },
+  "notes": [
+    "核对日期 2026-10-25；仅阅读官方文档/源码，未运行竞品。",
+    "公开 MCP 标准目录、Slim 目录、所有配置开关和可生成 CLI 命令分别枚举；接口条数不可直接当能力排名。",
+    "CLI 描述与生成器有细节差异：fill_form、wait_for、Slim 和隐藏开关工具不生成 CLI，已依源码标注。",
+    "默认 categoryMemory=true 不代表所有内存分析默认开放；take_heapsnapshot 与 memoryDebugging 条件分析工具分开。",
+    "Chrome 版本门槛、PWA pipe 限制、运行时热更新边界均以固定配置文档为准。",
+    "包 Node 运行约束：{'node': '^20.19.0 || ^22.12.0 || >=23'}。",
+    "完整目录之外的隐藏内部工具不作为已发布功能；未证实不等于不存在。",
+    "60 个标准 MCP 工具是默认与可选类别/条件工具的目录并集，不代表默认全部启用；3 个 Slim 工具属于替代模式，178 接口还包含 CLI 和配置项。"
+  ]
+}

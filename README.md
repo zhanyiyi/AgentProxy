@@ -831,9 +831,13 @@ frame when using its refs. Truncation only authorizes refs on delivered complete
 lines and does not seed a later delta. Baselines are limited to 32 tab/frame
 scopes and are invalidated by navigation, including reloads at the same URL.
 
-Every navigation and `browser_act` persists a checkpoint for its browser context.
-It records location, step and execution state, omitting typed values. Reopen the
-same `--db-path` to inspect the checkpoint after a server restart:
+`browser_navigate` and `browser_act` persist checkpoints for their browser context.
+The legacy click/fill/type/select/key wrappers use that same action path.
+`browser_go_back`, `browser_go_forward`, `browser_reload` and
+`browser_execute_js` currently bypass it: they do not have the same persisted
+step receipts, checkpoint updates or unknown-result gate.
+Checkpoints record location, step and execution state, omitting typed values.
+Reopen the same `--db-path` to inspect the checkpoint after a server restart:
 
 ```text
 browser_checkpoint(operation="inspect")
@@ -842,8 +846,8 @@ browser_snapshot(incremental=false)
 browser_checkpoint(operation="acknowledge")
 ```
 
-Observation and action tools automatically rebind a uniquely matching live page
-in the same context when their saved tab has disappeared. No URLs are opened and
+`browser_snapshot` and `browser_act` automatically rebind a uniquely matching
+live page in the same context when their saved tab has disappeared. No URLs are opened and
 no operations are repeated during this recovery. If no matching live page exists,
 the result is `resume_required` with a saved location and a next-step description.
 Open/select the intended page explicitly, observe it, and acknowledge the place
@@ -852,7 +856,7 @@ browser contexts or ambiguous matches.
 
 A restarted `inflight` or pending-dialog checkpoint becomes
 `needs_review`/`unknown`. Snapshot reads and explicit navigation preserve that
-uncertainty. Further actions remain `not_started` until acknowledgement; this
+uncertainty. Further `browser_act` steps remain `not_started` until acknowledgement; this
 permits a new step without declaring the old one successful. Handling a live
 dialog is an explicit continuation decision. `traffic_clear` also forgets the
 saved checkpoints.

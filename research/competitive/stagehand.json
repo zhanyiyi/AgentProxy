@@ -1,0 +1,3225 @@
+{
+  "project": "Stagehand",
+  "repo": "https://github.com/browserbase/stagehand",
+  "revision": {
+    "default_branch": "main",
+    "sha": "8023f34161d650c196dc343d2c232fb5e129a826",
+    "committed_at": "2026-10-23T23:57:31Z",
+    "verified_at": "2026-10-25"
+  },
+  "version": "4.0.0（当前monorepo package.json；v3兼容文档不等同当前API）",
+  "license": "MIT",
+  "sources": [
+    {
+      "id": "sh.readme",
+      "title": "README.md",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/README.md"
+    },
+    {
+      "id": "sh.package",
+      "title": "package.json",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/package.json"
+    },
+    {
+      "id": "sh.nav",
+      "title": "packages/docs/docs.json",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/docs.json"
+    },
+    {
+      "id": "sh.browser",
+      "title": "packages/docs/v4/configuration/browser.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/configuration/browser.mdx"
+    },
+    {
+      "id": "sh.model",
+      "title": "packages/docs/v4/configuration/models.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/configuration/models.mdx"
+    },
+    {
+      "id": "sh.logging",
+      "title": "packages/docs/v4/configuration/logging.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/configuration/logging.mdx"
+    },
+    {
+      "id": "sh.observability",
+      "title": "packages/docs/v4/configuration/observability.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/configuration/observability.mdx"
+    },
+    {
+      "id": "sh.migration",
+      "title": "packages/docs/v4/migrations/v3.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/migrations/v3.mdx"
+    },
+    {
+      "id": "sh.cache",
+      "title": "packages/docs/v4/best-practices/caching.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/best-practices/caching.mdx"
+    },
+    {
+      "id": "sh.deploy",
+      "title": "packages/docs/v4/best-practices/deployments.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/best-practices/deployments.mdx"
+    },
+    {
+      "id": "sh.tabs",
+      "title": "packages/docs/v4/best-practices/using-multiple-tabs.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/best-practices/using-multiple-tabs.mdx"
+    },
+    {
+      "id": "sh.userdata",
+      "title": "packages/docs/v4/best-practices/user-data.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/best-practices/user-data.mdx"
+    },
+    {
+      "id": "sh.approval",
+      "title": "packages/docs/v4/cookbooks/approve-form-submission.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/cookbooks/approve-form-submission.mdx"
+    },
+    {
+      "id": "sh.files",
+      "title": "packages/docs/v4/cookbooks/files-to-bucket.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/cookbooks/files-to-bucket.mdx"
+    },
+    {
+      "id": "sh.login",
+      "title": "packages/docs/v4/cookbooks/persisted-login.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/cookbooks/persisted-login.mdx"
+    },
+    {
+      "id": "sh.mcp",
+      "title": "packages/docs/v4/integrations/cli-agents/overview.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/integrations/cli-agents/overview.mdx"
+    },
+    {
+      "id": "sh.cua",
+      "title": "packages/docs/v4/integrations/agent-frameworks/claude-cua-toolset-quickstart.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/integrations/agent-frameworks/claude-cua-toolset-quickstart.mdx"
+    },
+    {
+      "id": "sh.openai_cua",
+      "title": "packages/docs/v4/integrations/agent-frameworks/openai-cua-toolset-quickstart.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/integrations/agent-frameworks/openai-cua-toolset-quickstart.mdx"
+    },
+    {
+      "id": "sh.frameworks",
+      "title": "packages/docs/v4/integrations/agent-frameworks/overview.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/integrations/agent-frameworks/overview.mdx"
+    },
+    {
+      "id": "sh.cli",
+      "title": "packages/cli/README.md",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/cli/README.md"
+    },
+    {
+      "id": "sh.fetch",
+      "title": "packages/docs/v4/add-ons/fetch.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/add-ons/fetch.mdx"
+    },
+    {
+      "id": "sh.search",
+      "title": "packages/docs/v4/add-ons/search.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/add-ons/search.mdx"
+    },
+    {
+      "id": "sh.index",
+      "title": "Stagehand官方完整文档索引",
+      "url": "https://docs.stagehand.dev/llms.txt"
+    },
+    {
+      "id": "sh.ref.stagehand",
+      "title": "packages/docs/v4/reference/stagehand.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/reference/stagehand.mdx"
+    },
+    {
+      "id": "sh.ref.page",
+      "title": "packages/docs/v4/reference/page.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/reference/page.mdx"
+    },
+    {
+      "id": "sh.ref.context",
+      "title": "packages/docs/v4/reference/context.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/reference/context.mdx"
+    },
+    {
+      "id": "sh.ref.locator",
+      "title": "packages/docs/v4/reference/locator.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/reference/locator.mdx"
+    },
+    {
+      "id": "sh.ref.clipboard",
+      "title": "packages/docs/v4/reference/clipboard.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/reference/clipboard.mdx"
+    },
+    {
+      "id": "sh.ref.response",
+      "title": "packages/docs/v4/reference/response.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/reference/response.mdx"
+    },
+    {
+      "id": "sh.ref.webmcp",
+      "title": "packages/docs/v4/reference/webmcp.mdx",
+      "url": "https://github.com/browserbase/stagehand/blob/8023f34161d650c196dc343d2c232fb5e129a826/packages/docs/v4/reference/webmcp.mdx"
+    }
+  ],
+  "features": [
+    {
+      "id": "sh.ai.act",
+      "category": "AI原语",
+      "name": "自然语言单步动作",
+      "availability": "原生",
+      "detail": "Stagehand.act接收指令或已观察的Action，并返回data与usage/cache元数据。",
+      "sources": [
+        "sh.ref.stagehand"
+      ],
+      "interfaces": [
+        "Stagehand.act"
+      ]
+    },
+    {
+      "id": "sh.ai.observe",
+      "category": "AI原语",
+      "name": "自然语言发现动作",
+      "availability": "原生",
+      "detail": "observe返回符合意图的候选动作，允许先检查再调用act。",
+      "sources": [
+        "sh.ref.stagehand"
+      ],
+      "interfaces": [
+        "Stagehand.observe"
+      ]
+    },
+    {
+      "id": "sh.ai.extract",
+      "category": "提取",
+      "name": "Schema约束提取",
+      "availability": "原生",
+      "detail": "extract支持Zod/Pydantic及Go类型输出；使用当前页或指定page。",
+      "sources": [
+        "sh.ref.stagehand"
+      ],
+      "interfaces": [
+        "Stagehand.extract"
+      ]
+    },
+    {
+      "id": "sh.ai.noagent",
+      "category": "版本边界",
+      "name": "v4移除内置agent循环",
+      "availability": "未提供",
+      "detail": "v3 agent()已移除；v4让调用方使用普通代码或外部模型tool loop组织控制流。",
+      "sources": [
+        "sh.migration"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.runtime.batch",
+      "category": "执行",
+      "name": "Service Worker内批量执行",
+      "availability": "部分",
+      "detail": "experimentalBatch把可信自包含代码放进扩展worker，返回JSON结果；API标为experimental。",
+      "sources": [
+        "sh.ref.stagehand"
+      ],
+      "interfaces": [
+        "Stagehand.experimentalBatch"
+      ]
+    },
+    {
+      "id": "sh.runtime.metrics",
+      "category": "可观测性",
+      "name": "累计模型用量与推理时间",
+      "availability": "原生",
+      "detail": "metrics以及每次metadata.usage提供token和延时；缓存命中/确定性动作不增加模型用量。",
+      "sources": [
+        "sh.ref.stagehand"
+      ],
+      "interfaces": [
+        "Stagehand.metrics"
+      ]
+    },
+    {
+      "id": "sh.browser.factory",
+      "category": "浏览器连接",
+      "name": "本地与Browserbase工厂",
+      "availability": "原生",
+      "detail": "localBrowser.launch/connect及browserbase.launch/connect分开管理浏览器生命周期。",
+      "sources": [
+        "sh.browser"
+      ],
+      "interfaces": [
+        "localBrowser.launch",
+        "localBrowser.connect",
+        "browserbase.launch",
+        "browserbase.connect"
+      ]
+    },
+    {
+      "id": "sh.browser.ownership",
+      "category": "资源所有权",
+      "name": "Stagehand与浏览器分别关闭",
+      "availability": "原生",
+      "detail": "Stagehand.close只释放运行时；browser.close显式关闭自己启动的浏览器或释放云会话，附着模式边界有文档。",
+      "sources": [
+        "sh.browser"
+      ],
+      "interfaces": [
+        "Stagehand.close",
+        "StagehandBrowser.close"
+      ]
+    },
+    {
+      "id": "sh.browser.extension",
+      "category": "扩展",
+      "name": "浏览器扩展运行时",
+      "availability": "原生",
+      "detail": "v4运行在Chrome扩展service worker；getExtensionArchive导出对应版本ZIP，云工厂可自动上传。",
+      "sources": [
+        "sh.browser"
+      ],
+      "interfaces": [
+        "getExtensionArchive"
+      ]
+    },
+    {
+      "id": "sh.browser.attach",
+      "category": "浏览器连接",
+      "name": "已有CDP与认证网关",
+      "availability": "原生",
+      "detail": "localBrowser.connect支持CDP URL及认证头；受控Chrome需可加载扩展。",
+      "sources": [
+        "sh.browser"
+      ],
+      "interfaces": [
+        "localBrowser.connect"
+      ]
+    },
+    {
+      "id": "sh.browser.profile",
+      "category": "状态复用",
+      "name": "本地持久目录与云Context",
+      "availability": "原生",
+      "detail": "本地userDataDir/preserve选项；Browserbase持久Context通过云SDK配置。",
+      "sources": [
+        "sh.browser"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.browser.launchconfig",
+      "category": "浏览器配置",
+      "name": "视口、代理与启动参数",
+      "availability": "部分",
+      "detail": "本地headless/viewport/代理server+bypass及启动flags可配；认证代理用户名密码当前明确不支持。",
+      "sources": [
+        "sh.browser"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.browser.tabs",
+      "category": "浏览器交互",
+      "name": "活动页跟随与标签管理",
+      "availability": "原生",
+      "detail": "pages/newPage/activePage/setActivePage，AI原语默认跟随Chrome激活的新标签页。",
+      "sources": [
+        "sh.tabs"
+      ],
+      "interfaces": [
+        "BrowserContext.pages",
+        "BrowserContext.newPage",
+        "BrowserContext.setActivePage"
+      ]
+    },
+    {
+      "id": "sh.browser.policy",
+      "category": "访问边界",
+      "name": "运行时域名策略",
+      "availability": "原生",
+      "detail": "getDomainPolicy/setDomainPolicy配置允许/拒绝域名；覆盖浏览器网络访问。",
+      "sources": [
+        "sh.ref.context"
+      ],
+      "interfaces": [
+        "BrowserContext.getDomainPolicy",
+        "BrowserContext.setDomainPolicy"
+      ]
+    },
+    {
+      "id": "sh.browser.cookies",
+      "category": "状态",
+      "name": "Cookie读写与清理",
+      "availability": "原生",
+      "detail": "context.cookies/addCookies/clearCookies公开Cookie接口。",
+      "sources": [
+        "sh.ref.context"
+      ],
+      "interfaces": [
+        "BrowserContext.cookies",
+        "BrowserContext.addCookies",
+        "BrowserContext.clearCookies"
+      ]
+    },
+    {
+      "id": "sh.browser.init",
+      "category": "浏览器配置",
+      "name": "启动脚本与额外HTTP头",
+      "availability": "原生",
+      "detail": "page/context addInitScript与setExtraHTTPHeaders为页面初始化和请求头配置。",
+      "sources": [
+        "sh.ref.context"
+      ],
+      "interfaces": [
+        "BrowserContext.addInitScript",
+        "BrowserContext.setExtraHTTPHeaders"
+      ]
+    },
+    {
+      "id": "sh.page.navigation",
+      "category": "浏览器交互",
+      "name": "导航与历史响应",
+      "availability": "原生",
+      "detail": "goto/reload/goBack/goForward返回主文档Response或null，能读取最终重定向响应。",
+      "sources": [
+        "sh.ref.page"
+      ],
+      "interfaces": [
+        "Page.goto",
+        "Page.reload",
+        "Page.goBack",
+        "Page.goForward"
+      ]
+    },
+    {
+      "id": "sh.page.pointer",
+      "category": "浏览器交互",
+      "name": "页面级指针键盘与拖拽",
+      "availability": "原生",
+      "detail": "click/hover/scroll/dragAndDrop/type/keyPress等确定性动作。",
+      "sources": [
+        "sh.ref.page"
+      ],
+      "interfaces": [
+        "Page.click",
+        "Page.hover",
+        "Page.scroll",
+        "Page.dragAndDrop",
+        "Page.type",
+        "Page.keyPress"
+      ]
+    },
+    {
+      "id": "sh.page.wait",
+      "category": "浏览器交互",
+      "name": "条件等待",
+      "availability": "原生",
+      "detail": "waitForLoadState/waitForSelector/waitForFunction/waitForTimeout提供显式等待。",
+      "sources": [
+        "sh.ref.page"
+      ],
+      "interfaces": [
+        "Page.waitForLoadState",
+        "Page.waitForSelector",
+        "Page.waitForFunction"
+      ]
+    },
+    {
+      "id": "sh.page.code",
+      "category": "扩展",
+      "name": "页面执行与原始CDP订阅",
+      "availability": "原生",
+      "detail": "evaluate、addInitScript及on(method,listener)访问页面和CDP事件；不是独立网络代理。",
+      "sources": [
+        "sh.ref.page"
+      ],
+      "interfaces": [
+        "Page.evaluate",
+        "Page.on"
+      ]
+    },
+    {
+      "id": "sh.page.snapshot",
+      "category": "页面观察",
+      "name": "可访问性DOM快照",
+      "availability": "原生",
+      "detail": "page.snapshot返回formattedTree/xpathMap/urlMap，支持includeIframes和整体timeout。",
+      "sources": [
+        "sh.ref.page"
+      ],
+      "interfaces": [
+        "Page.snapshot"
+      ]
+    },
+    {
+      "id": "sh.page.screenshot",
+      "category": "页面观察",
+      "name": "页面图像与PDF",
+      "availability": "原生",
+      "detail": "screenshot支持裁剪、整页等，pdf导出页面打印结果。",
+      "sources": [
+        "sh.ref.page"
+      ],
+      "interfaces": [
+        "Page.screenshot",
+        "Page.pdf"
+      ]
+    },
+    {
+      "id": "sh.locator.deep",
+      "category": "定位",
+      "name": "跨iframe和shadow DOM定位",
+      "availability": "原生",
+      "detail": "locator支持CSS/XPath与>>跨iframe路径，穿透shadow roots；受导航页面前提约束。",
+      "sources": [
+        "sh.ref.locator"
+      ],
+      "interfaces": [
+        "Page.locator"
+      ]
+    },
+    {
+      "id": "sh.locator.actions",
+      "category": "浏览器交互",
+      "name": "元素操作与状态",
+      "availability": "原生",
+      "detail": "click/hover/fill/type/selectOption/setInputFiles；读取可见性、checked、值、HTML、文本、数量。",
+      "sources": [
+        "sh.ref.locator"
+      ],
+      "interfaces": [
+        "Locator.click",
+        "Locator.fill",
+        "Locator.selectOption",
+        "Locator.setInputFiles"
+      ]
+    },
+    {
+      "id": "sh.locator.geometry",
+      "category": "页面观察",
+      "name": "元素几何与标注",
+      "availability": "原生",
+      "detail": "centroid、scrollTo、highlight与sendClickEvent提供低层辅助；first/nth细化定位。",
+      "sources": [
+        "sh.ref.locator"
+      ],
+      "interfaces": [
+        "Locator.centroid",
+        "Locator.scrollTo",
+        "Locator.highlight"
+      ]
+    },
+    {
+      "id": "sh.clipboard",
+      "category": "浏览器交互",
+      "name": "剪贴板",
+      "availability": "原生",
+      "detail": "readText/writeText/clear及copy/cut/paste提供浏览器剪贴板控制。",
+      "sources": [
+        "sh.ref.clipboard"
+      ],
+      "interfaces": [
+        "Clipboard.readText",
+        "Clipboard.writeText",
+        "Clipboard.copy",
+        "Clipboard.cut",
+        "Clipboard.paste"
+      ]
+    },
+    {
+      "id": "sh.response.headers",
+      "category": "网络诊断",
+      "name": "重复有序头与连接信息",
+      "availability": "原生",
+      "detail": "Response.headersArray保留顺序大小写和重复值；可读TLS信息、服务端地址与ServiceWorker来源。",
+      "sources": [
+        "sh.ref.response"
+      ],
+      "interfaces": [
+        "Response.headersArray",
+        "Response.securityDetails",
+        "Response.serverAddr"
+      ]
+    },
+    {
+      "id": "sh.response.body",
+      "category": "网络诊断",
+      "name": "导航响应正文与失败结果",
+      "availability": "原生",
+      "detail": "Response.body/text/json和finished按需获取；会话结束后句柄失效，并非持久请求仓库。",
+      "sources": [
+        "sh.ref.response"
+      ],
+      "interfaces": [
+        "Response.body",
+        "Response.text",
+        "Response.json",
+        "Response.finished"
+      ]
+    },
+    {
+      "id": "sh.webmcp",
+      "category": "扩展",
+      "name": "发现与调用页面WebMCP",
+      "availability": "部分",
+      "detail": "page.tools、工具invoke、invocation.result/cancel及工具增删事件；依赖页面注册与Chromium特性。",
+      "sources": [
+        "sh.ref.webmcp"
+      ],
+      "interfaces": [
+        "Page.tools",
+        "WebMCPTool.invoke",
+        "WebMCPInvocation.result",
+        "WebMCPInvocation.cancel"
+      ]
+    },
+    {
+      "id": "sh.models.direct",
+      "category": "模型",
+      "name": "自带模型与回调",
+      "availability": "原生",
+      "detail": "model可配置提供方密钥、OpenAI兼容服务或ClientLLM回调，本地运行需要自备模型接入。",
+      "sources": [
+        "sh.model"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.models.gateway",
+      "category": "云端",
+      "name": "Browserbase Model Gateway",
+      "availability": "云端",
+      "detail": "不指定model时自动选模型，支持固定模型；仅Browserbase托管浏览器可用。",
+      "sources": [
+        "sh.model"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.cache",
+      "category": "云端",
+      "name": "托管动作/观察/提取缓存",
+      "availability": "云端",
+      "detail": "act/observe/extract eligible结果服务端缓存；本地cache选项无效，费用与usage元数据可查询。",
+      "sources": [
+        "sh.cache"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.selfheal",
+      "category": "定位",
+      "name": "缓存动作重新推理",
+      "availability": "原生",
+      "detail": "selfHeal允许缓存selector失效时重新推理并重试；不等同任务业务结果恢复。",
+      "sources": [
+        "sh.ref.stagehand"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.logging",
+      "category": "可观测性",
+      "name": "结构化运行日志",
+      "availability": "原生",
+      "detail": "logging设定level、pretty/json和onLog回调。",
+      "sources": [
+        "sh.logging"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.otel",
+      "category": "可观测性",
+      "name": "OpenTelemetry与云会话观测",
+      "availability": "部分",
+      "detail": "telemetry支持trace导出；Browserbase额外提供live、回放、network/console、CPU内存和费用信息。",
+      "sources": [
+        "sh.observability"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.mcp",
+      "category": "接入",
+      "name": "实验stdio MCP适配",
+      "availability": "可选",
+      "detail": "官方同仓integrations提供run/snapshot/screenshot；需源码构建，未发布独立包。",
+      "sources": [
+        "sh.mcp"
+      ],
+      "interfaces": [
+        "MCP.run",
+        "MCP.snapshot",
+        "MCP.screenshot"
+      ]
+    },
+    {
+      "id": "sh.frameworks",
+      "category": "接入",
+      "name": "外部Agent框架适配",
+      "availability": "可选",
+      "detail": "官方文档列AI SDK、OpenAI/Claude CUA、CrewAI、Deep Agents、Mastra等；模型loop归外部框架。",
+      "sources": [
+        "sh.frameworks"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.approval",
+      "category": "人工介入",
+      "name": "人工审批示例",
+      "availability": "部分",
+      "detail": "官方recipe展示提交前人工审批和一次尝试回执；明确不是持久审批服务、不支持跨进程续接。",
+      "sources": [
+        "sh.approval"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.login.recipe",
+      "category": "状态复用",
+      "name": "登录持久化示例",
+      "availability": "部分",
+      "detail": "recipe示范保存登录配置和复用，而非内置密码库。",
+      "sources": [
+        "sh.login"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.files.recipe",
+      "category": "文件",
+      "name": "下载到云存储示例",
+      "availability": "部分",
+      "detail": "官方recipe把浏览器文件/上传与对象存储连接；浏览器上传正式接口是setInputFiles。",
+      "sources": [
+        "sh.files"
+      ],
+      "interfaces": [
+        "Locator.setInputFiles"
+      ]
+    },
+    {
+      "id": "sh.fetch",
+      "category": "云端",
+      "name": "页面Fetch附加API",
+      "availability": "云端",
+      "detail": "browserbase.fetch返回markdown、raw或schema JSON，不需要启动浏览器。",
+      "sources": [
+        "sh.fetch"
+      ],
+      "interfaces": [
+        "browserbase.fetch"
+      ]
+    },
+    {
+      "id": "sh.search",
+      "category": "云端",
+      "name": "网络Search附加API",
+      "availability": "云端",
+      "detail": "browserbase.search返回排名URL和metadata；提供方/模式选项有服务部署边界。",
+      "sources": [
+        "sh.search"
+      ],
+      "interfaces": [
+        "browserbase.search"
+      ]
+    },
+    {
+      "id": "sh.cli.browser",
+      "category": "接入",
+      "name": "同仓browse CLI",
+      "availability": "可选",
+      "detail": "持久daemon、命名隔离会话、refs快照、元素/鼠标动作、等待、标签和JS。",
+      "sources": [
+        "sh.cli"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.cli.network",
+      "category": "网络诊断",
+      "name": "CLI请求响应文件捕获",
+      "availability": "可选",
+      "detail": "network on/off/path/clear把请求响应头和body写本地目录；无需Cloud key。",
+      "sources": [
+        "sh.cli"
+      ],
+      "interfaces": [
+        "browse network on",
+        "browse network path",
+        "browse network clear"
+      ]
+    },
+    {
+      "id": "sh.cli.skills",
+      "category": "扩展",
+      "name": "Browse.sh技能目录",
+      "availability": "可选",
+      "detail": "skills list/find/add及install加载网站技能；与Stagehand SDK原语区分。",
+      "sources": [
+        "sh.cli"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.cli.cloud",
+      "category": "云端",
+      "name": "Cloud资源管理CLI",
+      "availability": "云端",
+      "detail": "projects/sessions/contexts/extensions和日志、下载、上传管理复用Browserbase API。",
+      "sources": [
+        "sh.cli"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.functions",
+      "category": "云端",
+      "name": "Functions部署与调用",
+      "availability": "云端",
+      "detail": "browse functions init/dev/publish/invoke提供部署为云API的正式入口。",
+      "sources": [
+        "sh.deploy"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.templates",
+      "category": "开发体验",
+      "name": "模板发现与项目脚手架",
+      "availability": "可选",
+      "detail": "browse templates list/find/clone复制官方示例项目。",
+      "sources": [
+        "sh.cli"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sh.regions",
+      "category": "云端",
+      "name": "多区域云浏览器",
+      "availability": "云端",
+      "detail": "浏览器工厂支持四个Browserbase地区，托管缓存/网关随session地区选择API。",
+      "sources": [
+        "sh.browser"
+      ],
+      "interfaces": []
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Stagehand.create",
+      "category": "v4 stagehand API",
+      "purpose": "连接浏览器并创建已初始化的Stagehand",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    {
+      "name": "Stagehand.close",
+      "category": "v4 stagehand API",
+      "purpose": "关闭当前对象持有的资源",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    {
+      "name": "Stagehand.experimentalBatch",
+      "category": "v4 stagehand API",
+      "purpose": "在扩展worker执行一段批量浏览器代码",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    {
+      "name": "Stagehand.metrics",
+      "category": "v4 stagehand API",
+      "purpose": "读取累计模型token和推理时间",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    {
+      "name": "Stagehand.act",
+      "category": "v4 stagehand API",
+      "purpose": "按自然语言执行浏览器动作",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    {
+      "name": "Stagehand.observe",
+      "category": "v4 stagehand API",
+      "purpose": "观察页面并返回可用动作",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    {
+      "name": "Stagehand.extract",
+      "category": "v4 stagehand API",
+      "purpose": "按要求提取页面数据",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    {
+      "name": "Page.goto",
+      "category": "v4 page API",
+      "purpose": "导航至URL",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.reload",
+      "category": "v4 page API",
+      "purpose": "刷新页面",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.goBack",
+      "category": "v4 page API",
+      "purpose": "返回历史上一页",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.goForward",
+      "category": "v4 page API",
+      "purpose": "前进至历史下一页",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.click",
+      "category": "v4 page API",
+      "purpose": "点击元素",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.hover",
+      "category": "v4 page API",
+      "purpose": "悬停元素或坐标",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.scroll",
+      "category": "v4 page API",
+      "purpose": "滚动页面或元素",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.dragAndDrop",
+      "category": "v4 page API",
+      "purpose": "在坐标或目标之间拖拽",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.type",
+      "category": "v4 page API",
+      "purpose": "向当前焦点逐字输入文本",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.keyPress",
+      "category": "v4 page API",
+      "purpose": "发送键盘按键组合",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.evaluate",
+      "category": "v4 page API",
+      "purpose": "执行页面JavaScript",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.on",
+      "category": "v4 page API",
+      "purpose": "订阅指定CDP事件",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.onToolsAdded",
+      "category": "v4 page API",
+      "purpose": "订阅页面WebMCP工具注册事件",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.onToolsRemoved",
+      "category": "v4 page API",
+      "purpose": "订阅页面WebMCP工具移除事件",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.addInitScript",
+      "category": "v4 page API",
+      "purpose": "在新文档页面脚本前运行初始化代码",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.setExtraHTTPHeaders",
+      "category": "v4 page API",
+      "purpose": "设置额外HTTP请求头",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.setViewportSize",
+      "category": "v4 page API",
+      "purpose": "设置视口尺寸",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.waitForLoadState",
+      "category": "v4 page API",
+      "purpose": "等待页面加载状态",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.waitForTimeout",
+      "category": "v4 page API",
+      "purpose": "等待固定时长",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.waitForFunction",
+      "category": "v4 page API",
+      "purpose": "等待页面JS条件成立",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.waitForSelector",
+      "category": "v4 page API",
+      "purpose": "等待元素满足状态",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.screenshot",
+      "category": "v4 page API",
+      "purpose": "获取截图",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.pdf",
+      "category": "v4 page API",
+      "purpose": "打印页面为PDF",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.snapshot",
+      "category": "v4 page API",
+      "purpose": "读取无障碍页面快照",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.tools",
+      "category": "v4 page API",
+      "purpose": "发现页面注册的WebMCP工具",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.url",
+      "category": "v4 page API",
+      "purpose": "读取当前页面URL",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.title",
+      "category": "v4 page API",
+      "purpose": "读取当前页面标题",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.close",
+      "category": "v4 page API",
+      "purpose": "关闭当前对象持有的资源",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "Page.locator",
+      "category": "v4 page API",
+      "purpose": "构造跨frame/shadow DOM的元素定位器",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "BrowserContext.pages",
+      "category": "v4 context API",
+      "purpose": "列出Context页面",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.newPage",
+      "category": "v4 context API",
+      "purpose": "创建标签页",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.activePage",
+      "category": "v4 context API",
+      "purpose": "获取Chrome当前活动标签页",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.setActivePage",
+      "category": "v4 context API",
+      "purpose": "切换活动标签页",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.close",
+      "category": "v4 context API",
+      "purpose": "关闭当前对象持有的资源",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.addInitScript",
+      "category": "v4 context API",
+      "purpose": "在新文档页面脚本前运行初始化代码",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.setExtraHTTPHeaders",
+      "category": "v4 context API",
+      "purpose": "设置额外HTTP请求头",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.getDomainPolicy",
+      "category": "v4 context API",
+      "purpose": "读取域名访问策略",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.setDomainPolicy",
+      "category": "v4 context API",
+      "purpose": "更新域名允许/拒绝策略",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.cookies",
+      "category": "v4 context API",
+      "purpose": "读取Cookie",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.addCookies",
+      "category": "v4 context API",
+      "purpose": "添加Cookie",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "BrowserContext.clearCookies",
+      "category": "v4 context API",
+      "purpose": "按条件清理Cookie",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    {
+      "name": "Locator.click",
+      "category": "v4 locator API",
+      "purpose": "点击元素",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.hover",
+      "category": "v4 locator API",
+      "purpose": "悬停元素或坐标",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.fill",
+      "category": "v4 locator API",
+      "purpose": "清空并填写元素文本",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.count",
+      "category": "v4 locator API",
+      "purpose": "读取匹配元素数量",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.isChecked",
+      "category": "v4 locator API",
+      "purpose": "读取复选状态",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.inputValue",
+      "category": "v4 locator API",
+      "purpose": "读取表单值",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.isVisible",
+      "category": "v4 locator API",
+      "purpose": "判断元素是否可见",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.innerText",
+      "category": "v4 locator API",
+      "purpose": "读取可见文本",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.innerHtml",
+      "category": "v4 locator API",
+      "purpose": "读取元素内部HTML",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.textContent",
+      "category": "v4 locator API",
+      "purpose": "读取节点文本",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.scrollTo",
+      "category": "v4 locator API",
+      "purpose": "将元素滚动至视图内",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.centroid",
+      "category": "v4 locator API",
+      "purpose": "读取元素中心坐标",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.highlight",
+      "category": "v4 locator API",
+      "purpose": "在页面标注元素",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.sendClickEvent",
+      "category": "v4 locator API",
+      "purpose": "发送DOM点击事件",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.type",
+      "category": "v4 locator API",
+      "purpose": "向当前焦点逐字输入文本",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.selectOption",
+      "category": "v4 locator API",
+      "purpose": "选择下拉值",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.setInputFiles",
+      "category": "v4 locator API",
+      "purpose": "向文件input上传路径或内存文件",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.first",
+      "category": "v4 locator API",
+      "purpose": "选择第一个匹配元素",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Locator.nth",
+      "category": "v4 locator API",
+      "purpose": "按序号选择匹配元素",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    {
+      "name": "Clipboard.readText",
+      "category": "v4 clipboard API",
+      "purpose": "读取剪贴板文字",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.clipboard"
+      ]
+    },
+    {
+      "name": "Clipboard.writeText",
+      "category": "v4 clipboard API",
+      "purpose": "写入剪贴板文字",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.clipboard"
+      ]
+    },
+    {
+      "name": "Clipboard.clear",
+      "category": "v4 clipboard API",
+      "purpose": "清空剪贴板",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.clipboard"
+      ]
+    },
+    {
+      "name": "Clipboard.paste",
+      "category": "v4 clipboard API",
+      "purpose": "向当前焦点粘贴",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.clipboard"
+      ]
+    },
+    {
+      "name": "Clipboard.copy",
+      "category": "v4 clipboard API",
+      "purpose": "复制当前选中内容",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.clipboard"
+      ]
+    },
+    {
+      "name": "Clipboard.cut",
+      "category": "v4 clipboard API",
+      "purpose": "剪切当前选中内容",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.clipboard"
+      ]
+    },
+    {
+      "name": "Response.url",
+      "category": "v4 Response API",
+      "purpose": "读取当前页面URL",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.status",
+      "category": "v4 Response API",
+      "purpose": "读取HTTP状态码",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.statusText",
+      "category": "v4 Response API",
+      "purpose": "读取状态文本",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.ok",
+      "category": "v4 Response API",
+      "purpose": "判断是否2xx",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.headers",
+      "category": "v4 Response API",
+      "purpose": "读取归一化响应头",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.fromServiceWorker",
+      "category": "v4 Response API",
+      "purpose": "判断是否由ServiceWorker响应",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.allHeaders",
+      "category": "v4 Response API",
+      "purpose": "读取完整头集合",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.headerValue",
+      "category": "v4 Response API",
+      "purpose": "读取合并后的指定头",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.headerValues",
+      "category": "v4 Response API",
+      "purpose": "读取重复响应头所有值",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.headersArray",
+      "category": "v4 Response API",
+      "purpose": "保留响应头顺序、大小写与重复值",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.securityDetails",
+      "category": "v4 Response API",
+      "purpose": "读取TLS安全信息",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.serverAddr",
+      "category": "v4 Response API",
+      "purpose": "读取服务端网络地址",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.body",
+      "category": "v4 Response API",
+      "purpose": "读取二进制正文",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.text",
+      "category": "v4 Response API",
+      "purpose": "读取文本正文",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.json",
+      "category": "v4 Response API",
+      "purpose": "解析JSON正文",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "Response.finished",
+      "category": "v4 Response API",
+      "purpose": "读取加载完成或失败结果",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.response"
+      ]
+    },
+    {
+      "name": "WebMCPTool.invoke",
+      "category": "WebMCP/事件订阅",
+      "purpose": "调用页面注册的WebMCP工具",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.webmcp",
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "WebMCPInvocation.result",
+      "category": "WebMCP/事件订阅",
+      "purpose": "等待工具调用结果",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.webmcp",
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "WebMCPInvocation.cancel",
+      "category": "WebMCP/事件订阅",
+      "purpose": "取消尚未完成的页面工具调用",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.webmcp",
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "CDPSubscription.unsubscribe",
+      "category": "WebMCP/事件订阅",
+      "purpose": "停止CDP/页面工具事件订阅",
+      "availability": "原生",
+      "sources": [
+        "sh.ref.webmcp",
+        "sh.ref.page"
+      ]
+    },
+    {
+      "name": "browserbase.launch",
+      "category": "浏览器工厂与扩展",
+      "purpose": "创建、连接或清理浏览器/导出运行时扩展；具体所有权见browser文档",
+      "availability": "云端",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    {
+      "name": "browserbase.connect",
+      "category": "浏览器工厂与扩展",
+      "purpose": "创建、连接或清理浏览器/导出运行时扩展；具体所有权见browser文档",
+      "availability": "云端",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    {
+      "name": "localBrowser.launch",
+      "category": "浏览器工厂与扩展",
+      "purpose": "创建、连接或清理浏览器/导出运行时扩展；具体所有权见browser文档",
+      "availability": "原生",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    {
+      "name": "localBrowser.connect",
+      "category": "浏览器工厂与扩展",
+      "purpose": "创建、连接或清理浏览器/导出运行时扩展；具体所有权见browser文档",
+      "availability": "原生",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    {
+      "name": "StagehandBrowser.close",
+      "category": "浏览器工厂与扩展",
+      "purpose": "创建、连接或清理浏览器/导出运行时扩展；具体所有权见browser文档",
+      "availability": "原生",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    {
+      "name": "getExtensionArchive",
+      "category": "浏览器工厂与扩展",
+      "purpose": "创建、连接或清理浏览器/导出运行时扩展；具体所有权见browser文档",
+      "availability": "原生",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    {
+      "name": "browserbase.fetch",
+      "category": "Browserbase云端附加服务",
+      "purpose": "直接读取网页或搜索网络；需要Browserbase账户",
+      "availability": "云端",
+      "sources": [
+        "sh.fetch"
+      ]
+    },
+    {
+      "name": "browserbase.search",
+      "category": "Browserbase云端附加服务",
+      "purpose": "直接读取网页或搜索网络；需要Browserbase账户",
+      "availability": "云端",
+      "sources": [
+        "sh.search"
+      ]
+    },
+    {
+      "name": "MCP.run",
+      "category": "实验MCP适配器",
+      "purpose": "运行浏览器代码",
+      "availability": "可选",
+      "sources": [
+        "sh.mcp"
+      ]
+    },
+    {
+      "name": "MCP.snapshot",
+      "category": "实验MCP适配器",
+      "purpose": "读取无障碍页面快照",
+      "availability": "可选",
+      "sources": [
+        "sh.mcp"
+      ]
+    },
+    {
+      "name": "MCP.screenshot",
+      "category": "实验MCP适配器",
+      "purpose": "获取截图",
+      "availability": "可选",
+      "sources": [
+        "sh.mcp"
+      ]
+    },
+    {
+      "name": "browse open",
+      "category": "同仓CLI：导航",
+      "purpose": "操作浏览器或任务数据；导航命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse reload",
+      "category": "同仓CLI：导航",
+      "purpose": "载入浏览器或任务数据；导航命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse back",
+      "category": "同仓CLI：导航",
+      "purpose": "操作浏览器或任务数据；导航命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse forward",
+      "category": "同仓CLI：导航",
+      "purpose": "操作浏览器或任务数据；导航命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse snapshot",
+      "category": "同仓CLI：观察",
+      "purpose": "读取无障碍页面快照；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse get url",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse get title",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse get text",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse get html",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse get value",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse get box",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse get markdown",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse is visible",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse is checked",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse eval",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse viewport",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cursor",
+      "category": "同仓CLI：观察",
+      "purpose": "操作浏览器或任务数据；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse screenshot",
+      "category": "同仓CLI：观察",
+      "purpose": "获取截图；观察命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse click",
+      "category": "同仓CLI：交互",
+      "purpose": "点击元素；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse fill",
+      "category": "同仓CLI：交互",
+      "purpose": "操作浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse select",
+      "category": "同仓CLI：交互",
+      "purpose": "操作浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse type",
+      "category": "同仓CLI：交互",
+      "purpose": "输入文本；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse press",
+      "category": "同仓CLI：交互",
+      "purpose": "操作浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse upload",
+      "category": "同仓CLI：交互",
+      "purpose": "载入浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse highlight",
+      "category": "同仓CLI：交互",
+      "purpose": "操作浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse mouse click",
+      "category": "同仓CLI：交互",
+      "purpose": "点击元素；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse mouse hover",
+      "category": "同仓CLI：交互",
+      "purpose": "悬停元素或坐标；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse mouse scroll",
+      "category": "同仓CLI：交互",
+      "purpose": "滚动页面或元素；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse mouse drag",
+      "category": "同仓CLI：交互",
+      "purpose": "操作浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse wait load",
+      "category": "同仓CLI：交互",
+      "purpose": "载入浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse wait selector",
+      "category": "同仓CLI：交互",
+      "purpose": "操作浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse wait timeout",
+      "category": "同仓CLI：交互",
+      "purpose": "操作浏览器或任务数据；交互命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse tab list",
+      "category": "同仓CLI：标签页",
+      "purpose": "列出浏览器或任务数据；标签页命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse tab new",
+      "category": "同仓CLI：标签页",
+      "purpose": "操作浏览器或任务数据；标签页命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse tab switch",
+      "category": "同仓CLI：标签页",
+      "purpose": "切换标签页；标签页命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse tab close",
+      "category": "同仓CLI：标签页",
+      "purpose": "关闭标签页；标签页命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse network on",
+      "category": "同仓CLI：网络",
+      "purpose": "操作浏览器或任务数据；网络命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse network off",
+      "category": "同仓CLI：网络",
+      "purpose": "操作浏览器或任务数据；网络命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse network path",
+      "category": "同仓CLI：网络",
+      "purpose": "操作浏览器或任务数据；网络命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse network clear",
+      "category": "同仓CLI：网络",
+      "purpose": "清理浏览器或任务数据；网络命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cdp",
+      "category": "同仓CLI：网络",
+      "purpose": "操作浏览器或任务数据；网络命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse status",
+      "category": "同仓CLI：会话",
+      "purpose": "操作浏览器或任务数据；会话命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse stop",
+      "category": "同仓CLI：会话",
+      "purpose": "操作浏览器或任务数据；会话命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse doctor",
+      "category": "同仓CLI：会话",
+      "purpose": "操作浏览器或任务数据；会话命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse skills install",
+      "category": "同仓CLI：技能",
+      "purpose": "操作浏览器或任务数据；技能命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse skills list",
+      "category": "同仓CLI：技能",
+      "purpose": "列出浏览器或任务数据；技能命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse skills find",
+      "category": "同仓CLI：技能",
+      "purpose": "查找页面目标；技能命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse skills add",
+      "category": "同仓CLI：技能",
+      "purpose": "操作浏览器或任务数据；技能命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud projects list",
+      "category": "同仓CLI：Cloud",
+      "purpose": "列出浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud projects get",
+      "category": "同仓CLI：Cloud",
+      "purpose": "读取浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud projects usage",
+      "category": "同仓CLI：Cloud",
+      "purpose": "操作浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions list",
+      "category": "同仓CLI：Cloud",
+      "purpose": "列出浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions get",
+      "category": "同仓CLI：Cloud",
+      "purpose": "读取浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions create",
+      "category": "同仓CLI：Cloud",
+      "purpose": "创建浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions update",
+      "category": "同仓CLI：Cloud",
+      "purpose": "更新浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions debug",
+      "category": "同仓CLI：Cloud",
+      "purpose": "操作浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions logs",
+      "category": "同仓CLI：Cloud",
+      "purpose": "操作浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions downloads get",
+      "category": "同仓CLI：Cloud",
+      "purpose": "读取浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud sessions uploads create",
+      "category": "同仓CLI：Cloud",
+      "purpose": "创建浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud contexts create",
+      "category": "同仓CLI：Cloud",
+      "purpose": "创建浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud contexts get",
+      "category": "同仓CLI：Cloud",
+      "purpose": "读取浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud contexts update",
+      "category": "同仓CLI：Cloud",
+      "purpose": "更新浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud contexts delete",
+      "category": "同仓CLI：Cloud",
+      "purpose": "删除浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud extensions upload",
+      "category": "同仓CLI：Cloud",
+      "purpose": "载入浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud extensions get",
+      "category": "同仓CLI：Cloud",
+      "purpose": "读取浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud extensions delete",
+      "category": "同仓CLI：Cloud",
+      "purpose": "删除浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud fetch",
+      "category": "同仓CLI：Cloud",
+      "purpose": "操作浏览器或任务数据；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse cloud search",
+      "category": "同仓CLI：Cloud",
+      "purpose": "搜索引擎查询；Cloud命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse functions init",
+      "category": "同仓CLI：Functions",
+      "purpose": "操作浏览器或任务数据；Functions命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse functions dev",
+      "category": "同仓CLI：Functions",
+      "purpose": "操作浏览器或任务数据；Functions命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse functions publish",
+      "category": "同仓CLI：Functions",
+      "purpose": "操作浏览器或任务数据；Functions命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse functions invoke",
+      "category": "同仓CLI：Functions",
+      "purpose": "操作浏览器或任务数据；Functions命令",
+      "availability": "云端",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse templates list",
+      "category": "同仓CLI：模板",
+      "purpose": "列出浏览器或任务数据；模板命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse templates find",
+      "category": "同仓CLI：模板",
+      "purpose": "查找页面目标；模板命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    {
+      "name": "browse templates clone",
+      "category": "同仓CLI：模板",
+      "purpose": "操作浏览器或任务数据；模板命令",
+      "availability": "可选",
+      "sources": [
+        "sh.cli"
+      ]
+    }
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "可选",
+      "detail": "官方实验同仓MCP适配器，stdio提供run/snapshot/screenshot；需源码构建。",
+      "sources": [
+        "sh.mcp"
+      ]
+    },
+    "D02": {
+      "availability": "未证实",
+      "detail": "已查正式MCP适配文档只列3个tools，未核实resources/prompts。",
+      "sources": [
+        "sh.mcp"
+      ]
+    },
+    "D03": {
+      "availability": "可选",
+      "detail": "官方实验同仓MCP适配器，stdio提供run/snapshot/screenshot；需源码构建。",
+      "sources": [
+        "sh.mcp"
+      ]
+    },
+    "D04": {
+      "availability": "云端",
+      "detail": "Browserbase云浏览器、控制台和远程API；不是MIT本地SDK默认部署。",
+      "sources": [
+        "sh.browser",
+        "sh.observability"
+      ]
+    },
+    "D05": {
+      "availability": "可选",
+      "detail": "同仓browse CLI具备任务操作、status和doctor。",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    "D06": {
+      "availability": "云端",
+      "detail": "Browserbase云浏览器、控制台和远程API；不是MIT本地SDK默认部署。",
+      "sources": [
+        "sh.browser",
+        "sh.observability"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "v4 SDK支持TypeScript/Python/Go，本地Chrome可用自带模型运行。",
+      "sources": [
+        "sh.readme",
+        "sh.browser",
+        "sh.model"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "v4 SDK支持TypeScript/Python/Go，本地Chrome可用自带模型运行。",
+      "sources": [
+        "sh.readme",
+        "sh.browser",
+        "sh.model"
+      ]
+    },
+    "D09": {
+      "availability": "云端",
+      "detail": "Browserbase云浏览器、控制台和远程API；不是MIT本地SDK默认部署。",
+      "sources": [
+        "sh.browser",
+        "sh.observability"
+      ]
+    },
+    "D10": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "D11": {
+      "availability": "可选",
+      "detail": "同仓browse CLI具备任务操作、status和doctor。",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    "D12": {
+      "availability": "部分",
+      "detail": "框架适配由应用注册工具；MCP仅3工具，未核实按能力组切换。",
+      "sources": [
+        "sh.mcp",
+        "sh.frameworks"
+      ]
+    },
+    "B01": {
+      "availability": "原生",
+      "detail": "browser工厂支持本地/附着、headless、独立Context、持久目录及视口/启动配置。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "B02": {
+      "availability": "原生",
+      "detail": "browser工厂支持本地/附着、headless、独立Context、持久目录及视口/启动配置。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "B03": {
+      "availability": "未提供",
+      "detail": "v4运行时依赖Chrome扩展/CDP；未提供Firefox/WebKit引擎。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "B04": {
+      "availability": "原生",
+      "detail": "browser工厂支持本地/附着、headless、独立Context、持久目录及视口/启动配置。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "B05": {
+      "availability": "原生",
+      "detail": "browser工厂支持本地/附着、headless、独立Context、持久目录及视口/启动配置。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "B06": {
+      "availability": "原生",
+      "detail": "browser工厂支持本地/附着、headless、独立Context、持久目录及视口/启动配置。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "B07": {
+      "availability": "原生",
+      "detail": "Context标签页API和AI默认跟随活动popup。",
+      "sources": [
+        "sh.ref.context",
+        "sh.tabs"
+      ]
+    },
+    "B08": {
+      "availability": "原生",
+      "detail": "locator的>>路径穿过iframe，snapshot可包含iframe。",
+      "sources": [
+        "sh.ref.locator",
+        "sh.ref.page"
+      ]
+    },
+    "B09": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "B10": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "B11": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "B12": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "B13": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "B14": {
+      "availability": "原生",
+      "detail": "Locator.setInputFiles接受本地文件或内存payload，单文件上限50MiB。",
+      "sources": [
+        "sh.ref.locator"
+      ]
+    },
+    "B15": {
+      "availability": "部分",
+      "detail": "Browserbase会话下载及browse cloud sessions downloads get；SDK未核实完整本地下载跟踪。",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    "B16": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "B17": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "B18": {
+      "availability": "原生",
+      "detail": "BrowserContext.cookies/addCookies/clearCookies。",
+      "sources": [
+        "sh.ref.context"
+      ]
+    },
+    "B19": {
+      "availability": "部分",
+      "detail": "本地持久userDataDir与Browserbase Context复用；不等同完整storage_state JSON API。",
+      "sources": [
+        "sh.browser",
+        "sh.login"
+      ]
+    },
+    "B20": {
+      "availability": "原生",
+      "detail": "browser工厂支持本地/附着、headless、独立Context、持久目录及视口/启动配置。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "B21": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "O01": {
+      "availability": "原生",
+      "detail": "page.snapshot返回无障碍树及引用映射；browse snapshot另有filter/depth。",
+      "sources": [
+        "sh.ref.page",
+        "sh.cli"
+      ]
+    },
+    "O02": {
+      "availability": "原生",
+      "detail": "page.snapshot返回无障碍树及引用映射；browse snapshot另有filter/depth。",
+      "sources": [
+        "sh.ref.page",
+        "sh.cli"
+      ]
+    },
+    "O03": {
+      "availability": "未提供",
+      "detail": "完整v4 snapshot公开参数为includeIframes/timeout；未暴露基线增量diff返回。",
+      "sources": [
+        "sh.ref.page"
+      ]
+    },
+    "O04": {
+      "availability": "原生",
+      "detail": "page.snapshot返回无障碍树及引用映射；browse snapshot另有filter/depth。",
+      "sources": [
+        "sh.ref.page",
+        "sh.cli"
+      ]
+    },
+    "O05": {
+      "availability": "部分",
+      "detail": "MCP声明引用属于最近快照，导航或过期后需重取；未承诺跨进程引用重绑。",
+      "sources": [
+        "sh.mcp"
+      ]
+    },
+    "O06": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "O07": {
+      "availability": "原生",
+      "detail": "Locator.highlight和页面级坐标指针；视觉CUA是可选框架适配。",
+      "sources": [
+        "sh.ref.locator",
+        "sh.cua"
+      ]
+    },
+    "O08": {
+      "availability": "原生",
+      "detail": "page.snapshot返回无障碍树及引用映射；browse snapshot另有filter/depth。",
+      "sources": [
+        "sh.ref.page",
+        "sh.cli"
+      ]
+    },
+    "O09": {
+      "availability": "原生",
+      "detail": "Stagehand.extract schema与act/observe原生AI推理。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "O10": {
+      "availability": "原生",
+      "detail": "Stagehand.extract schema与act/observe原生AI推理。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "O11": {
+      "availability": "原生",
+      "detail": "selfHeal重新推理缓存selector；具体策略依赖模型。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "O12": {
+      "availability": "原生",
+      "detail": "完整Page/Locator API覆盖导航、输入、指针、拖拽、JS、等待、截图和PDF。",
+      "sources": [
+        "sh.ref.page",
+        "sh.ref.locator"
+      ]
+    },
+    "N01": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N02": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N03": {
+      "availability": "部分",
+      "detail": "网络由Chrome负责；没有独立HTTP/2解密代理。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "N04": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N05": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N06": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N07": {
+      "availability": "部分",
+      "detail": "导航Response含有序重复头、状态、body/text/json；同仓CLI另捕获请求/响应文件。",
+      "sources": [
+        "sh.ref.response",
+        "sh.cli"
+      ]
+    },
+    "N08": {
+      "availability": "部分",
+      "detail": "Context domain policy与CLI快照过滤；不是复杂代理流量过滤语言。",
+      "sources": [
+        "sh.ref.context",
+        "sh.cli"
+      ]
+    },
+    "N09": {
+      "availability": "部分",
+      "detail": "导航Response含有序重复头、状态、body/text/json；同仓CLI另捕获请求/响应文件。",
+      "sources": [
+        "sh.ref.response",
+        "sh.cli"
+      ]
+    },
+    "N10": {
+      "availability": "部分",
+      "detail": "导航Response含有序重复头、状态、body/text/json；同仓CLI另捕获请求/响应文件。",
+      "sources": [
+        "sh.ref.response",
+        "sh.cli"
+      ]
+    },
+    "N11": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N12": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N13": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N14": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N15": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N16": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "N17": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M01": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M02": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M03": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M04": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M06": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M07": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "M08": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "W01": {
+      "availability": "未提供",
+      "detail": "v4官方迁移说明移除agent()；由调用方代码或外部模型组织loop。",
+      "sources": [
+        "sh.migration"
+      ]
+    },
+    "W02": {
+      "availability": "原生",
+      "detail": "AI原语支持提供方密钥、Gateway或自定义ClientLLM回调。",
+      "sources": [
+        "sh.model"
+      ]
+    },
+    "W03": {
+      "availability": "部分",
+      "detail": "外部工具框架可包装SDK；page WebMCP发现网站自有工具，不是内置Agent动作注册器。",
+      "sources": [
+        "sh.frameworks",
+        "sh.ref.webmcp"
+      ]
+    },
+    "W04": {
+      "availability": "部分",
+      "detail": "experimentalBatch与普通脚本支持序列；不是持久工作流定义/调度系统。",
+      "sources": [
+        "sh.ref.stagehand",
+        "sh.migration"
+      ]
+    },
+    "W05": {
+      "availability": "未提供",
+      "detail": "v4公开核心没有条件/循环/并行工作流块；普通TS/Python/Go控制流归应用。",
+      "sources": [
+        "sh.migration"
+      ]
+    },
+    "W06": {
+      "availability": "部分",
+      "detail": "官方人工审批recipe含一次尝试回执、未知提交停止检查；非核心持久服务。",
+      "sources": [
+        "sh.approval"
+      ]
+    },
+    "W07": {
+      "availability": "部分",
+      "detail": "act返回success；业务成功验证由脚本读取页面/提取结果或recipe检查。",
+      "sources": [
+        "sh.ref.stagehand",
+        "sh.approval"
+      ]
+    },
+    "W08": {
+      "availability": "部分",
+      "detail": "每次结果usage/cache与日志/trace可记录；v4无统一Agent历史对象。",
+      "sources": [
+        "sh.ref.stagehand",
+        "sh.logging"
+      ]
+    },
+    "W09": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "W10": {
+      "availability": "部分",
+      "detail": "可连接已有CDP或Browserbase会话，复用持久Context；不等同自动恢复中断步骤。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "W11": {
+      "availability": "部分",
+      "detail": "官方人工审批recipe含一次尝试回执、未知提交停止检查；非核心持久服务。",
+      "sources": [
+        "sh.approval"
+      ]
+    },
+    "W12": {
+      "availability": "云端",
+      "detail": "托管act/observe/extract缓存只对Browserbase session生效，本地cache无效。",
+      "sources": [
+        "sh.cache"
+      ]
+    },
+    "W13": {
+      "availability": "部分",
+      "detail": "持久目录/云Context/登录recipe；未提供自带凭据保险库。",
+      "sources": [
+        "sh.browser",
+        "sh.login"
+      ]
+    },
+    "W14": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "W15": {
+      "availability": "云端",
+      "detail": "Browserbase Functions可部署和调用运行；非SDK内置通用定时工作流。",
+      "sources": [
+        "sh.deploy"
+      ]
+    },
+    "T01": {
+      "availability": "部分",
+      "detail": "page.on订阅CDP；云Dashboard另有console/异常，不等同本地专用console tool。",
+      "sources": [
+        "sh.ref.page",
+        "sh.observability"
+      ]
+    },
+    "T02": {
+      "availability": "部分",
+      "detail": "OpenTelemetry、metrics及云回放/网络时序；时间关联不宣称因果关联。",
+      "sources": [
+        "sh.observability"
+      ]
+    },
+    "T03": {
+      "availability": "不适用",
+      "detail": "核心定位不包含该专门分析模块；未将任意JS或CDP可编程性算成成品功能。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "T04": {
+      "availability": "部分",
+      "detail": "OpenTelemetry、metrics及云回放/网络时序；时间关联不宣称因果关联。",
+      "sources": [
+        "sh.observability"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "OpenTelemetry、metrics及云回放/网络时序；时间关联不宣称因果关联。",
+      "sources": [
+        "sh.observability"
+      ]
+    },
+    "T06": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "T07": {
+      "availability": "不适用",
+      "detail": "核心定位不包含该专门分析模块；未将任意JS或CDP可编程性算成成品功能。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "T08": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "S01": {
+      "availability": "部分",
+      "detail": "同仓browse network捕获可落地文件；未核实统一持久数据库重开查询API。",
+      "sources": [
+        "sh.cli"
+      ]
+    },
+    "S02": {
+      "availability": "云端",
+      "detail": "Browserbase session metadata与控制台筛选，非请求注释系统。",
+      "sources": [
+        "sh.observability"
+      ]
+    },
+    "S03": {
+      "availability": "部分",
+      "detail": "云session下载导出及Page.pdf、上传文件；本地完整下载追踪未核实。",
+      "sources": [
+        "sh.cli",
+        "sh.ref.page"
+      ]
+    },
+    "S04": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "S05": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sh.ref.stagehand"
+      ]
+    },
+    "S06": {
+      "availability": "部分",
+      "detail": "CLI network clear、wait超时与模型预算；未提供可查的持久消息截断元数据。",
+      "sources": [
+        "sh.cli",
+        "sh.ref.stagehand"
+      ]
+    },
+    "S07": {
+      "availability": "部分",
+      "detail": "本地网络文件、截图/PDF和云下载zip/回放；非统一证据包。",
+      "sources": [
+        "sh.cli",
+        "sh.ref.page"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "Stagehand.create配置logging JSON/onLog、metrics、运行时域名策略。",
+      "sources": [
+        "sh.logging",
+        "sh.ref.stagehand",
+        "sh.ref.context"
+      ]
+    },
+    "X02": {
+      "availability": "可选",
+      "detail": "官方Agent框架集成、Browse.sh技能和WebMCP；不等同代理addon。",
+      "sources": [
+        "sh.frameworks",
+        "sh.cli",
+        "sh.ref.webmcp"
+      ]
+    },
+    "X03": {
+      "availability": "部分",
+      "detail": "MCP run权限由调用Agent决定；应用需按框架配置tool approval。",
+      "sources": [
+        "sh.mcp",
+        "sh.approval"
+      ]
+    },
+    "X04": {
+      "availability": "云端",
+      "detail": "Browserbase API key；附着CDP可传认证头，本地MCP为stdio。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "X05": {
+      "availability": "原生",
+      "detail": "Stagehand.close与browser.close分离；附着与自己创建的浏览器资源责任有公开说明。",
+      "sources": [
+        "sh.browser"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "Stagehand.create配置logging JSON/onLog、metrics、运行时域名策略。",
+      "sources": [
+        "sh.logging",
+        "sh.ref.stagehand",
+        "sh.ref.context"
+      ]
+    }
+  },
+  "notes": [
+    "固定HEAD读取v4所有公开reference、完整docs导航、配置/缓存/部署/集成文档和同仓browse CLI；没有安装运行竞品。",
+    "最关键版本变化：4.0.0已移除v3 agent()，旧references/agent文档仍留在仓库，不能作为v4当前功能。",
+    "v4正式API面为TypeScript/Python/Go；方法列表以TypeScript名字去重，Python snake_case及Go等价名见各参考，不逐个别名重复计数。",
+    "浏览器运行时是扩展service worker，Page.on为通用CDP事件订阅；没有据此推定已提供SSE事件持久存储、Heap诊断等成品能力。",
+    "Browserbase Gateway、缓存、Fetch/Search、Functions和云Dashboard均单列云端；具体套餐限制未证实处不猜测付费档。",
+    "同仓browse CLI是独立可选产品面；其网络落地文件不等于Stagehand SDK自身提供持久数据库。",
+    "抽取计数：features为有意义的产品能力；interfaces为具名公开操作，SDK方法、HTTP方法+路径、MCP工具、CLI命令和工作流块分别保留类别；不展开每个参数、结果字段、语言别名或底层通用协议全集。接口分组计数：{\"Browserbase云端附加服务\": 2, \"WebMCP/事件订阅\": 4, \"v4 Response API\": 16, \"v4 clipboard API\": 6, \"v4 context API\": 12, \"v4 locator API\": 19, \"v4 page API\": 29, \"v4 stagehand API\": 7, \"同仓CLI：Cloud\": 20, \"同仓CLI：Functions\": 4, \"同仓CLI：交互\": 14, \"同仓CLI：会话\": 3, \"同仓CLI：导航\": 4, \"同仓CLI：技能\": 4, \"同仓CLI：标签页\": 4, \"同仓CLI：模板\": 3, \"同仓CLI：网络\": 5, \"同仓CLI：观察\": 14, \"实验MCP适配器\": 3, \"浏览器工厂与扩展\": 6}",
+    "106项横向维度全部有状态与证据；“未证实”表示查阅上述范围仍缺明确合同，“不适用”表示定位之外，均不按缺少README描述判断为没有。可选集成、官方托管云和内置能力已分开；没有实测性能结论。"
+  ]
+}

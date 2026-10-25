@@ -1,0 +1,2574 @@
+{
+  "project": "Playwright MCP",
+  "repo": "https://github.com/microsoft/playwright-mcp",
+  "revision": "0c4107acbecb75472b23c05c0e42471a0011874f",
+  "version": "0.0.83（package.json；正式发布 v0.0.83 于 2026-09-28；HEAD 可能含发布后文档变化）",
+  "license": "Apache-2.0",
+  "sources": [
+    {
+      "id": "readme",
+      "title": "固定版本 README 与完整 MCP 工具目录",
+      "url": "https://github.com/microsoft/playwright-mcp/blob/0c4107acbecb75472b23c05c0e42471a0011874f/README.md"
+    },
+    {
+      "id": "config",
+      "title": "固定版本配置类型",
+      "url": "https://github.com/microsoft/playwright-mcp/blob/0c4107acbecb75472b23c05c0e42471a0011874f/config.d.ts"
+    },
+    {
+      "id": "package",
+      "title": "包版本、依赖与运行要求",
+      "url": "https://github.com/microsoft/playwright-mcp/blob/0c4107acbecb75472b23c05c0e42471a0011874f/package.json"
+    },
+    {
+      "id": "sdk",
+      "title": "JavaScript 嵌入接口",
+      "url": "https://github.com/microsoft/playwright-mcp/blob/0c4107acbecb75472b23c05c0e42471a0011874f/index.d.ts"
+    },
+    {
+      "id": "release",
+      "title": "正式发布 v0.0.83",
+      "url": "https://github.com/microsoft/playwright-mcp/releases/tag/v0.0.83"
+    },
+    {
+      "id": "engine_tools",
+      "title": "锁定依赖版本的工具过滤规则",
+      "url": "https://github.com/microsoft/playwright/blob/e8149b8257d32dcf8f72573ecc43e72439da7080/packages/playwright-core/src/tools/backend/tools.ts"
+    },
+    {
+      "id": "engine_webmcp",
+      "title": "锁定依赖版本的动态 WebMCP 暴露",
+      "url": "https://github.com/microsoft/playwright/blob/e8149b8257d32dcf8f72573ecc43e72439da7080/packages/playwright-core/src/tools/backend/webmcp.ts"
+    },
+    {
+      "id": "engine_tab",
+      "title": "快照、引用和下载实现",
+      "url": "https://github.com/microsoft/playwright/blob/e8149b8257d32dcf8f72573ecc43e72439da7080/packages/playwright-core/src/tools/backend/tab.ts"
+    },
+    {
+      "id": "engine_response",
+      "title": "MCP 图片、事件及产物输出",
+      "url": "https://github.com/microsoft/playwright/blob/e8149b8257d32dcf8f72573ecc43e72439da7080/packages/playwright-core/src/tools/backend/response.ts"
+    },
+    {
+      "id": "engine_mcp",
+      "title": "嵌入 MCP server 的实现",
+      "url": "https://github.com/microsoft/playwright/blob/e8149b8257d32dcf8f72573ecc43e72439da7080/packages/playwright-core/src/tools/mcp/index.ts"
+    },
+    {
+      "id": "npm_engine",
+      "title": "依赖版本的 gitHead 元数据",
+      "url": "https://registry.npmjs.org/playwright-core/1.64.0-alpha-1790635538000"
+    }
+  ],
+  "features": [
+    {
+      "id": "mcp",
+      "category": "接入",
+      "name": "本地 MCP 与远程 HTTP",
+      "availability": "原生",
+      "detail": "stdio 启动；--port 提供 HTTP MCP 接入。服务负责浏览器工具，不内置任务模型。",
+      "sources": [
+        "readme",
+        "engine_mcp"
+      ],
+      "interfaces": [
+        "--port",
+        "--host"
+      ]
+    },
+    {
+      "id": "sdk",
+      "category": "接入",
+      "name": "嵌入式 Server",
+      "availability": "原生",
+      "detail": "createConnection 接受配置和 BrowserContext getter，可嵌入应用。",
+      "sources": [
+        "sdk"
+      ],
+      "interfaces": [
+        "createConnection(config?, contextGetter?)"
+      ]
+    },
+    {
+      "id": "caps",
+      "category": "接入",
+      "name": "按能力裁剪工具",
+      "availability": "原生",
+      "detail": "核心工具默认；config/network/storage/devtools/vision/pdf/testing 需显式能力组。README 顶部 --caps 简短枚举并非完整清单，以工具组和 Config 类型为准。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ],
+      "interfaces": [
+        "--caps"
+      ]
+    },
+    {
+      "id": "engine",
+      "category": "浏览器",
+      "name": "多引擎与启动模式",
+      "availability": "原生",
+      "detail": "Chromium/Chrome/Edge、Firefox、WebKit；可 headed/headless、指定可执行文件。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--browser",
+        "--headless",
+        "--executable-path"
+      ]
+    },
+    {
+      "id": "attach",
+      "category": "浏览器",
+      "name": "已有浏览器与远程连接",
+      "availability": "可选",
+      "detail": "CDP 带连接头/超时；Playwright remoteEndpoint；Chrome/Edge 扩展连接现有登录浏览器。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--cdp-endpoint",
+        "--cdp-header",
+        "--cdp-timeout",
+        "--endpoint",
+        "--extension"
+      ]
+    },
+    {
+      "id": "profile",
+      "category": "状态",
+      "name": "持久和隔离配置",
+      "availability": "原生",
+      "detail": "支持 user-data-dir、isolated、storage-state 与 HTTP 共享 Context；单用户目录并行使用有锁约束。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--user-data-dir",
+        "--isolated",
+        "--shared-browser-context",
+        "--storage-state"
+      ]
+    },
+    {
+      "id": "navigate",
+      "category": "交互",
+      "name": "导航和标签页",
+      "availability": "原生",
+      "detail": "导航、返回，以及创建/选择/关闭标签页；固定 MCP 目录不把兄弟 CLI 的独立 forward/reload 算进来。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_navigate",
+        "browser_navigate_back",
+        "browser_tabs",
+        "browser_close"
+      ]
+    },
+    {
+      "id": "form",
+      "category": "交互",
+      "name": "表单、键盘与指针",
+      "availability": "原生",
+      "detail": "点击、悬停、拖拽、填写表单、逐字输入、按键和下拉选择。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_click",
+        "browser_hover",
+        "browser_drag",
+        "browser_fill_form",
+        "browser_type",
+        "browser_press_key",
+        "browser_select_option"
+      ]
+    },
+    {
+      "id": "vision",
+      "category": "交互",
+      "name": "坐标操作",
+      "availability": "可选",
+      "detail": "vision 能力组提供坐标点击、拖动、鼠标上下和滚轮。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_mouse_click_xy",
+        "browser_mouse_drag_xy",
+        "browser_mouse_down",
+        "browser_mouse_up",
+        "browser_mouse_move_xy",
+        "browser_mouse_wheel"
+      ]
+    },
+    {
+      "id": "dialogs",
+      "category": "交互",
+      "name": "对话框和文件操作",
+      "availability": "原生",
+      "detail": "显式对话框、文件选择器上传、向元素拖放文件或 MIME 数据。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_handle_dialog",
+        "browser_file_upload",
+        "browser_drop"
+      ]
+    },
+    {
+      "id": "download",
+      "category": "交互",
+      "name": "下载自动保存与事件",
+      "availability": "原生",
+      "detail": "页面下载有开始/完成事件，保存到产物目录；没有独立 download-status 查询工具。",
+      "sources": [
+        "engine_tab",
+        "engine_response"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "snapshot",
+      "category": "观察",
+      "name": "ARIA refs 与裁剪",
+      "availability": "原生",
+      "detail": "快照带元素引用；target 子树、depth、boxes 和快照搜索减小上下文；过期 ref 明确要求重新观察。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ],
+      "interfaces": [
+        "browser_snapshot",
+        "browser_find"
+      ]
+    },
+    {
+      "id": "snapshot_delta",
+      "category": "观察",
+      "name": "独立增量快照接口",
+      "availability": "未提供",
+      "detail": "已核对固定 MCP 快照 schema 和 tab 实现，提供全量或子树快照及搜索，没有 delta/base_snapshot_id 参数合同；不等于 Playwright 其他接口不能构建差异。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ],
+      "interfaces": [
+        "browser_snapshot"
+      ]
+    },
+    {
+      "id": "capture",
+      "category": "观察",
+      "name": "截图与图片响应",
+      "availability": "原生",
+      "detail": "页面或元素截图；可选择图片允许/省略/仅图片，支持尺寸和坐标表达。",
+      "sources": [
+        "readme",
+        "engine_response"
+      ],
+      "interfaces": [
+        "browser_take_screenshot",
+        "--image-responses",
+        "--snapshot-boxes"
+      ]
+    },
+    {
+      "id": "pdf",
+      "category": "产物",
+      "name": "页面 PDF",
+      "availability": "可选",
+      "detail": "pdf 能力组提供页面 PDF 保存。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_pdf_save"
+      ]
+    },
+    {
+      "id": "evaluate",
+      "category": "调试",
+      "name": "页面及宿主代码入口",
+      "availability": "原生",
+      "detail": "browser_evaluate 在页面执行；browser_run_code_unsafe 在服务进程执行 Playwright 代码，二者信任范围不同。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_evaluate",
+        "browser_run_code_unsafe"
+      ]
+    },
+    {
+      "id": "wait",
+      "category": "交互",
+      "name": "显式等待与超时",
+      "availability": "原生",
+      "detail": "等待文本出现/消失或时间；可配置动作、导航、expect 和动作后 settle 时间。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "browser_wait_for",
+        "--timeout-action",
+        "--timeout-navigation",
+        "--timeout-settle"
+      ]
+    },
+    {
+      "id": "environment",
+      "category": "环境",
+      "name": "设备、媒体和权限",
+      "availability": "原生",
+      "detail": "设备/移动模拟、viewport、UA、权限、CSS 媒体特征和初始化脚本。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "browser_emulate_media",
+        "browser_resize",
+        "--device",
+        "--mobile",
+        "--grant-permissions",
+        "--init-script",
+        "--init-page"
+      ]
+    },
+    {
+      "id": "network_read",
+      "category": "网络",
+      "name": "浏览器请求摘要和详情",
+      "availability": "原生",
+      "detail": "请求列表可筛选，详情可按 part 读取头和正文并保存文件；作用于受控浏览器，不是独立 MITM 数据库。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_network_requests",
+        "browser_network_request"
+      ]
+    },
+    {
+      "id": "network_route",
+      "category": "网络",
+      "name": "浏览器路由与离线",
+      "availability": "可选",
+      "detail": "network 组提供 mock route、列出/移除路由和在线/离线切换。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_route",
+        "browser_route_list",
+        "browser_unroute",
+        "browser_network_state_set"
+      ]
+    },
+    {
+      "id": "proxy",
+      "category": "网络",
+      "name": "上游代理和源过滤",
+      "availability": "可选",
+      "detail": "可配置浏览器代理及绕过域名；源黑白名单不是完整安全边界，文档明确不覆盖重定向。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--proxy-server",
+        "--proxy-bypass",
+        "--allowed-origins",
+        "--blocked-origins"
+      ]
+    },
+    {
+      "id": "storage",
+      "category": "状态",
+      "name": "Cookie 与 Web Storage 管理",
+      "availability": "可选",
+      "detail": "storage 组提供 Cookie、localStorage、sessionStorage CRUD 和存储状态文件导入导出。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_cookie_list",
+        "browser_localstorage_list",
+        "browser_sessionstorage_list",
+        "browser_storage_state",
+        "browser_set_storage_state"
+      ]
+    },
+    {
+      "id": "console",
+      "category": "调试",
+      "name": "Console 读取与过滤",
+      "availability": "原生",
+      "detail": "读取控制台消息，可配置返回级别。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_console_messages",
+        "--console-level"
+      ]
+    },
+    {
+      "id": "trace",
+      "category": "调试",
+      "name": "执行 trace 与视频",
+      "availability": "可选",
+      "detail": "devtools 组有 trace、录屏、视频章节和动作叠层；这是执行产物，不等同于性能洞察引擎。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_start_tracing",
+        "browser_stop_tracing",
+        "browser_start_video",
+        "browser_stop_video",
+        "browser_video_chapter",
+        "browser_video_show_actions",
+        "browser_video_hide_actions"
+      ]
+    },
+    {
+      "id": "manual",
+      "category": "工作流",
+      "name": "人工演示、标注和脚本继续",
+      "availability": "可选",
+      "detail": "devtools 组可记录人工操作为代码、等待人工标注、显示高亮，并继续/单步暂停脚本。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_start_recording",
+        "browser_stop_recording",
+        "browser_annotate",
+        "browser_highlight",
+        "browser_hide_highlight",
+        "browser_resume"
+      ]
+    },
+    {
+      "id": "assertions",
+      "category": "验证",
+      "name": "页面断言",
+      "availability": "可选",
+      "detail": "testing 组验证元素、文本、列表和表单值，并生成定位器；不自动推断业务完成。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": [
+        "browser_generate_locator",
+        "browser_verify_element_visible",
+        "browser_verify_text_visible",
+        "browser_verify_list_visible",
+        "browser_verify_value"
+      ]
+    },
+    {
+      "id": "webmcp",
+      "category": "扩展",
+      "name": "页面提供的动态工具",
+      "availability": "部分",
+      "detail": "配置默认收集页面 WebMCP；固定依赖中的 browser_webmcp_list/call 为 skillOnly，不列为固定 MCP 工具；MCP 使用动态 webmcp_<name>。依赖页面实现与浏览器支持。",
+      "sources": [
+        "config",
+        "engine_tools",
+        "engine_webmcp"
+      ],
+      "interfaces": [
+        "webmcp_<page_tool_name>",
+        "--no-webmcp"
+      ]
+    },
+    {
+      "id": "output",
+      "category": "存储",
+      "name": "产物保存与大小预算",
+      "availability": "原生",
+      "detail": "可保存会话、快照、请求详情、图片、trace 和视频；outputMaxSize 驱逐旧产物，并可配置路径表达。未证明存在可重开的持久流量查询库。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_response"
+      ],
+      "interfaces": [
+        "--save-session",
+        "--output-dir",
+        "--output-max-size",
+        "--file-paths"
+      ]
+    },
+    {
+      "id": "security",
+      "category": "边界",
+      "name": "文件范围、Host 检查与秘密替换",
+      "availability": "部分",
+      "detail": "默认工作区文件限制、服务 Host 检查和秘密值输出替换；配置类型明确文件与秘密机制是便利护栏，不是强制沙箱。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--allowed-hosts",
+        "--allow-unrestricted-file-access",
+        "--secrets",
+        "--sandbox"
+      ]
+    },
+    {
+      "id": "lifecycle",
+      "category": "运行",
+      "name": "空闲与借用浏览器生命周期",
+      "availability": "原生",
+      "detail": "空闲关闭并可重启自建浏览器；附着已有浏览器的默认行为与自建模式不同，具体受 idle 配置约束。",
+      "sources": [
+        "readme",
+        "config"
+      ],
+      "interfaces": [
+        "--idle-timeout"
+      ]
+    },
+    {
+      "id": "delivery",
+      "category": "交付",
+      "name": "npm、Docker 和客户端接入",
+      "availability": "原生",
+      "detail": "提供 npm/npx、Docker 路径及多个 MCP 客户端安装示例；Node >=18。Docker 的浏览器/显示约束需按 README 使用。",
+      "sources": [
+        "readme",
+        "package"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "cli_boundary",
+      "category": "接入",
+      "name": "官方兄弟 CLI",
+      "availability": "部分",
+      "detail": "README 推荐编码 Agent 考虑 Playwright CLI+skills；它是另一入口，未将其所有命令直接计入本包固定 MCP 功能。",
+      "sources": [
+        "readme"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "message_boundary",
+      "category": "实时消息",
+      "name": "应用消息存储合同",
+      "availability": "未证实",
+      "detail": "已查固定工具、网络和输出接口；未证实有开放连接期间的 SSE/WS 事件级持久记录与游标。MCP 传输使用 SSE 不等于采集应用 SSE。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ],
+      "interfaces": []
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "browser_click",
+      "category": "MCP / Core automation",
+      "purpose": "点击元素",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_close",
+      "category": "MCP / Core automation",
+      "purpose": "关闭页面或浏览器",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_console_messages",
+      "category": "MCP / Core automation",
+      "purpose": "读取控制台记录",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_drag",
+      "category": "MCP / Core automation",
+      "purpose": "在元素间拖拽",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_drop",
+      "category": "MCP / Core automation",
+      "purpose": "向页面拖入文件或 MIME 数据",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_emulate_media",
+      "category": "MCP / Core automation",
+      "purpose": "模拟颜色与 CSS 媒体特征",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_evaluate",
+      "category": "MCP / Core automation",
+      "purpose": "在页面或元素执行 JavaScript",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_file_upload",
+      "category": "MCP / Core automation",
+      "purpose": "完成文件选择器上传",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_fill_form",
+      "category": "MCP / Core automation",
+      "purpose": "一次填写多个表单字段",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_find",
+      "category": "MCP / Core automation",
+      "purpose": "按文字或正则检索快照上下文",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_handle_dialog",
+      "category": "MCP / Core automation",
+      "purpose": "显式接受或取消原生对话框",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_hover",
+      "category": "MCP / Core automation",
+      "purpose": "悬停元素",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_navigate",
+      "category": "MCP / Core automation",
+      "purpose": "导航到 URL",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_navigate_back",
+      "category": "MCP / Core automation",
+      "purpose": "返回上一页",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_network_request",
+      "category": "MCP / Core automation",
+      "purpose": "读取指定请求的头和正文",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_network_requests",
+      "category": "MCP / Core automation",
+      "purpose": "列出并过滤页面请求",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_press_key",
+      "category": "MCP / Core automation",
+      "purpose": "发送按键",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_resize",
+      "category": "MCP / Core automation",
+      "purpose": "调整浏览器窗口",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_run_code_unsafe",
+      "category": "MCP / Core automation",
+      "purpose": "在服务进程执行 Playwright 代码",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_select_option",
+      "category": "MCP / Core automation",
+      "purpose": "选择下拉选项",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_snapshot",
+      "category": "MCP / Core automation",
+      "purpose": "读取带引用的 ARIA 快照",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_take_screenshot",
+      "category": "MCP / Core automation",
+      "purpose": "保存或返回页面或元素截图",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_type",
+      "category": "MCP / Core automation",
+      "purpose": "填写或逐字输入文本",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_wait_for",
+      "category": "MCP / Core automation",
+      "purpose": "等待文字变化或指定时长",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_tabs",
+      "category": "MCP / Tab management",
+      "purpose": "列出、创建、切换和关闭标签页",
+      "availability": "原生",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_get_config",
+      "category": "MCP / Configuration (opt-in via --caps=config)",
+      "purpose": "读取合并后的实际配置；Configuration (opt-in via --caps=config)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_network_state_set",
+      "category": "MCP / Network (opt-in via --caps=network)",
+      "purpose": "切换在线或离线状态；Network (opt-in via --caps=network)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_route",
+      "category": "MCP / Network (opt-in via --caps=network)",
+      "purpose": "配置浏览器网络回应规则；Network (opt-in via --caps=network)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_route_list",
+      "category": "MCP / Network (opt-in via --caps=network)",
+      "purpose": "列出网络路由；Network (opt-in via --caps=network)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_unroute",
+      "category": "MCP / Network (opt-in via --caps=network)",
+      "purpose": "删除网络路由；Network (opt-in via --caps=network)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_cookie_clear",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "清空Cookie记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_cookie_delete",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "删除Cookie记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_cookie_get",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "读取Cookie记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_cookie_list",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "列出Cookie记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_cookie_set",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "设置Cookie记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_localstorage_clear",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "清空localStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_localstorage_delete",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "删除localStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_localstorage_get",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "读取localStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_localstorage_list",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "列出localStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_localstorage_set",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "设置localStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_sessionstorage_clear",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "清空sessionStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_sessionstorage_delete",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "删除sessionStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_sessionstorage_get",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "读取sessionStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_sessionstorage_list",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "列出sessionStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_sessionstorage_set",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "设置sessionStorage记录；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_set_storage_state",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "从文件恢复 Cookie 和本地存储；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_storage_state",
+      "category": "MCP / Storage (opt-in via --caps=storage)",
+      "purpose": "将浏览器存储状态保存到文件；Storage (opt-in via --caps=storage)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_annotate",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "等待人工页面标注并返回图像与快照；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_hide_highlight",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "移除元素高亮；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_highlight",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "高亮页面元素；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_resume",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "继续或单步运行已暂停脚本；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_start_recording",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "开始记录人工操作代码；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_start_tracing",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "开始执行 trace；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_start_video",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "开始录制视频；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_stop_recording",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "结束并返回人工操作代码；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_stop_tracing",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "结束并保存 trace；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_stop_video",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "结束并保存视频；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_video_chapter",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "添加视频章节卡片；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_video_hide_actions",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "隐藏视频动作标注；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_video_show_actions",
+      "category": "MCP / DevTools (opt-in via --caps=devtools)",
+      "purpose": "显示视频动作标注；DevTools (opt-in via --caps=devtools)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_mouse_click_xy",
+      "category": "MCP / Coordinate-based (opt-in via --caps=vision)",
+      "purpose": "点击页面坐标；Coordinate-based (opt-in via --caps=vision)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_mouse_down",
+      "category": "MCP / Coordinate-based (opt-in via --caps=vision)",
+      "purpose": "按下鼠标键；Coordinate-based (opt-in via --caps=vision)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_mouse_drag_xy",
+      "category": "MCP / Coordinate-based (opt-in via --caps=vision)",
+      "purpose": "拖动到页面坐标；Coordinate-based (opt-in via --caps=vision)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_mouse_move_xy",
+      "category": "MCP / Coordinate-based (opt-in via --caps=vision)",
+      "purpose": "移动到页面坐标；Coordinate-based (opt-in via --caps=vision)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_mouse_up",
+      "category": "MCP / Coordinate-based (opt-in via --caps=vision)",
+      "purpose": "松开鼠标键；Coordinate-based (opt-in via --caps=vision)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_mouse_wheel",
+      "category": "MCP / Coordinate-based (opt-in via --caps=vision)",
+      "purpose": "滚动鼠标滚轮；Coordinate-based (opt-in via --caps=vision)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_pdf_save",
+      "category": "MCP / PDF generation (opt-in via --caps=pdf)",
+      "purpose": "将页面保存为 PDF；PDF generation (opt-in via --caps=pdf)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_generate_locator",
+      "category": "MCP / Test assertions (opt-in via --caps=testing)",
+      "purpose": "生成元素测试定位器；Test assertions (opt-in via --caps=testing)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_verify_element_visible",
+      "category": "MCP / Test assertions (opt-in via --caps=testing)",
+      "purpose": "验证指定角色元素可见；Test assertions (opt-in via --caps=testing)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_verify_list_visible",
+      "category": "MCP / Test assertions (opt-in via --caps=testing)",
+      "purpose": "验证列表可见；Test assertions (opt-in via --caps=testing)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_verify_text_visible",
+      "category": "MCP / Test assertions (opt-in via --caps=testing)",
+      "purpose": "验证页面文字可见；Test assertions (opt-in via --caps=testing)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "browser_verify_value",
+      "category": "MCP / Test assertions (opt-in via --caps=testing)",
+      "purpose": "验证表单元素值；Test assertions (opt-in via --caps=testing)",
+      "availability": "可选",
+      "sources": [
+        "readme"
+      ]
+    },
+    {
+      "name": "--allowed-hosts",
+      "category": "启动配置",
+      "purpose": "设置服务接入 Host 检查",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--allowed-origins",
+      "category": "启动配置",
+      "purpose": "配置允许请求的源；不是安全隔离边界",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--allow-unrestricted-file-access",
+      "category": "启动配置",
+      "purpose": "扩大本地文件与 file URL 可访问范围",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--blocked-origins",
+      "category": "启动配置",
+      "purpose": "配置请求源黑名单；不覆盖重定向",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--block-service-workers",
+      "category": "启动配置",
+      "purpose": "禁止 Service Worker",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--browser",
+      "category": "启动配置",
+      "purpose": "选择 Chrome、Firefox、WebKit 或 Edge",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--caps",
+      "category": "启动配置",
+      "purpose": "启用可选工具能力组",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--cdp-endpoint",
+      "category": "启动配置",
+      "purpose": "连接已有 Chromium CDP 服务",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--cdp-header",
+      "category": "启动配置",
+      "purpose": "配置 CDP 连接头",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--cdp-timeout",
+      "category": "启动配置",
+      "purpose": "设置 CDP 连接超时",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--codegen",
+      "category": "启动配置",
+      "purpose": "选择操作代码生成语言",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--config",
+      "category": "启动配置",
+      "purpose": "加载配置文件",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--console-level",
+      "category": "启动配置",
+      "purpose": "选择控制台日志级别",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--device",
+      "category": "启动配置",
+      "purpose": "选择设备模拟配置",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--mobile",
+      "category": "启动配置",
+      "purpose": "启用移动设备模拟",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--executable-path",
+      "category": "启动配置",
+      "purpose": "指定浏览器程序路径",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--extension",
+      "category": "启动配置",
+      "purpose": "通过扩展连接现有浏览器",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--endpoint",
+      "category": "启动配置",
+      "purpose": "连接已有 Playwright 浏览器服务",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--file-paths",
+      "category": "启动配置",
+      "purpose": "选择产物路径表示方式",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--grant-permissions",
+      "category": "启动配置",
+      "purpose": "配置浏览器权限",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--headless",
+      "category": "启动配置",
+      "purpose": "无头启动浏览器",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--host",
+      "category": "启动配置",
+      "purpose": "设置 MCP 监听地址",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--idle-timeout",
+      "category": "启动配置",
+      "purpose": "设置空闲资源释放时间",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--ignore-https-errors",
+      "category": "启动配置",
+      "purpose": "允许忽略 HTTPS 证书错误",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--init-page",
+      "category": "启动配置",
+      "purpose": "加载 Playwright 页面初始化代码",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--init-script",
+      "category": "启动配置",
+      "purpose": "加载文档启动前的页面脚本",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--isolated",
+      "category": "启动配置",
+      "purpose": "使用内存隔离浏览器配置",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--image-responses",
+      "category": "启动配置",
+      "purpose": "选择图片返回策略",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--no-sandbox",
+      "category": "启动配置",
+      "purpose": "修改浏览器进程沙箱设置",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--no-webmcp",
+      "category": "启动配置",
+      "purpose": "禁止收集和暴露页面 WebMCP 工具",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--output-dir",
+      "category": "启动配置",
+      "purpose": "设置自动命名产物目录",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--output-max-size",
+      "category": "启动配置",
+      "purpose": "设置产物驱逐预算",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--port",
+      "category": "启动配置",
+      "purpose": "启动 HTTP MCP 服务",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--profile-dir-name",
+      "category": "启动配置",
+      "purpose": "指定扩展连接使用的浏览器配置",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--proxy-bypass",
+      "category": "启动配置",
+      "purpose": "设置代理绕过域名",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--proxy-server",
+      "category": "启动配置",
+      "purpose": "设置浏览器上游代理",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--sandbox",
+      "category": "启动配置",
+      "purpose": "启用浏览器进程沙箱",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--save-session",
+      "category": "启动配置",
+      "purpose": "保存当前操作会话产物",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--secrets",
+      "category": "启动配置",
+      "purpose": "加载输出秘密值替换配置",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--shared-browser-context",
+      "category": "启动配置",
+      "purpose": "在 HTTP 客户端间共享浏览器 Context",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--snapshot-boxes",
+      "category": "启动配置",
+      "purpose": "在快照加入元素坐标",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--snapshot-mode",
+      "category": "启动配置",
+      "purpose": "选择自动快照返回模式",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--storage-state",
+      "category": "启动配置",
+      "purpose": "加载隔离会话初始状态",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--test-id-attribute",
+      "category": "启动配置",
+      "purpose": "指定测试 ID 属性",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--timeout-action",
+      "category": "启动配置",
+      "purpose": "设置动作超时",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--timeout-navigation",
+      "category": "启动配置",
+      "purpose": "设置导航超时",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--timeout-settle",
+      "category": "启动配置",
+      "purpose": "设置动作后观察收敛等待",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--user-agent",
+      "category": "启动配置",
+      "purpose": "设置浏览器用户代理",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--user-data-dir",
+      "category": "启动配置",
+      "purpose": "设置持久用户目录",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "--viewport-size",
+      "category": "启动配置",
+      "purpose": "设置初始视口",
+      "availability": "可选",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    {
+      "name": "createConnection(config?, contextGetter?)",
+      "category": "嵌入 SDK",
+      "purpose": "创建可嵌入 MCP Server，并可注入现有 BrowserContext",
+      "availability": "原生",
+      "sources": [
+        "sdk",
+        "engine_mcp"
+      ]
+    },
+    {
+      "name": "webmcp_<page_tool_name>",
+      "category": "动态 MCP 工具",
+      "purpose": "将页面注册工具转换为动态 MCP 接口；名称取决于页面，输出视为不可信",
+      "availability": "部分",
+      "sources": [
+        "config",
+        "engine_webmcp"
+      ]
+    }
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "原生",
+      "detail": "本地 MCP server，stdio 接入。",
+      "sources": [
+        "readme",
+        "engine_mcp"
+      ]
+    },
+    "D02": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "D03": {
+      "availability": "原生",
+      "detail": "本地 MCP server，stdio 接入。",
+      "sources": [
+        "readme",
+        "engine_mcp"
+      ]
+    },
+    "D04": {
+      "availability": "原生",
+      "detail": "--port 暴露 HTTP MCP。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "D05": {
+      "availability": "部分",
+      "detail": "同组织另有 CLI+skills；本包 CLI 主要启动 MCP，未混算兄弟 CLI 全部命令。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "D06": {
+      "availability": "部分",
+      "detail": "devtools 标注与 Dashboard 集成；不是持久流量工作台。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "createConnection 可嵌入并注入 BrowserContext。",
+      "sources": [
+        "sdk"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "本地 MCP server，stdio 接入。",
+      "sources": [
+        "readme",
+        "engine_mcp"
+      ]
+    },
+    "D09": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "D10": {
+      "availability": "原生",
+      "detail": "官方 Docker 路径与能力组裁剪。",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    "D11": {
+      "availability": "部分",
+      "detail": "browser_get_config 可读实际配置；未证实专门 doctor。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "D12": {
+      "availability": "原生",
+      "detail": "官方 Docker 路径与能力组裁剪。",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    "B01": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B02": {
+      "availability": "可选",
+      "detail": "CDP、远程 Playwright endpoint 或 Chrome/Edge 扩展。",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    "B03": {
+      "availability": "原生",
+      "detail": "Chromium、Firefox、WebKit。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B04": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B05": {
+      "availability": "原生",
+      "detail": "隔离配置；HTTP 客户端可选 shared-browser-context。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B06": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B07": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B08": {
+      "availability": "原生",
+      "detail": "快照可提供 iframe refs，按引用操作。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ]
+    },
+    "B09": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B10": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B11": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B12": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B13": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B14": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B15": {
+      "availability": "原生",
+      "detail": "下载自动 saveAs 并输出开始/完成事件；没有独立下载列表工具。",
+      "sources": [
+        "engine_tab",
+        "engine_response"
+      ]
+    },
+    "B16": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B17": {
+      "availability": "原生",
+      "detail": "固定浏览器工具和启动配置覆盖；具体动作见 interfaces。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B18": {
+      "availability": "可选",
+      "detail": "storage 能力组提供 Cookie/Web Storage 与文件状态导入导出。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B19": {
+      "availability": "可选",
+      "detail": "storage 能力组提供 Cookie/Web Storage 与文件状态导入导出。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B20": {
+      "availability": "原生",
+      "detail": "设备、媒体、权限、UA 和 viewport 模拟。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "B21": {
+      "availability": "可选",
+      "detail": "network 组明确在线/离线；未单独证明速率节流工具。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "O01": {
+      "availability": "原生",
+      "detail": "ARIA refs、子树/深度/搜索、截图，旧 ref 明确要求新快照。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ]
+    },
+    "O02": {
+      "availability": "原生",
+      "detail": "ARIA refs、子树/深度/搜索、截图，旧 ref 明确要求新快照。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ]
+    },
+    "O03": {
+      "availability": "未提供",
+      "detail": "固定 MCP snapshot schema 无增量参数或基线 ID；tab 返回当前全量或子树。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ]
+    },
+    "O04": {
+      "availability": "原生",
+      "detail": "ARIA refs、子树/深度/搜索、截图，旧 ref 明确要求新快照。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ]
+    },
+    "O05": {
+      "availability": "原生",
+      "detail": "ARIA refs、子树/深度/搜索、截图，旧 ref 明确要求新快照。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ]
+    },
+    "O06": {
+      "availability": "原生",
+      "detail": "ARIA refs、子树/深度/搜索、截图，旧 ref 明确要求新快照。",
+      "sources": [
+        "readme",
+        "engine_tab"
+      ]
+    },
+    "O07": {
+      "availability": "可选",
+      "detail": "devtools 标注和 vision 坐标工具。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "O08": {
+      "availability": "部分",
+      "detail": "结构快照和 evaluate 可读页面；没有独立完整 DOM/文本产品工具。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "O09": {
+      "availability": "未提供",
+      "detail": "固定 MCP 工具目录无 schema 页面提取或内置自然语言动作/语义自愈工具；外部 Agent 能力不混算。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "O10": {
+      "availability": "未提供",
+      "detail": "固定 MCP 工具目录无 schema 页面提取或内置自然语言动作/语义自愈工具；外部 Agent 能力不混算。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "O11": {
+      "availability": "未提供",
+      "detail": "固定 MCP 工具目录无 schema 页面提取或内置自然语言动作/语义自愈工具；外部 Agent 能力不混算。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "O12": {
+      "availability": "可选",
+      "detail": "browser_pdf_save，pdf 能力组。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N01": {
+      "availability": "不适用",
+      "detail": "浏览器 MCP，未提供独立协议代理或 CA 管理产品面。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N02": {
+      "availability": "不适用",
+      "detail": "浏览器 MCP，未提供独立协议代理或 CA 管理产品面。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N03": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "N04": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "N05": {
+      "availability": "不适用",
+      "detail": "浏览器 MCP，未提供独立协议代理或 CA 管理产品面。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N06": {
+      "availability": "部分",
+      "detail": "浏览器可用上游代理和 bypass；不是多模式 MITM 代理。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "页面请求列表过滤与单请求 headers/body；作用域为受控页面。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "页面请求列表过滤与单请求 headers/body；作用域为受控页面。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N09": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "N10": {
+      "availability": "部分",
+      "detail": "浏览器返回可读正文；未据此证明代理层保留原压缩字节或完整字符集合同。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N11": {
+      "availability": "可选",
+      "detail": "浏览器 route/mock，network 组；不是代理规则引擎。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N12": {
+      "availability": "未提供",
+      "detail": "完整固定 MCP 目录未暴露该专用网络接口；通用代码执行不等同于产品化支持。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "N13": {
+      "availability": "未提供",
+      "detail": "完整固定 MCP 目录未暴露该专用网络接口；通用代码执行不等同于产品化支持。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "N14": {
+      "availability": "可选",
+      "detail": "浏览器 route/mock，network 组；不是代理规则引擎。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "N15": {
+      "availability": "未提供",
+      "detail": "完整固定 MCP 目录未暴露该专用网络接口；通用代码执行不等同于产品化支持。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "N16": {
+      "availability": "未提供",
+      "detail": "完整固定 MCP 目录未暴露该专用网络接口；通用代码执行不等同于产品化支持。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "N17": {
+      "availability": "未提供",
+      "detail": "完整固定 MCP 目录未暴露该专用网络接口；通用代码执行不等同于产品化支持。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M01": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M02": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M03": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M04": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M06": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M07": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "M08": {
+      "availability": "未证实",
+      "detail": "已查请求详情与固定 MCP 工具，未证实应用 WS/SSE 消息级观察、持久存储或完整性查询合同。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "W01": {
+      "availability": "未提供",
+      "detail": "本身提供工具，不内置调用模型推进任务的执行循环。",
+      "sources": [
+        "readme",
+        "engine_mcp"
+      ]
+    },
+    "W02": {
+      "availability": "不适用",
+      "detail": "模型由外部 MCP 客户端选择。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W03": {
+      "availability": "部分",
+      "detail": "可注入 Context、接入页面动态 WebMCP；不是内置 Agent 的动作注册 SDK。",
+      "sources": [
+        "sdk",
+        "engine_webmcp"
+      ]
+    },
+    "W04": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "W05": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "W06": {
+      "availability": "可选",
+      "detail": "人工标注、动作录制及暂停脚本继续；不等同于业务审批流程。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W07": {
+      "availability": "部分",
+      "detail": "testing 可验证元素、文本、列表和值；不是自动业务成功判定。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W08": {
+      "availability": "部分",
+      "detail": "可保存会话并录制人工动作代码；未证实持久步骤游标或自动重放恢复。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W09": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "W10": {
+      "availability": "部分",
+      "detail": "持久用户目录和 storage-state 恢复登录状态；非执行中步骤恢复。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W11": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "W12": {
+      "availability": "部分",
+      "detail": "可保存会话并录制人工动作代码；未证实持久步骤游标或自动重放恢复。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W13": {
+      "availability": "原生",
+      "detail": "持久状态、扩展接入现有登录浏览器和秘密输出替换。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "W14": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "W15": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "T01": {
+      "availability": "原生",
+      "detail": "控制台消息与级别配置。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "T02": {
+      "availability": "部分",
+      "detail": "执行 trace 可录制；固定接口无独立性能洞察分析工具。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "T03": {
+      "availability": "未提供",
+      "detail": "完整固定 MCP 工具目录无 Heap 分析工具。",
+      "sources": [
+        "readme",
+        "engine_tools"
+      ]
+    },
+    "T04": {
+      "availability": "可选",
+      "detail": "devtools trace、视频和动作代码录制。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "trace/响应中含事件；未证明 MCP 动作与请求的因果归因。",
+      "sources": [
+        "engine_tab",
+        "engine_response"
+      ]
+    },
+    "T06": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "T07": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "T08": {
+      "availability": "部分",
+      "detail": "可保存快照、trace、视频；无独立请求差异报告工具。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "S01": {
+      "availability": "部分",
+      "detail": "save-session/trace/请求文件属于持久产物；没有流量数据库重开查询合同。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "S02": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "S03": {
+      "availability": "原生",
+      "detail": "下载保存附件字节。",
+      "sources": [
+        "engine_tab"
+      ]
+    },
+    "S04": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "S05": {
+      "availability": "未证实",
+      "detail": "已查固定 MCP 工具目录、配置类型与锁定依赖实现；未证实该维度的正式产品接口。",
+      "sources": [
+        "readme",
+        "config",
+        "engine_tools"
+      ]
+    },
+    "S06": {
+      "availability": "原生",
+      "detail": "outputMaxSize 有产物大小驱逐预算。",
+      "sources": [
+        "config"
+      ]
+    },
+    "S07": {
+      "availability": "原生",
+      "detail": "快照、图片、请求详情、trace、视频等文件产物。",
+      "sources": [
+        "readme"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "CLI、环境变量和 JSON Config；未证明运行时热更新。",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    "X02": {
+      "availability": "部分",
+      "detail": "浏览器扩展与动态页面 WebMCP；不是通用第三方代理 addon。",
+      "sources": [
+        "readme",
+        "engine_webmcp"
+      ]
+    },
+    "X03": {
+      "availability": "部分",
+      "detail": "工具读写类型与客户端权限；文件和秘密替换是护栏，不是强制安全边界。",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    "X04": {
+      "availability": "部分",
+      "detail": "allowedHosts 为 Host/DNS 重绑定检查；未证实内置用户身份认证。",
+      "sources": [
+        "config"
+      ]
+    },
+    "X05": {
+      "availability": "原生",
+      "detail": "明确空闲超时与附着浏览器模式；清理范围依连接方式。",
+      "sources": [
+        "readme",
+        "config"
+      ]
+    },
+    "X06": {
+      "availability": "部分",
+      "detail": "Console、实际配置和服务诊断日志；无统一健康状态 API。",
+      "sources": [
+        "readme"
+      ]
+    }
+  },
+  "notes": [
+    "核对日期 2026-10-25；未运行仓库代码或竞品基准。",
+    "固定 MCP 工具按该 SHA 的 README 全量枚举；配置项单列，不将配置项数当工具数。",
+    "依赖的 playwright-core 版本为 1.64.0-alpha-1790635538000，其 npm gitHead 为 e8149b8257d32dcf8f72573ecc43e72439da7080。",
+    "已核对单独 README、配置声明、嵌入导出、底层工具过滤与关键实现；没有将 Playwright 通用 API 或兄弟 CLI 的能力全部视为本 MCP 原生功能。",
+    "动态页面 WebMCP 工具不能静态穷举，名称模式单列；skillOnly 内部固定工具不冒充公开固定 MCP。",
+    "未证实表示已查范围不足以确认合同，不等于该功能不存在；未提供仅指本次完整固定 MCP 目录未暴露对应正式接口。",
+    "72 个固定 MCP 工具是核心与所有可选能力组的目录并集，不代表默认全部启用；124 接口还包含配置项、SDK 与动态名称模式。"
+  ]
+}

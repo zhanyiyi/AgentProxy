@@ -141,3 +141,11 @@
 - 10 项对比见 [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)。依据官方仓库及文档，不提供未经实测的性能、任务成功率或名次结论。
 
 实现核对了 [mitmproxy stream 合同](https://docs.mitmproxy.org/stable/api/mitmproxy/http.html)、[Brotli Python 增量 API](https://github.com/google/brotli/blob/master/python/_brotli.c) 与 [Zstandard 增量解码及结束状态](https://python-zstandard.readthedocs.io/en/latest/decompressor.html)，并由本地定向场景验证当前环境。
+
+## 第四轮：完整功能清单调研（仅文档）
+
+本轮以 `e8ca17e` 的实际代码为 AgentProxy 基线，核对 10 个相关项目的固定源码、公开工具/SDK/CLI 及官方插件目录。完整报告见 [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)：106 个统一维度、541 个功能分组、2240 个具名条目，原生、可选、云端、付费、部分和未证实分别记录；明细和来源数据位于 `research/competitive/`。
+
+本地调用链复核收窄第二轮“每步自动保存”的覆盖表述：自动检查点和持久回执覆盖统一导航/动作链路，但 `browser_go_back`、`browser_go_forward`、`browser_reload`、`browser_execute_js` 旧入口尚未全部接入。README 与比较表已明确这一差距，未修改业务实现。公开 `traffic_clear` 会同时清理检查点，保留附件与下载文件。
+
+本轮没有运行产品功能测试。已核对 11 份数据的 106 维覆盖、状态与来源引用，以及生成的 12 份 Markdown 的本地链接/锚点、106 行横向 CSV 和 1166 行逐项证据 CSV。

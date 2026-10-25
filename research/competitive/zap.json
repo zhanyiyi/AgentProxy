@@ -1,0 +1,2848 @@
+{
+  "project": "ZAP",
+  "repo": "https://github.com/zaproxy/zaproxy",
+  "revision": "1228a82745c5bb22d9e33e0eeb826c533c359443",
+  "version": "2.17.0（最新正式 core release，2025-12-15）；比较 main HEAD 与当日独立更新的插件。",
+  "license": "Apache-2.0（core）；独立插件和第三方组件各自核对。",
+  "sources": [
+    {
+      "id": "zap-meta",
+      "title": "main HEAD",
+      "url": "https://api.github.com/repos/zaproxy/zaproxy/commits/main"
+    },
+    {
+      "id": "zap-release",
+      "title": "core 最新正式发布",
+      "url": "https://github.com/zaproxy/zaproxy/releases/tag/v2.17.0"
+    },
+    {
+      "id": "zap-license",
+      "title": "core Apache-2.0",
+      "url": "https://github.com/zaproxy/zaproxy/blob/1228a82745c5bb22d9e33e0eeb826c533c359443/LICENSE"
+    },
+    {
+      "id": "zap-readme",
+      "title": "官方定位",
+      "url": "https://github.com/zaproxy/zaproxy/blob/1228a82745c5bb22d9e33e0eeb826c533c359443/README.md"
+    },
+    {
+      "id": "zap-features",
+      "title": "核心功能目录",
+      "url": "https://www.zaproxy.org/docs/desktop/start/features/"
+    },
+    {
+      "id": "zap-market",
+      "title": "插件名称/版本/成熟度",
+      "url": "https://www.zaproxy.org/addons/"
+    },
+    {
+      "id": "zap-cmd",
+      "title": "命令行",
+      "url": "https://www.zaproxy.org/docs/desktop/cmdline/"
+    },
+    {
+      "id": "zap-api",
+      "title": "HTTP API 合同",
+      "url": "https://www.zaproxy.org/docs/desktop/start/features/api/"
+    },
+    {
+      "id": "zap-api-catalogue",
+      "title": "HTTP API 全部公开组",
+      "url": "https://www.zaproxy.org/docs/api/"
+    },
+    {
+      "id": "zap-network",
+      "title": "Network 插件",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/network/"
+    },
+    {
+      "id": "zap-http2",
+      "title": "HTTP/2 支持",
+      "url": "https://www.zaproxy.org/docs/desktop/releases/2.13.0/"
+    },
+    {
+      "id": "zap-local",
+      "title": "监听/透明代理/ALPN/内容解码",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/network/options/localservers/"
+    },
+    {
+      "id": "zap-connection",
+      "title": "上游代理/HTTP状态/TLS",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/network/options/connection/"
+    },
+    {
+      "id": "zap-server-certs",
+      "title": "CA和服务器证书",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/network/options/servercertificates/"
+    },
+    {
+      "id": "zap-client-certs",
+      "title": "客户端证书",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/network/options/clientcertificates/"
+    },
+    {
+      "id": "zap-rate",
+      "title": "网络限速",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/network/options/ratelimit/"
+    },
+    {
+      "id": "zap-auth",
+      "title": "上下文/用户/认证",
+      "url": "https://www.zaproxy.org/docs/desktop/start/features/authentication/"
+    },
+    {
+      "id": "zap-authhelper",
+      "title": "认证辅助",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/authentication-helper/"
+    },
+    {
+      "id": "zap-oauth",
+      "title": "OAuth2初步范围",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/authentication-helper/oauth2-auth/"
+    },
+    {
+      "id": "zap-session",
+      "title": "会话数据库持续记录与重开",
+      "url": "https://www.zaproxy.org/docs/desktop/ui/dialogs/persistsession/"
+    },
+    {
+      "id": "zap-database",
+      "title": "正文预算/恢复日志/数据库压缩",
+      "url": "https://www.zaproxy.org/docs/desktop/ui/dialogs/options/database/"
+    },
+    {
+      "id": "zap-exim",
+      "title": "HAR/消息/站点树导入导出",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/import-export/"
+    },
+    {
+      "id": "zap-reports",
+      "title": "模板报告",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/report-generation/"
+    },
+    {
+      "id": "zap-diff",
+      "title": "请求响应差异",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/diff/"
+    },
+    {
+      "id": "zap-replacer",
+      "title": "替换规则",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/replacer/"
+    },
+    {
+      "id": "zap-maplocal",
+      "title": "本地响应映射",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/map-local/"
+    },
+    {
+      "id": "zap-ws",
+      "title": "WebSocket插件",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/websockets/"
+    },
+    {
+      "id": "zap-ws-api",
+      "title": "WebSocket API",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/websockets/api/"
+    },
+    {
+      "id": "zap-sse",
+      "title": "SSE插件",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/server-sent-events/"
+    },
+    {
+      "id": "zap-automation",
+      "title": "YAML任务/认证/Job Tests",
+      "url": "https://www.zaproxy.org/docs/automate/automation-framework/"
+    },
+    {
+      "id": "zap-selenium",
+      "title": "浏览器/WebDriver脚本",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/selenium/"
+    },
+    {
+      "id": "zap-client",
+      "title": "ClientMap/DOM/客户端历史",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/client-side-integration/"
+    },
+    {
+      "id": "zap-zest",
+      "title": "录制/编辑/回放脚本",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/zest/"
+    },
+    {
+      "id": "zap-zest-control",
+      "title": "Zest条件/循环/断言源码",
+      "url": "https://github.com/zaproxy/zest/tree/5cff406fbbe575abdff0e336ae5053970ecbb61a/src/main/java/org/zaproxy/zest/core/v1"
+    },
+    {
+      "id": "zap-scripts",
+      "title": "JSR-223脚本类别",
+      "url": "https://www.zaproxy.org/docs/desktop/start/features/scripts/"
+    },
+    {
+      "id": "zap-hud",
+      "title": "浏览器内HUD",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/hud/"
+    },
+    {
+      "id": "zap-mcp",
+      "title": "官方MCP插件与访问合同",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/mcp-integration/"
+    },
+    {
+      "id": "zap-mcp-tools",
+      "title": "MCP工具全集",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/mcp-integration/mcp-tools/"
+    },
+    {
+      "id": "zap-mcp-resources",
+      "title": "MCP资源全集",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/mcp-integration/mcp-resources/"
+    },
+    {
+      "id": "zap-mcp-prompts",
+      "title": "MCP提示全集",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/mcp-integration/mcp-prompts/"
+    },
+    {
+      "id": "zap-llm",
+      "title": "可选LLM工具调用",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/llm-support/"
+    },
+    {
+      "id": "zap-llm-options",
+      "title": "供应商/模型/Trusted策略",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/llm-support/options/"
+    },
+    {
+      "id": "zap-llm-chat",
+      "title": "聊天/工具回执及切换限制",
+      "url": "https://www.zaproxy.org/docs/desktop/addons/llm-support/chat/"
+    },
+    {
+      "id": "zap-docker",
+      "title": "镜像渠道和healthcheck",
+      "url": "https://www.zaproxy.org/docs/docker/about/"
+    }
+  ],
+  "features": [
+    {
+      "id": "zap-http",
+      "category": "协议",
+      "name": "HTTP(S) 与 HTTP/2",
+      "availability": "原生",
+      "detail": "Network独立更新；HTTP2自2.13正式支持。",
+      "sources": [
+        "zap-network",
+        "zap-http2"
+      ],
+      "interfaces": [
+        "Network"
+      ]
+    },
+    {
+      "id": "zap-modes",
+      "category": "接入",
+      "name": "多监听与透明代理",
+      "availability": "原生",
+      "detail": "可分别启用proxy/API、额外监听、SNI透明HTTPS和TLS透传。",
+      "sources": [
+        "zap-local"
+      ],
+      "interfaces": [
+        "Network"
+      ]
+    },
+    {
+      "id": "zap-upstream",
+      "category": "接入",
+      "name": "HTTP/SOCKS上游、DNS和TLS",
+      "availability": "原生",
+      "detail": "上游凭据/例外、超时/TLS版本、DNS缓存。",
+      "sources": [
+        "zap-connection"
+      ],
+      "interfaces": [
+        "Network"
+      ]
+    },
+    {
+      "id": "zap-decode",
+      "category": "观察",
+      "name": "正文编码处理",
+      "availability": "部分",
+      "detail": "gzip/deflate和指定平台br；不是压缩SSE增量处理证明。",
+      "sources": [
+        "zap-local"
+      ],
+      "interfaces": [
+        "Network"
+      ]
+    },
+    {
+      "id": "zap-traffic",
+      "category": "观察",
+      "name": "HTTP历史/搜索/站点树",
+      "availability": "原生",
+      "detail": "头体、状态、参数、标签/备注和手工请求编辑。",
+      "sources": [
+        "zap-features",
+        "zap-api"
+      ],
+      "interfaces": [
+        "ZAP Desktop",
+        "HTTP API"
+      ]
+    },
+    {
+      "id": "zap-break",
+      "category": "改写",
+      "name": "HTTP断点与继续",
+      "availability": "原生",
+      "detail": "UI/API暂停、编辑、继续或丢弃。",
+      "sources": [
+        "zap-features",
+        "zap-api-catalogue"
+      ],
+      "interfaces": [
+        "break"
+      ]
+    },
+    {
+      "id": "zap-rewrite",
+      "category": "改写",
+      "name": "替换/脚本/本地响应",
+      "availability": "可选",
+      "detail": "Replacer/MapLocal/Proxy与Sender脚本。",
+      "sources": [
+        "zap-replacer",
+        "zap-maplocal",
+        "zap-scripts"
+      ],
+      "interfaces": [
+        "Replacer",
+        "Map Local"
+      ]
+    },
+    {
+      "id": "zap-ws",
+      "category": "实时消息",
+      "name": "WebSocket消息与控制",
+      "availability": "可选",
+      "detail": "双向/二进制、UI/API、消息断点/脚本和已有测试模块。",
+      "sources": [
+        "zap-ws",
+        "zap-ws-api"
+      ],
+      "interfaces": [
+        "WebSockets",
+        "websocket"
+      ]
+    },
+    {
+      "id": "zap-sse",
+      "category": "实时消息",
+      "name": "SSE截获与事件显示",
+      "availability": "可选",
+      "detail": "专用事件tab；压缩开放流增量与持久游标未验证。",
+      "sources": [
+        "zap-sse"
+      ],
+      "interfaces": [
+        "Server-Sent Events"
+      ]
+    },
+    {
+      "id": "zap-cert",
+      "category": "证书",
+      "name": "CA和服务器/客户端证书",
+      "availability": "原生",
+      "detail": "Network证书与mTLS设置，客户端需信任相应CA。",
+      "sources": [
+        "zap-server-certs",
+        "zap-client-certs"
+      ],
+      "interfaces": [
+        "Network"
+      ]
+    },
+    {
+      "id": "zap-contexts",
+      "category": "会话",
+      "name": "上下文/用户/范围/认证",
+      "availability": "原生",
+      "detail": "每应用的认证方法、验证指标、会话和用户。",
+      "sources": [
+        "zap-auth"
+      ],
+      "interfaces": [
+        "context",
+        "users",
+        "authentication"
+      ]
+    },
+    {
+      "id": "zap-authhelper",
+      "category": "会话",
+      "name": "登录辅助和认证统计",
+      "availability": "可选",
+      "detail": "浏览器/客户端脚本/自动识别等；OAuth2初步支持不能当作全部OAuth流程。",
+      "sources": [
+        "zap-authhelper",
+        "zap-oauth"
+      ],
+      "interfaces": [
+        "Authentication Helper",
+        "Authentication Statistics"
+      ]
+    },
+    {
+      "id": "zap-httpstate",
+      "category": "会话",
+      "name": "Cookie和HTTP鉴权跟踪",
+      "availability": "部分",
+      "detail": "全局HTTP State/HTTP Sessions，不是浏览器Context隔离。",
+      "sources": [
+        "zap-connection",
+        "zap-auth"
+      ],
+      "interfaces": [
+        "httpSessions"
+      ]
+    },
+    {
+      "id": "zap-persist",
+      "category": "存储",
+      "name": "持续数据库记录和重开",
+      "availability": "原生",
+      "detail": "启用persist后连续保存；未持久会话关闭后不可重开。",
+      "sources": [
+        "zap-session"
+      ],
+      "interfaces": [
+        "core"
+      ]
+    },
+    {
+      "id": "zap-budget",
+      "category": "存储",
+      "name": "恢复日志/正文预算/退出压缩",
+      "availability": "原生",
+      "detail": "请求响应最大体积、数据库恢复日志和持久策略。",
+      "sources": [
+        "zap-database"
+      ],
+      "interfaces": [
+        "core"
+      ]
+    },
+    {
+      "id": "zap-exim",
+      "category": "导出",
+      "name": "HAR/消息/URL/站点树",
+      "availability": "可选",
+      "detail": "HAR双向、原始二进制/文本/XML与日志；导入会规范化部分HTTP字段。",
+      "sources": [
+        "zap-exim"
+      ],
+      "interfaces": [
+        "exim",
+        "Import/Export"
+      ]
+    },
+    {
+      "id": "zap-report",
+      "category": "报告",
+      "name": "模板报告和差异",
+      "availability": "可选",
+      "detail": "Report Generation按范围/风险/置信度，HTML/MD/PDF/JSON/SARIF依所装模板；Diff比较请求响应。",
+      "sources": [
+        "zap-reports",
+        "zap-diff",
+        "zap-market"
+      ],
+      "interfaces": [
+        "Report Generation",
+        "Diff"
+      ]
+    },
+    {
+      "id": "zap-api-structure",
+      "category": "API结构",
+      "name": "OpenAPI/Postman/GraphQL/SOAP/gRPC",
+      "availability": "可选",
+      "detail": "具名插件导入/识别/解析，不把定义导入误写成自动生成定义。",
+      "sources": [
+        "zap-market",
+        "zap-api-catalogue"
+      ],
+      "interfaces": [
+        "OpenAPI Support",
+        "Postman Support",
+        "GraphQL Support",
+        "SOAP Support",
+        "gRPC Support"
+      ]
+    },
+    {
+      "id": "zap-passive",
+      "category": "检查",
+      "name": "被动检查和告警管理",
+      "availability": "可选",
+      "detail": "已观察流量检查、队列、风险/置信度/证据和筛选。",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ],
+      "interfaces": [
+        "pscan",
+        "alert",
+        "Alert Filters"
+      ]
+    },
+    {
+      "id": "zap-testing",
+      "category": "检查",
+      "name": "扩展安全测试模块",
+      "availability": "可选",
+      "detail": "ActiveRules/AccessControl/Sequence/Fuzzer/OAST，仅列存在性不提供流程。",
+      "sources": [
+        "zap-market"
+      ],
+      "interfaces": [
+        "Active Scan Rules",
+        "Access Control Testing",
+        "Sequence Scanner",
+        "Fuzzer",
+        "OAST Support"
+      ]
+    },
+    {
+      "id": "zap-selenium",
+      "category": "浏览器",
+      "name": "多引擎/WebDriver脚本",
+      "availability": "可选",
+      "detail": "Chrome/Edge/Firefox/Safari/HtmlUnit、headless，JS/URL/表单/点击。",
+      "sources": [
+        "zap-selenium"
+      ],
+      "interfaces": [
+        "Selenium / WebDriver scripts"
+      ]
+    },
+    {
+      "id": "zap-client",
+      "category": "浏览器",
+      "name": "DOM/事件/Client Map",
+      "availability": "可选",
+      "detail": "扩展记录DOM变化/表单/输入/链接/Cookie和fragment页面，历史与YAML导出。",
+      "sources": [
+        "zap-client"
+      ],
+      "interfaces": [
+        "Client Side Integration / Client Spider"
+      ]
+    },
+    {
+      "id": "zap-spiders",
+      "category": "浏览器",
+      "name": "HTTP与现代客户端页面发现",
+      "availability": "可选",
+      "detail": "HTTP Spider/ClientSpider；AJAX模块是有渠道变化的历史兼容功能。",
+      "sources": [
+        "zap-client",
+        "zap-market"
+      ],
+      "interfaces": [
+        "spider",
+        "Client Side Integration / Client Spider"
+      ]
+    },
+    {
+      "id": "zap-zest",
+      "category": "工作流",
+      "name": "交互录制/编辑/回放",
+      "availability": "可选",
+      "detail": "HTTP和客户端脚本、树形编辑、导入导出，不等于未知动作自动恢复。",
+      "sources": [
+        "zap-zest"
+      ],
+      "interfaces": [
+        "Zest / Browser Recorder"
+      ]
+    },
+    {
+      "id": "zap-zest-controls",
+      "category": "工作流",
+      "name": "条件/循环/断言",
+      "availability": "可选",
+      "detail": "Zest正式数据对象支持条件/循环/断言，未声称并行或跨进程幂等。",
+      "sources": [
+        "zap-zest-control",
+        "zap-zest"
+      ],
+      "interfaces": [
+        "Zest / Browser Recorder"
+      ]
+    },
+    {
+      "id": "zap-automation",
+      "category": "工作流",
+      "name": "YAML多任务与Job Tests",
+      "availability": "可选",
+      "detail": "环境/认证/delay/统计或URL测试/退出码/报告，插件扩展任务。",
+      "sources": [
+        "zap-automation"
+      ],
+      "interfaces": [
+        "Automation Framework YAML"
+      ]
+    },
+    {
+      "id": "zap-history",
+      "category": "工作流",
+      "name": "客户端历史/任务进度/工具回执",
+      "availability": "部分",
+      "detail": "不同模块的历史和状态；没有据此推断统一业务checkpoint。",
+      "sources": [
+        "zap-client",
+        "zap-automation",
+        "zap-llm-chat"
+      ],
+      "interfaces": [
+        "automation",
+        "stats"
+      ]
+    },
+    {
+      "id": "zap-scripts",
+      "category": "扩展",
+      "name": "JSR-223脚本类别",
+      "availability": "原生",
+      "detail": "Extender/Proxy/Sender/认证/会话/standalone/targeted和检查脚本；语言按插件。",
+      "sources": [
+        "zap-scripts"
+      ],
+      "interfaces": [
+        "JSR-223 / Extender scripts"
+      ]
+    },
+    {
+      "id": "zap-plugins",
+      "category": "扩展",
+      "name": "Marketplace与独立更新",
+      "availability": "原生",
+      "detail": "UI/CLI/API安装更新插件；alpha/beta/release不能混成稳定。",
+      "sources": [
+        "zap-market",
+        "zap-cmd"
+      ],
+      "interfaces": [
+        "autoupdate"
+      ]
+    },
+    {
+      "id": "zap-mcp",
+      "category": "机器接口",
+      "name": "官方HTTP MCP",
+      "availability": "可选",
+      "detail": "17工具、10资源模板类别、2提示；同机可信合同，支持Extender自定义工具资源。",
+      "sources": [
+        "zap-mcp",
+        "zap-mcp-tools",
+        "zap-mcp-resources",
+        "zap-mcp-prompts"
+      ],
+      "interfaces": [
+        "MCP HTTP server"
+      ]
+    },
+    {
+      "id": "zap-history-range",
+      "category": "机器接口",
+      "name": "MCP分层历史/正文范围",
+      "availability": "可选",
+      "detail": "字段/offset/max正文读取，Length/Offset/Returned/Truncated元数据。",
+      "sources": [
+        "zap-mcp-tools"
+      ],
+      "interfaces": [
+        "zap_get_history"
+      ]
+    },
+    {
+      "id": "zap-llm",
+      "category": "模型",
+      "name": "多供应商聊天和工具调用",
+      "availability": "可选",
+      "detail": "LLM+MCP可在聊天调用工具，默认不选装不发送数据；供应商费用独立。",
+      "sources": [
+        "zap-llm",
+        "zap-llm-options"
+      ],
+      "interfaces": [
+        "Azure OpenAI / Anthropic / Gemini / Ollama / OpenAI Compatible"
+      ]
+    },
+    {
+      "id": "zap-llm-history",
+      "category": "模型",
+      "name": "聊天回执/Trusted范围与切换限制",
+      "availability": "部分",
+      "detail": "独立聊天/模型/工具/token记录；换provider时展示历史不保证给新模型的上下文。",
+      "sources": [
+        "zap-llm-chat",
+        "zap-llm-options"
+      ],
+      "interfaces": [
+        "Azure OpenAI / Anthropic / Gemini / Ollama / OpenAI Compatible"
+      ]
+    },
+    {
+      "id": "zap-hud",
+      "category": "界面",
+      "name": "浏览器内HUD",
+      "availability": "可选",
+      "detail": "部分ZAP功能进入浏览器；官方列覆盖和多标签限制。",
+      "sources": [
+        "zap-hud"
+      ],
+      "interfaces": [
+        "HUD"
+      ]
+    },
+    {
+      "id": "zap-api-access",
+      "category": "访问控制",
+      "name": "本机/API key和文件接口",
+      "availability": "原生",
+      "detail": "HTTP API默认本机，文件传输默认关闭且需API key；MCP有独立可选key。",
+      "sources": [
+        "zap-api",
+        "zap-mcp"
+      ],
+      "interfaces": [
+        "HTTP API",
+        "MCP HTTP server"
+      ]
+    },
+    {
+      "id": "zap-runtime",
+      "category": "运行",
+      "name": "CLI/daemon/统计/容器",
+      "availability": "原生",
+      "detail": "桌面跨平台，DockerHub/GHCR stable/weekly/nightly/bare及healthcheck。",
+      "sources": [
+        "zap-cmd",
+        "zap-readme",
+        "zap-docker"
+      ],
+      "interfaces": [
+        "zap.sh / zap.bat / daemon",
+        "stable / weekly / nightly / bare Docker"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "ZAP Desktop",
+      "category": "人工界面",
+      "purpose": "History/Sites/Request/Response/Alerts/Break等工作台。",
+      "availability": "原生",
+      "sources": [
+        "zap-features"
+      ]
+    },
+    {
+      "name": "zap.sh / zap.bat / daemon",
+      "category": "CLI",
+      "purpose": "桌面、批处理/后台、会话、配置与插件管理。",
+      "availability": "原生",
+      "sources": [
+        "zap-cmd"
+      ]
+    },
+    {
+      "name": "HTTP API",
+      "category": "机器接口",
+      "purpose": "JSON/HTML/XML，actions/views/others；默认本机，可配key和来源。",
+      "availability": "原生",
+      "sources": [
+        "zap-api"
+      ]
+    },
+    {
+      "name": "MCP HTTP server",
+      "category": "MCP",
+      "purpose": "官方插件提供tools/resources/prompts，同机可信客户端合同。",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp"
+      ]
+    },
+    {
+      "name": "Automation Framework YAML",
+      "category": "工作流接口",
+      "purpose": "环境、认证、多任务、Job Tests、退出码与报告。",
+      "availability": "可选",
+      "sources": [
+        "zap-automation"
+      ]
+    },
+    {
+      "name": "Selenium / WebDriver scripts",
+      "category": "浏览器脚本",
+      "purpose": "多浏览器启动，URL/JS/点击/表单交互。",
+      "availability": "可选",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    {
+      "name": "Zest / Browser Recorder",
+      "category": "脚本接口",
+      "purpose": "HTTP和客户端交互录制、图形编辑、回放与导入导出。",
+      "availability": "可选",
+      "sources": [
+        "zap-zest"
+      ]
+    },
+    {
+      "name": "JSR-223 / Extender scripts",
+      "category": "扩展接口",
+      "purpose": "脚本扩展API/UI/代理/认证/会话和检查模块。",
+      "availability": "原生",
+      "sources": [
+        "zap-scripts"
+      ]
+    },
+    {
+      "name": "accessControl",
+      "category": "HTTP API 组",
+      "purpose": "访问控制模块状态与报告",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "acsrf",
+      "category": "HTTP API 组",
+      "purpose": "CSRF token配置",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "ajaxSpider",
+      "category": "HTTP API 组",
+      "purpose": "旧AJAX浏览器发现任务",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "alert",
+      "category": "HTTP API 组",
+      "purpose": "告警读取与管理",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "alertFilter",
+      "category": "HTTP API 组",
+      "purpose": "告警筛选",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "ascan",
+      "category": "HTTP API 组",
+      "purpose": "已有检查任务和策略",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "authentication",
+      "category": "HTTP API 组",
+      "purpose": "认证方法与登录识别",
+      "availability": "原生",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "authorization",
+      "category": "HTTP API 组",
+      "purpose": "授权状态检测配置",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "automation",
+      "category": "HTTP API 组",
+      "purpose": "YAML计划与进度",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "autoupdate",
+      "category": "HTTP API 组",
+      "purpose": "版本和插件管理",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "break",
+      "category": "HTTP API 组",
+      "purpose": "HTTP断点/继续/丢弃",
+      "availability": "原生",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "client",
+      "category": "HTTP API 组",
+      "purpose": "客户端事件和Client Map",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "clientSpider",
+      "category": "HTTP API 组",
+      "purpose": "现代页面发现任务",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "context",
+      "category": "HTTP API 组",
+      "purpose": "范围/技术/上下文",
+      "availability": "原生",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "core",
+      "category": "HTTP API 组",
+      "purpose": "会话/消息/版本/代理与文件",
+      "availability": "原生",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "custompayloads",
+      "category": "HTTP API 组",
+      "purpose": "测试数据配置",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "dev",
+      "category": "HTTP API 组",
+      "purpose": "开发诊断",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "exim",
+      "category": "HTTP API 组",
+      "purpose": "消息/HAR/日志/站点树导入导出",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "forcedUser",
+      "category": "HTTP API 组",
+      "purpose": "手工固定用户模式",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "graphql",
+      "category": "HTTP API 组",
+      "purpose": "GraphQL结构支持",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "httpSessions",
+      "category": "HTTP API 组",
+      "purpose": "HTTP会话观察",
+      "availability": "原生",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "hud",
+      "category": "HTTP API 组",
+      "purpose": "浏览器内界面",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "keyboard",
+      "category": "HTTP API 组",
+      "purpose": "键盘配置",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "localProxies",
+      "category": "HTTP API 组",
+      "purpose": "本地监听兼容接口",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "network",
+      "category": "HTTP API 组",
+      "purpose": "连接/证书/代理配置",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "oast",
+      "category": "HTTP API 组",
+      "purpose": "异步回调诊断模块",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "openapi",
+      "category": "HTTP API 组",
+      "purpose": "OpenAPI定义导入",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "paramDigger",
+      "category": "HTTP API 组",
+      "purpose": "参数发现模块",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "params",
+      "category": "HTTP API 组",
+      "purpose": "参数观察",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "pnh",
+      "category": "HTTP API 组",
+      "purpose": "旧浏览器集成兼容",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "postman",
+      "category": "HTTP API 组",
+      "purpose": "Postman集合导入",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "pscan",
+      "category": "HTTP API 组",
+      "purpose": "被动检查队列",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "quickstartlaunch",
+      "category": "HTTP API 组",
+      "purpose": "浏览器启动",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "replacer",
+      "category": "HTTP API 组",
+      "purpose": "流量替换规则",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "reports",
+      "category": "HTTP API 组",
+      "purpose": "报告生成",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "retest",
+      "category": "HTTP API 组",
+      "purpose": "已有结果复核",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "reveal",
+      "category": "HTTP API 组",
+      "purpose": "页面观察辅助",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "revisit",
+      "category": "HTTP API 组",
+      "purpose": "流量重访工具",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "ruleConfig",
+      "category": "HTTP API 组",
+      "purpose": "规则配置",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "script",
+      "category": "HTTP API 组",
+      "purpose": "脚本管理",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "search",
+      "category": "HTTP API 组",
+      "purpose": "流量搜索",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "selenium",
+      "category": "HTTP API 组",
+      "purpose": "浏览器/驱动配置",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "sessionManagement",
+      "category": "HTTP API 组",
+      "purpose": "会话机制",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "soap",
+      "category": "HTTP API 组",
+      "purpose": "SOAP结构导入",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "spider",
+      "category": "HTTP API 组",
+      "purpose": "HTTP页面发现",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "stats",
+      "category": "HTTP API 组",
+      "purpose": "统计监控",
+      "availability": "原生",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "users",
+      "category": "HTTP API 组",
+      "purpose": "用户和凭据",
+      "availability": "原生",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "wappalyzer",
+      "category": "HTTP API 组",
+      "purpose": "技术识别",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "websocket",
+      "category": "HTTP API 组",
+      "purpose": "连接和消息",
+      "availability": "可选",
+      "sources": [
+        "zap-api-catalogue"
+      ]
+    },
+    {
+      "name": "zap_version",
+      "category": "MCP tool",
+      "purpose": "版本",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_info",
+      "category": "MCP tool",
+      "purpose": "基础信息",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_create_context",
+      "category": "MCP tool",
+      "purpose": "范围上下文",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_start_spider",
+      "category": "MCP tool",
+      "purpose": "启动发现任务",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_stop_spider",
+      "category": "MCP tool",
+      "purpose": "停止发现任务",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_get_spider_status",
+      "category": "MCP tool",
+      "purpose": "发现任务进度",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_start_ajax_spider",
+      "category": "MCP tool",
+      "purpose": "启动旧AJAX任务",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_stop_ajax_spider",
+      "category": "MCP tool",
+      "purpose": "停止AJAX任务",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_get_ajax_spider_status",
+      "category": "MCP tool",
+      "purpose": "AJAX任务进度",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_start_active_scan",
+      "category": "MCP tool",
+      "purpose": "启动已有检查模块，仅列存在性",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_stop_active_scan",
+      "category": "MCP tool",
+      "purpose": "停止检查任务",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_get_active_scan_status",
+      "category": "MCP tool",
+      "purpose": "检查任务进度",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_get_passive_scan_status",
+      "category": "MCP tool",
+      "purpose": "被动队列状态",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_get_history",
+      "category": "MCP tool",
+      "purpose": "按字段和正文范围读取HTTP历史",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_generate_report",
+      "category": "MCP tool",
+      "purpose": "模板报告",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_list_resources",
+      "category": "MCP tool",
+      "purpose": "兼容只支持tools的客户端",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap_read_resource",
+      "category": "MCP tool",
+      "purpose": "读取资源",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-tools"
+      ]
+    },
+    {
+      "name": "zap://alerts",
+      "category": "MCP resource",
+      "purpose": "紧凑告警概要",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://alerts/{alertRef}",
+      "category": "MCP resource",
+      "purpose": "实例及historyRef",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://contexts",
+      "category": "MCP resource",
+      "purpose": "范围",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://history",
+      "category": "MCP resource",
+      "purpose": "历史条数概要",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://history/{id}",
+      "category": "MCP resource",
+      "purpose": "单条HTTP头体",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://scan-policies",
+      "category": "MCP resource",
+      "purpose": "策略",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://scan-status",
+      "category": "MCP resource",
+      "purpose": "长任务状态",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://sites",
+      "category": "MCP resource",
+      "purpose": "顶层站点",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://sites-tree",
+      "category": "MCP resource",
+      "purpose": "完整站点树",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap://report-templates",
+      "category": "MCP resource",
+      "purpose": "模板名称/扩展名",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-resources"
+      ]
+    },
+    {
+      "name": "zap_baseline_scan",
+      "category": "MCP prompt",
+      "purpose": "可发现的被动工作流模板。",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-prompts"
+      ]
+    },
+    {
+      "name": "zap_full_scan",
+      "category": "MCP prompt",
+      "purpose": "可发现的完整检查模板；本报告不提供操作流程。",
+      "availability": "可选",
+      "sources": [
+        "zap-mcp-prompts"
+      ]
+    },
+    {
+      "name": "Network",
+      "category": "官方具名 addon / 类别",
+      "purpose": "HTTP2/证书/代理网络栈",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Server-Sent Events",
+      "category": "官方具名 addon / 类别",
+      "purpose": "SSE截获和事件显示",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "WebSockets",
+      "category": "官方具名 addon / 类别",
+      "purpose": "消息/断点/API/脚本",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "MCP Integration",
+      "category": "官方具名 addon / 类别",
+      "purpose": "MCP接口和扩展",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "LLM Support",
+      "category": "官方具名 addon / 类别",
+      "purpose": "多模型聊天和工具调用",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Automation Framework",
+      "category": "官方具名 addon / 类别",
+      "purpose": "YAML计划/Job Tests",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Authentication Helper",
+      "category": "官方具名 addon / 类别",
+      "purpose": "认证辅助/浏览器/OAuth",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Authentication Statistics",
+      "category": "官方具名 addon / 类别",
+      "purpose": "登录状态统计",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Selenium",
+      "category": "官方具名 addon / 类别",
+      "purpose": "浏览器/WebDriver脚本",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Linux / macOS / Windows WebDrivers",
+      "category": "官方具名 addon / 类别",
+      "purpose": "平台浏览器驱动",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Client Side Integration / Client Spider",
+      "category": "官方具名 addon / 类别",
+      "purpose": "浏览器扩展/客户端事件/Client Map/页面发现",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "AJAX Spider",
+      "category": "官方具名 addon / 类别",
+      "purpose": "旧AJAX模块，交付渠道有退役变化",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Zest",
+      "category": "官方具名 addon / 类别",
+      "purpose": "录制/编辑/回放",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Script Console / GraalVM JS / Groovy / Kotlin",
+      "category": "官方具名 addon / 类别",
+      "purpose": "脚本编辑和语言引擎",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Community Scripts",
+      "category": "官方具名 addon / 类别",
+      "purpose": "可选社区脚本集合",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Import/Export",
+      "category": "官方具名 addon / 类别",
+      "purpose": "HAR/原始消息/URL/站点树",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Report Generation",
+      "category": "官方具名 addon / 类别",
+      "purpose": "可扩展报告模板",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Diff",
+      "category": "官方具名 addon / 类别",
+      "purpose": "请求响应差异",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Replacer",
+      "category": "官方具名 addon / 类别",
+      "purpose": "自动替换",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Map Local",
+      "category": "官方具名 addon / 类别",
+      "purpose": "本地响应映射",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Encoder",
+      "category": "官方具名 addon / 类别",
+      "purpose": "编码/解码/hash处理器",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "JSON View",
+      "category": "官方具名 addon / 类别",
+      "purpose": "格式化JSON",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Browser View",
+      "category": "官方具名 addon / 类别",
+      "purpose": "HTML响应渲染",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "HUD",
+      "category": "官方具名 addon / 类别",
+      "purpose": "浏览器内部分ZAP界面",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "OpenAPI Support",
+      "category": "官方具名 addon / 类别",
+      "purpose": "定义导入和API结构",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Postman Support",
+      "category": "官方具名 addon / 类别",
+      "purpose": "集合导入",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "GraphQL Support",
+      "category": "官方具名 addon / 类别",
+      "purpose": "GraphQL结构",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "SOAP Support",
+      "category": "官方具名 addon / 类别",
+      "purpose": "SOAP定义",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "gRPC Support",
+      "category": "官方具名 addon / 类别",
+      "purpose": "gRPC/Protobuf观察",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Passive Scanner / Passive Scan Rules",
+      "category": "官方具名 addon / 类别",
+      "purpose": "已观察流量的被动检查",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Active Scan Rules",
+      "category": "官方具名 addon / 类别",
+      "purpose": "已有检查规则组，仅列存在性",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Access Control Testing",
+      "category": "官方具名 addon / 类别",
+      "purpose": "已有访问控制模块，仅列存在性",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Sequence Scanner",
+      "category": "官方具名 addon / 类别",
+      "purpose": "已有多请求序列模块，仅列存在性",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Fuzzer",
+      "category": "官方具名 addon / 类别",
+      "purpose": "已有测试数据模块，仅列存在性",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "OAST Support",
+      "category": "官方具名 addon / 类别",
+      "purpose": "异步回调诊断，仅列存在性",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Params / Parameter Digger",
+      "category": "官方具名 addon / 类别",
+      "purpose": "参数观察/发现",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Technology Detection",
+      "category": "官方具名 addon / 类别",
+      "purpose": "技术识别",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "HTTPS Info / TLS Debug",
+      "category": "官方具名 addon / 类别",
+      "purpose": "证书/TLS诊断",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Alert Filters",
+      "category": "官方具名 addon / 类别",
+      "purpose": "告警筛选",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Insights",
+      "category": "官方具名 addon / 类别",
+      "purpose": "结果和流量辅助洞察",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Retest",
+      "category": "官方具名 addon / 类别",
+      "purpose": "已有结果复核",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "OWASP PTK",
+      "category": "官方具名 addon / 类别",
+      "purpose": "浏览器侧集成和被动信息",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Retire.js",
+      "category": "官方具名 addon / 类别",
+      "purpose": "前端依赖诊断",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "All In One Notes / Neonmarker / Highlighter",
+      "category": "官方具名 addon / 类别",
+      "purpose": "备注/标记显示",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Call Graph / TreeTools",
+      "category": "官方具名 addon / 类别",
+      "purpose": "关系和树查看",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Invoke Applications",
+      "category": "官方具名 addon / 类别",
+      "purpose": "外部工具集成",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Quick Start",
+      "category": "官方具名 addon / 类别",
+      "purpose": "快速接入/浏览器启动",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Database",
+      "category": "官方具名 addon / 类别",
+      "purpose": "可选数据库基础设施",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Dev Add-On",
+      "category": "官方具名 addon / 类别",
+      "purpose": "开发诊断",
+      "availability": "可选",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    {
+      "name": "Azure OpenAI / Anthropic / Gemini / Ollama / OpenAI Compatible",
+      "category": "模型接口",
+      "purpose": "多provider/model、自定义端点、Trusted范围。",
+      "availability": "可选",
+      "sources": [
+        "zap-llm-options"
+      ]
+    },
+    {
+      "name": "stable / weekly / nightly / bare Docker",
+      "category": "交付接口",
+      "purpose": "DockerHub/GHCR，healthcheck和不同更新节奏。",
+      "availability": "原生",
+      "sources": [
+        "zap-docker"
+      ]
+    }
+  ],
+  "notes": [
+    "只读核验：2026-10-25（Asia/Shanghai）。默认分支main；core SHA不代表所有插件源码版本。文档是当日可见的浮动页面。",
+    "可选表示通过官方插件提供或需安装配置，不等于发行包必然未安装。Network是随产品提供的关键插件；MCP/LLM/报告/浏览器等有独立版本。",
+    "Marketplace当前列MCP Integration 0.4.0 alpha、LLM Support 0.1.0 alpha。存在性和成熟度须一起表述，外部模型可能另有费用。",
+    "列一等核心能力、49个HTTP API组、17个MCP工具/10类资源/2提示，以及官方具名插件类别；不逐条穷举扫描规则、payload字典或内部参数。",
+    "安全功能仅列已有模块和可选性，不提供攻击流程或自主攻防建议。",
+    "Selenium/Zest/Client Side Integration已有真实浏览器操作、客户端观察和多步录制；不能把ZAP简化成只看HTTP的代理。这些仍不等同版本化ARIA/ref合同。",
+    "LLM+MCP聊天可以调用工具；未实测通用业务目标执行效果。数据库重开和Zest回放不自动证明未知业务动作防重复执行。",
+    "当前插件文档不代表2.17.0原始安装包全都默认包含。AJAX Spider等旧模块在新nightly/weekly交付有退役变化，目录保留历史兼容定位，优先关注Client Spider。"
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "可选",
+      "detail": "官方MCP HTTP工具。",
+      "sources": [
+        "zap-mcp"
+      ]
+    },
+    "D02": {
+      "availability": "可选",
+      "detail": "10资源类别、2提示。",
+      "sources": [
+        "zap-mcp-resources",
+        "zap-mcp-prompts"
+      ]
+    },
+    "D03": {
+      "availability": "未证实",
+      "detail": "已确认官方HTTP MCP，未核实stdio入口。",
+      "sources": [
+        "zap-mcp"
+      ]
+    },
+    "D04": {
+      "availability": "原生",
+      "detail": "core HTTP API；MCP为插件。",
+      "sources": [
+        "zap-api",
+        "zap-mcp"
+      ]
+    },
+    "D05": {
+      "availability": "原生",
+      "detail": "CLI/daemon、配置/会话/插件及自动化。",
+      "sources": [
+        "zap-cmd",
+        "zap-automation"
+      ]
+    },
+    "D06": {
+      "availability": "原生",
+      "detail": "桌面工作台，另有HUD插件。",
+      "sources": [
+        "zap-features",
+        "zap-hud"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "API、addon和扩展脚本。",
+      "sources": [
+        "zap-api",
+        "zap-scripts"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "本地核心，LLM可选。",
+      "sources": [
+        "zap-readme",
+        "zap-llm"
+      ]
+    },
+    "D09": {
+      "availability": "未证实",
+      "detail": "已查core/API及官方插件目录，未确认该维度明确合同。",
+      "sources": [
+        "zap-features"
+      ]
+    },
+    "D10": {
+      "availability": "原生",
+      "detail": "官方多渠道Docker镜像。",
+      "sources": [
+        "zap-docker"
+      ]
+    },
+    "D11": {
+      "availability": "原生",
+      "detail": "API状态、Job Tests、Docker health。",
+      "sources": [
+        "zap-api-catalogue",
+        "zap-automation",
+        "zap-docker"
+      ]
+    },
+    "D12": {
+      "availability": "部分",
+      "detail": "可选插件/脚本/规则；未确认MCP tool profile。",
+      "sources": [
+        "zap-market",
+        "zap-mcp-tools"
+      ]
+    },
+    "B01": {
+      "availability": "可选",
+      "detail": "Selenium启动和脚本控制。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B02": {
+      "availability": "部分",
+      "detail": "已有浏览器可装Client扩展接入；非CDP attach。",
+      "sources": [
+        "zap-client"
+      ]
+    },
+    "B03": {
+      "availability": "可选",
+      "detail": "Chrome/Edge/Firefox/Safari/HtmlUnit。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B04": {
+      "availability": "可选",
+      "detail": "公开headed/headless。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B05": {
+      "availability": "部分",
+      "detail": "profile和应用Context/User不同于Playwright Context。",
+      "sources": [
+        "zap-auth",
+        "zap-selenium"
+      ]
+    },
+    "B06": {
+      "availability": "部分",
+      "detail": "Client带Firefox profile，未证实通用user-data-dir恢复。",
+      "sources": [
+        "zap-client"
+      ]
+    },
+    "B07": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B08": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B09": {
+      "availability": "可选",
+      "detail": "Selenium URL和Zest回放。",
+      "sources": [
+        "zap-selenium",
+        "zap-zest"
+      ]
+    },
+    "B10": {
+      "availability": "可选",
+      "detail": "Selenium脚本正式支持点击。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B11": {
+      "availability": "可选",
+      "detail": "Selenium脚本正式支持填表。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B12": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B13": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B14": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B15": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B16": {
+      "availability": "可选",
+      "detail": "Selenium脚本可执行页面JS。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B17": {
+      "availability": "部分",
+      "detail": "自动化delay/验证；统一元素wait工具未证实。",
+      "sources": [
+        "zap-automation",
+        "zap-auth"
+      ]
+    },
+    "B18": {
+      "availability": "部分",
+      "detail": "Client读取Cookie，HTTP State跟踪；非浏览器CRUD全集。",
+      "sources": [
+        "zap-client",
+        "zap-connection"
+      ]
+    },
+    "B19": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B20": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "B21": {
+      "availability": "部分",
+      "detail": "Network限速，非完整浏览器离线模拟。",
+      "sources": [
+        "zap-rate"
+      ]
+    },
+    "O01": {
+      "availability": "不适用",
+      "detail": "DOM/事件观察不等于ARIA快照。",
+      "sources": [
+        "zap-client"
+      ]
+    },
+    "O02": {
+      "availability": "不适用",
+      "detail": "未核实Agent快照ref机制。",
+      "sources": [
+        "zap-client",
+        "zap-selenium"
+      ]
+    },
+    "O03": {
+      "availability": "部分",
+      "detail": "DOMMutation/NodeAdded事件，非版本化ARIA增量。",
+      "sources": [
+        "zap-client"
+      ]
+    },
+    "O04": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "O05": {
+      "availability": "不适用",
+      "detail": "没有此报告核实的快照ref合同对象。",
+      "sources": [
+        "zap-client"
+      ]
+    },
+    "O06": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "O07": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "O08": {
+      "availability": "可选",
+      "detail": "DOM元素/文本/链接/HTML响应。",
+      "sources": [
+        "zap-client",
+        "zap-features"
+      ]
+    },
+    "O09": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "O10": {
+      "availability": "部分",
+      "detail": "LLM调用MCP不等于通用自然语言页面定位。",
+      "sources": [
+        "zap-llm",
+        "zap-mcp-tools"
+      ]
+    },
+    "O11": {
+      "availability": "未证实",
+      "detail": "已查Selenium/Client/Zest正式文档，未确认该项作为独立动作或观察合同。",
+      "sources": [
+        "zap-selenium"
+      ]
+    },
+    "O12": {
+      "availability": "不适用",
+      "detail": "PDF报告不是页面打印PDF。",
+      "sources": [
+        "zap-reports"
+      ]
+    },
+    "N01": {
+      "availability": "原生",
+      "detail": "独立HTTP客户端代理。",
+      "sources": [
+        "zap-local"
+      ]
+    },
+    "N02": {
+      "availability": "原生",
+      "detail": "CA与HTTPS MITM。",
+      "sources": [
+        "zap-server-certs"
+      ]
+    },
+    "N03": {
+      "availability": "原生",
+      "detail": "2.13起正式HTTP2。",
+      "sources": [
+        "zap-http2"
+      ]
+    },
+    "N04": {
+      "availability": "未证实",
+      "detail": "无核实HTTP3模式；HAR h3转H2不是支持证据。",
+      "sources": [
+        "zap-exim",
+        "zap-local"
+      ]
+    },
+    "N05": {
+      "availability": "未证实",
+      "detail": "未确认通用TCP/UDP捕获解码。",
+      "sources": [
+        "zap-network"
+      ]
+    },
+    "N06": {
+      "availability": "原生",
+      "detail": "regular/transparent/多监听/透传和HTTP/SOCKS上游。",
+      "sources": [
+        "zap-local",
+        "zap-connection"
+      ]
+    },
+    "N07": {
+      "availability": "原生",
+      "detail": "History/API头体。",
+      "sources": [
+        "zap-features",
+        "zap-api"
+      ]
+    },
+    "N08": {
+      "availability": "原生",
+      "detail": "搜索、Context范围与站点/历史。",
+      "sources": [
+        "zap-features",
+        "zap-api-catalogue"
+      ]
+    },
+    "N09": {
+      "availability": "未证实",
+      "detail": "有原始头文本，未确认顺序/重复头保真合同。",
+      "sources": [
+        "zap-mcp-resources",
+        "zap-exim"
+      ]
+    },
+    "N10": {
+      "availability": "部分",
+      "detail": "gzip/deflate、指定平台br及格式插件。",
+      "sources": [
+        "zap-local",
+        "zap-market"
+      ]
+    },
+    "N11": {
+      "availability": "可选",
+      "detail": "Replacer/MapLocal/代理脚本。",
+      "sources": [
+        "zap-replacer",
+        "zap-maplocal",
+        "zap-scripts"
+      ]
+    },
+    "N12": {
+      "availability": "原生",
+      "detail": "HTTP断点UI和break API。",
+      "sources": [
+        "zap-features",
+        "zap-api-catalogue"
+      ]
+    },
+    "N13": {
+      "availability": "原生",
+      "detail": "手工请求/API发送，HAR发送为插件。",
+      "sources": [
+        "zap-features",
+        "zap-exim"
+      ]
+    },
+    "N14": {
+      "availability": "不适用",
+      "detail": "代理层处理不等于browser.route。",
+      "sources": [
+        "zap-scripts"
+      ]
+    },
+    "N15": {
+      "availability": "可选",
+      "detail": "HAR双向，导入有规范化边界。",
+      "sources": [
+        "zap-exim"
+      ]
+    },
+    "N16": {
+      "availability": "未证实",
+      "detail": "确认HAR/原始消息/Zest导出，未核实cURL/多语言客户端。",
+      "sources": [
+        "zap-exim",
+        "zap-zest"
+      ]
+    },
+    "N17": {
+      "availability": "可选",
+      "detail": "OpenAPI等导入与结构支持，非已证实自动生成。",
+      "sources": [
+        "zap-market",
+        "zap-api-catalogue"
+      ]
+    },
+    "M01": {
+      "availability": "可选",
+      "detail": "WS消息tab和API。",
+      "sources": [
+        "zap-ws"
+      ]
+    },
+    "M02": {
+      "availability": "可选",
+      "detail": "双向/二进制/连接信息。",
+      "sources": [
+        "zap-ws",
+        "zap-ws-api"
+      ]
+    },
+    "M03": {
+      "availability": "可选",
+      "detail": "消息发送、断点和脚本。",
+      "sources": [
+        "zap-ws",
+        "zap-ws-api"
+      ]
+    },
+    "M04": {
+      "availability": "可选",
+      "detail": "SSE插件截获与事件显示。",
+      "sources": [
+        "zap-sse"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "官方只确认SSE展示，未验证压缩开放流增量。",
+      "sources": [
+        "zap-sse",
+        "zap-local"
+      ]
+    },
+    "M06": {
+      "availability": "可选",
+      "detail": "WS/SSE连接中观察；不表示MCP全暴露。",
+      "sources": [
+        "zap-ws",
+        "zap-sse"
+      ]
+    },
+    "M07": {
+      "availability": "部分",
+      "detail": "持久session/WS消息ID分页；未确认跨重启单调SSE游标。",
+      "sources": [
+        "zap-session",
+        "zap-ws-api"
+      ]
+    },
+    "M08": {
+      "availability": "部分",
+      "detail": "MCP正文范围truncated；SSE失败/尾部标记未证实。",
+      "sources": [
+        "zap-mcp-tools",
+        "zap-sse"
+      ]
+    },
+    "W01": {
+      "availability": "可选",
+      "detail": "LLM+MCP聊天可模型调用工具，非实测通用业务Agent。",
+      "sources": [
+        "zap-llm"
+      ]
+    },
+    "W02": {
+      "availability": "可选",
+      "detail": "五类供应商及自定义端点/模型。",
+      "sources": [
+        "zap-llm-options"
+      ]
+    },
+    "W03": {
+      "availability": "可选",
+      "detail": "Extender扩展MCP工具资源与脚本。",
+      "sources": [
+        "zap-mcp",
+        "zap-scripts"
+      ]
+    },
+    "W04": {
+      "availability": "可选",
+      "detail": "YAML和Zest多步定义。",
+      "sources": [
+        "zap-automation",
+        "zap-zest"
+      ]
+    },
+    "W05": {
+      "availability": "部分",
+      "detail": "Zest条件/循环/断言；未证实并行合同。",
+      "sources": [
+        "zap-zest-control",
+        "zap-automation"
+      ]
+    },
+    "W06": {
+      "availability": "部分",
+      "detail": "流量断点人工接管，非统一业务审批节点。",
+      "sources": [
+        "zap-features",
+        "zap-llm-chat"
+      ]
+    },
+    "W07": {
+      "availability": "可选",
+      "detail": "Job Tests与Zest断言。",
+      "sources": [
+        "zap-automation",
+        "zap-zest-control"
+      ]
+    },
+    "W08": {
+      "availability": "部分",
+      "detail": "Client历史、任务状态、LLM工具回执分散提供。",
+      "sources": [
+        "zap-client",
+        "zap-automation",
+        "zap-llm-chat"
+      ]
+    },
+    "W09": {
+      "availability": "未证实",
+      "detail": "未确认动作前后自动持久业务checkpoint。",
+      "sources": [
+        "zap-automation",
+        "zap-zest"
+      ]
+    },
+    "W10": {
+      "availability": "部分",
+      "detail": "数据库重开记录配置；不等于自动重绑业务页面。",
+      "sources": [
+        "zap-session"
+      ]
+    },
+    "W11": {
+      "availability": "未证实",
+      "detail": "未确认未知动作结果防重复执行合同。",
+      "sources": [
+        "zap-zest",
+        "zap-automation",
+        "zap-llm-chat"
+      ]
+    },
+    "W12": {
+      "availability": "可选",
+      "detail": "Zest/客户端交互回放，不等于自动中断恢复。",
+      "sources": [
+        "zap-zest"
+      ]
+    },
+    "W13": {
+      "availability": "可选",
+      "detail": "Context/User/认证辅助/浏览器登录和会话。",
+      "sources": [
+        "zap-auth",
+        "zap-authhelper"
+      ]
+    },
+    "W14": {
+      "availability": "部分",
+      "detail": "HAR/API定义文件，不是通用PDF/Office任务解析。",
+      "sources": [
+        "zap-exim",
+        "zap-market"
+      ]
+    },
+    "W15": {
+      "availability": "部分",
+      "detail": "API任务异步状态；统一定时/完成webhook未核实。",
+      "sources": [
+        "zap-automation",
+        "zap-mcp-resources"
+      ]
+    },
+    "T01": {
+      "availability": "部分",
+      "detail": "Client浏览器事件，不代表完整DevTools Console接口。",
+      "sources": [
+        "zap-client"
+      ]
+    },
+    "T02": {
+      "availability": "部分",
+      "detail": "网络时序/统计，非浏览器CPU trace。",
+      "sources": [
+        "zap-api-catalogue",
+        "zap-features"
+      ]
+    },
+    "T03": {
+      "availability": "未证实",
+      "detail": "已查core/API及官方插件目录，未确认该维度明确合同。",
+      "sources": [
+        "zap-features"
+      ]
+    },
+    "T04": {
+      "availability": "部分",
+      "detail": "Zest和客户端历史可回看，不是视频。",
+      "sources": [
+        "zap-zest",
+        "zap-client"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "Client Map可跳Sites；官方说未必是创建节点的同一消息，不声称因果。",
+      "sources": [
+        "zap-client"
+      ]
+    },
+    "T06": {
+      "availability": "可选",
+      "detail": "被动规则/客户端检查/TLS与技术诊断。",
+      "sources": [
+        "zap-market",
+        "zap-features"
+      ]
+    },
+    "T07": {
+      "availability": "可选",
+      "detail": "已有测试模块，仅列存在性。",
+      "sources": [
+        "zap-market"
+      ]
+    },
+    "T08": {
+      "availability": "可选",
+      "detail": "Diff与模板报告。",
+      "sources": [
+        "zap-diff",
+        "zap-reports"
+      ]
+    },
+    "S01": {
+      "availability": "原生",
+      "detail": "启用persist后持续数据库记录和重开。",
+      "sources": [
+        "zap-session"
+      ]
+    },
+    "S02": {
+      "availability": "原生",
+      "detail": "标签/备注/Context和historyRef，非统一业务DAG。",
+      "sources": [
+        "zap-features",
+        "zap-mcp-resources"
+      ]
+    },
+    "S03": {
+      "availability": "可选",
+      "detail": "保存原始消息和二进制响应。",
+      "sources": [
+        "zap-exim"
+      ]
+    },
+    "S04": {
+      "availability": "未证实",
+      "detail": "已查core/API及官方插件目录，未确认该维度明确合同。",
+      "sources": [
+        "zap-features"
+      ]
+    },
+    "S05": {
+      "availability": "部分",
+      "detail": "被动队列/任务状态；traffic writer完成/丢弃计数未证实。",
+      "sources": [
+        "zap-mcp-tools",
+        "zap-api-catalogue"
+      ]
+    },
+    "S06": {
+      "availability": "原生",
+      "detail": "正文预算/数据库压缩/持久策略，非全部插件统一预算。",
+      "sources": [
+        "zap-database"
+      ]
+    },
+    "S07": {
+      "availability": "可选",
+      "detail": "报告/HAR/原始报文/站点树/Zest。",
+      "sources": [
+        "zap-reports",
+        "zap-exim",
+        "zap-zest"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "CLI/config/API/插件配置，热更新按模块。",
+      "sources": [
+        "zap-cmd",
+        "zap-api"
+      ]
+    },
+    "X02": {
+      "availability": "原生",
+      "detail": "Marketplace和扩展脚本。",
+      "sources": [
+        "zap-market",
+        "zap-scripts"
+      ]
+    },
+    "X03": {
+      "availability": "部分",
+      "detail": "Trusted/工具开关与本机合同不是强制沙箱。",
+      "sources": [
+        "zap-llm-options",
+        "zap-mcp"
+      ]
+    },
+    "X04": {
+      "availability": "部分",
+      "detail": "HTTP API key/来源；MCP可选key且限定可信同机。",
+      "sources": [
+        "zap-api",
+        "zap-mcp"
+      ]
+    },
+    "X05": {
+      "availability": "部分",
+      "detail": "会话/daemon/browser生命周期分散；借用CDP所有权未证实。",
+      "sources": [
+        "zap-cmd",
+        "zap-selenium",
+        "zap-session"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "Output/API/统计/任务和Docker health。",
+      "sources": [
+        "zap-api-catalogue",
+        "zap-automation",
+        "zap-docker"
+      ]
+    }
+  }
+}

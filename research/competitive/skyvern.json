@@ -1,0 +1,5998 @@
+{
+  "project": "Skyvern",
+  "repo": "https://github.com/Skyvern-AI/skyvern",
+  "revision": {
+    "default_branch": "main",
+    "sha": "c4022ddeb209834672c6224ee2fe486e087ea83c",
+    "committed_at": "2026-10-25T04:15:51Z",
+    "verified_at": "2026-10-25"
+  },
+  "version": "1.0.56（仓库pyproject）；云端引擎Default/3.0与自托管能力另述",
+  "license": "AGPL-3.0",
+  "sources": [
+    {
+      "id": "sky.readme",
+      "title": "README.md",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/README.md"
+    },
+    {
+      "id": "sky.package",
+      "title": "pyproject.toml",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/pyproject.toml"
+    },
+    {
+      "id": "sky.selfhost",
+      "title": "docs/developers/self-hosted/overview.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/developers/self-hosted/overview.mdx"
+    },
+    {
+      "id": "sky.browserguide",
+      "title": "docs/developers/browser-automation.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/developers/browser-automation.mdx"
+    },
+    {
+      "id": "sky.mcpdoc",
+      "title": "docs/developers/getting-started/mcp.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/developers/getting-started/mcp.mdx"
+    },
+    {
+      "id": "sky.cli",
+      "title": "docs/reference/cli.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/reference/cli.mdx"
+    },
+    {
+      "id": "sky.config",
+      "title": "docs/reference/configuration.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/reference/configuration.mdx"
+    },
+    {
+      "id": "sky.blocksdoc",
+      "title": "docs/reference/blocks.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/reference/blocks.mdx"
+    },
+    {
+      "id": "sky.blockschema",
+      "title": "skyvern/schemas/workflows.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/schemas/workflows.py"
+    },
+    {
+      "id": "sky.blockmap",
+      "title": "skyvern/cli/mcp_tools/blocks.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/blocks.py"
+    },
+    {
+      "id": "sky.blockimpl",
+      "title": "skyvern/forge/sdk/workflow/models/block.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/forge/sdk/workflow/models/block.py"
+    },
+    {
+      "id": "sky.mcp",
+      "title": "skyvern/cli/mcp_tools/__init__.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/__init__.py"
+    },
+    {
+      "id": "sky.scopes",
+      "title": "skyvern/cli/mcp_tools/scopes.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/scopes.py"
+    },
+    {
+      "id": "sky.mcp.browser",
+      "title": "skyvern/cli/mcp_tools/browser.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/browser.py"
+    },
+    {
+      "id": "sky.mcp.inspection",
+      "title": "skyvern/cli/mcp_tools/inspection.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/inspection.py"
+    },
+    {
+      "id": "sky.mcp.state",
+      "title": "skyvern/cli/mcp_tools/state.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/state.py"
+    },
+    {
+      "id": "sky.mcp.trajectory",
+      "title": "skyvern/cli/mcp_tools/trajectory.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/trajectory.py"
+    },
+    {
+      "id": "sky.mcp.session",
+      "title": "skyvern/cli/mcp_tools/session.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/session.py"
+    },
+    {
+      "id": "sky.mcp.common",
+      "title": "skyvern/cli/mcp_tools/_common.py",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/skyvern/cli/mcp_tools/_common.py"
+    },
+    {
+      "id": "sky.studio",
+      "title": "docs/cloud/studio.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/cloud/studio.mdx"
+    },
+    {
+      "id": "sky.cloudruns",
+      "title": "docs/cloud/runs.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/cloud/runs.mdx"
+    },
+    {
+      "id": "sky.cloudintegrations",
+      "title": "docs/cloud/integrations.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/cloud/integrations.mdx"
+    },
+    {
+      "id": "sky.account",
+      "title": "docs/cloud/account.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/cloud/account.mdx"
+    },
+    {
+      "id": "sky.production",
+      "title": "docs/developers/production.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/developers/production.mdx"
+    },
+    {
+      "id": "sky.triggers",
+      "title": "docs/developers/event-triggers.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/developers/event-triggers.mdx"
+    },
+    {
+      "id": "sky.openapi",
+      "title": "docs/api-reference/openapi.json",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/api-reference/openapi.json"
+    },
+    {
+      "id": "sky.index",
+      "title": "Skyvern官方完整文档索引",
+      "url": "https://docs.skyvern.com/llms.txt"
+    },
+    {
+      "id": "sky.sdk.overview",
+      "title": "docs/sdk-reference/overview.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/overview.mdx"
+    },
+    {
+      "id": "sky.sdk.agents",
+      "title": "docs/sdk-reference/agents.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/agents.mdx"
+    },
+    {
+      "id": "sky.sdk.runs",
+      "title": "docs/sdk-reference/runs.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/runs.mdx"
+    },
+    {
+      "id": "sky.sdk.browser-sessions",
+      "title": "docs/sdk-reference/browser-sessions.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/browser-sessions.mdx"
+    },
+    {
+      "id": "sky.sdk.browser-profiles",
+      "title": "docs/sdk-reference/browser-profiles.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/browser-profiles.mdx"
+    },
+    {
+      "id": "sky.sdk.credentials",
+      "title": "docs/sdk-reference/credentials.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/credentials.mdx"
+    },
+    {
+      "id": "sky.sdk.files",
+      "title": "docs/sdk-reference/files.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/files.mdx"
+    },
+    {
+      "id": "sky.sdk.folders",
+      "title": "docs/sdk-reference/folders.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/folders.mdx"
+    },
+    {
+      "id": "sky.sdk.artifacts",
+      "title": "docs/sdk-reference/artifacts.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/artifacts.mdx"
+    },
+    {
+      "id": "sky.sdk.schedules",
+      "title": "docs/sdk-reference/schedules.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/schedules.mdx"
+    },
+    {
+      "id": "sky.sdk.helpers",
+      "title": "docs/sdk-reference/helpers.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/helpers.mdx"
+    },
+    {
+      "id": "sky.sdk.browser-automation.agent",
+      "title": "docs/sdk-reference/browser-automation/agent.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/browser-automation/agent.mdx"
+    },
+    {
+      "id": "sky.sdk.browser-automation.page",
+      "title": "docs/sdk-reference/browser-automation/page.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/browser-automation/page.mdx"
+    },
+    {
+      "id": "sky.sdk.browser-automation.forms",
+      "title": "docs/sdk-reference/browser-automation/forms.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/browser-automation/forms.mdx"
+    },
+    {
+      "id": "sky.sdk.browser-automation.frames",
+      "title": "docs/sdk-reference/browser-automation/frames.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/browser-automation/frames.mdx"
+    },
+    {
+      "id": "sky.sdk.browser-automation.browsers",
+      "title": "docs/sdk-reference/browser-automation/browsers.mdx",
+      "url": "https://github.com/Skyvern-AI/skyvern/blob/c4022ddeb209834672c6224ee2fe486e087ea83c/docs/sdk-reference/browser-automation/browsers.mdx"
+    }
+  ],
+  "features": [
+    {
+      "id": "sky.block.task",
+      "category": "工作流块",
+      "name": "旧Task块",
+      "availability": "部分",
+      "detail": "保留旧任务schema；新建任务优先使用navigation/当前引擎。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:task"
+      ]
+    },
+    {
+      "id": "sky.block.task_v2",
+      "category": "工作流块",
+      "name": "旧Task V2块",
+      "availability": "部分",
+      "detail": "保留旧2.0任务schema；UI仅对已有2.0块开放受限编辑。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:task_v2"
+      ]
+    },
+    {
+      "id": "sky.block.for_loop",
+      "category": "工作流块",
+      "name": "Loop",
+      "availability": "原生",
+      "detail": "按已知列表逐项执行嵌套块。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:for_loop"
+      ]
+    },
+    {
+      "id": "sky.block.while_loop",
+      "category": "工作流块",
+      "name": "While Loop",
+      "availability": "原生",
+      "detail": "按Jinja表达式或自然语言条件反复执行嵌套块。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:while_loop"
+      ]
+    },
+    {
+      "id": "sky.block.conditional",
+      "category": "工作流块",
+      "name": "Conditional",
+      "availability": "原生",
+      "detail": "按表达式或模型判断选分支，支持else。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:conditional"
+      ]
+    },
+    {
+      "id": "sky.block.code",
+      "category": "工作流块",
+      "name": "Code",
+      "availability": "原生",
+      "detail": "执行工作流Python代码，可访问受允许的输入和任务资源。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:code"
+      ]
+    },
+    {
+      "id": "sky.block.text_prompt",
+      "category": "工作流块",
+      "name": "Text Prompt",
+      "availability": "原生",
+      "detail": "不操作浏览器，处理输入文本并生成文本或结构化结果。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:text_prompt"
+      ]
+    },
+    {
+      "id": "sky.block.download_to_s3",
+      "category": "工作流块",
+      "name": "Download to S3",
+      "availability": "原生",
+      "detail": "把文件URL保存到S3。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:download_to_s3"
+      ]
+    },
+    {
+      "id": "sky.block.upload_to_s3",
+      "category": "工作流块",
+      "name": "Upload to S3",
+      "availability": "原生",
+      "detail": "将本地产物上传S3；UI Cloud Storage配置还涵盖Azure。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:upload_to_s3"
+      ]
+    },
+    {
+      "id": "sky.block.file_upload",
+      "category": "工作流块",
+      "name": "File Upload",
+      "availability": "原生",
+      "detail": "从受支持存储取得文件并上传到网页元素。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:file_upload"
+      ]
+    },
+    {
+      "id": "sky.block.send_email",
+      "category": "工作流块",
+      "name": "Send Email",
+      "availability": "原生",
+      "detail": "通过SMTP或已连接Gmail发送邮件，可附加运行文件。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:send_email"
+      ]
+    },
+    {
+      "id": "sky.block.file_url_parser",
+      "category": "工作流块",
+      "name": "File Parser",
+      "availability": "原生",
+      "detail": "解析PDF、CSV、Excel、图片、DOCX；ZIP解开为文件列表。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:file_url_parser"
+      ]
+    },
+    {
+      "id": "sky.block.validation",
+      "category": "工作流块",
+      "name": "AI Validation",
+      "availability": "原生",
+      "detail": "根据complete/terminate条件验证页面和输入。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:validation"
+      ]
+    },
+    {
+      "id": "sky.block.action",
+      "category": "工作流块",
+      "name": "Browser Action",
+      "availability": "原生",
+      "detail": "执行一个聚焦的页面动作。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:action"
+      ]
+    },
+    {
+      "id": "sky.block.navigation",
+      "category": "工作流块",
+      "name": "Browser Task / Navigation",
+      "availability": "原生",
+      "detail": "按目标自主导航和多步交互，可配置完成条件、下载完成条件及步骤上限。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:navigation"
+      ]
+    },
+    {
+      "id": "sky.block.extraction",
+      "category": "工作流块",
+      "name": "Extraction",
+      "availability": "原生",
+      "detail": "从页面提取JSON Schema约束的数据。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:extraction"
+      ]
+    },
+    {
+      "id": "sky.block.login",
+      "category": "工作流块",
+      "name": "Login",
+      "availability": "原生",
+      "detail": "使用所选凭据完成正常登录与所需验证码交互。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:login"
+      ]
+    },
+    {
+      "id": "sky.block.wait",
+      "category": "工作流块",
+      "name": "Wait",
+      "availability": "原生",
+      "detail": "按配置暂停工作流。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:wait"
+      ]
+    },
+    {
+      "id": "sky.block.file_download",
+      "category": "工作流块",
+      "name": "File Download",
+      "availability": "原生",
+      "detail": "由浏览器按目标找到文件并等待保存。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:file_download"
+      ]
+    },
+    {
+      "id": "sky.block.goto_url",
+      "category": "工作流块",
+      "name": "Go to URL",
+      "availability": "原生",
+      "detail": "确定性导航至指定URL。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:goto_url"
+      ]
+    },
+    {
+      "id": "sky.block.pdf_parser",
+      "category": "工作流块",
+      "name": "PDF Parser",
+      "availability": "原生",
+      "detail": "从PDF提取结构化信息。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:pdf_parser"
+      ]
+    },
+    {
+      "id": "sky.block.http_request",
+      "category": "工作流块",
+      "name": "HTTP Request",
+      "availability": "原生",
+      "detail": "调用外部HTTP API，支持头、JSON、文件、超时及响应保存。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:http_request"
+      ]
+    },
+    {
+      "id": "sky.block.web_search",
+      "category": "工作流块",
+      "name": "Web Search",
+      "availability": "原生",
+      "detail": "通过Google/Exa搜索并可选由模型处理，支持schema结果。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:web_search"
+      ]
+    },
+    {
+      "id": "sky.block.human_interaction",
+      "category": "工作流块",
+      "name": "Human Interaction",
+      "availability": "原生",
+      "detail": "暂停等待人类批准/拒绝或接管，支持通知与超时。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:human_interaction"
+      ]
+    },
+    {
+      "id": "sky.block.print_page",
+      "category": "工作流块",
+      "name": "Print Page",
+      "availability": "原生",
+      "detail": "将当前页面打印为PDF产物。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:print_page"
+      ]
+    },
+    {
+      "id": "sky.block.workflow_trigger",
+      "category": "工作流块",
+      "name": "Workflow Trigger",
+      "availability": "原生",
+      "detail": "触发另一个工作流，支持传参和等待完成。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:workflow_trigger"
+      ]
+    },
+    {
+      "id": "sky.block.google_sheets_read",
+      "category": "工作流块",
+      "name": "Google Sheets Read",
+      "availability": "原生",
+      "detail": "读取Google Sheet为结构化行。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:google_sheets_read"
+      ]
+    },
+    {
+      "id": "sky.block.google_sheets_write",
+      "category": "工作流块",
+      "name": "Google Sheets Write",
+      "availability": "原生",
+      "detail": "追加行或更新单元格。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:google_sheets_write"
+      ]
+    },
+    {
+      "id": "sky.block.pdf_fill",
+      "category": "工作流块",
+      "name": "PDF Fill",
+      "availability": "原生",
+      "detail": "按目标与数据填充AcroForm或扁平PDF。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:pdf_fill"
+      ]
+    },
+    {
+      "id": "sky.block.split_pdf",
+      "category": "工作流块",
+      "name": "Split PDF",
+      "availability": "原生",
+      "detail": "按要求把PDF拆为多个文件并保存。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:split_pdf"
+      ]
+    },
+    {
+      "id": "sky.block.email_inbox",
+      "category": "工作流块",
+      "name": "Email Inbox",
+      "availability": "原生",
+      "detail": "读取匹配的Gmail/Outlook邮件，可下载附件。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:email_inbox"
+      ]
+    },
+    {
+      "id": "sky.block.data_export",
+      "category": "工作流块",
+      "name": "Data Export",
+      "availability": "原生",
+      "detail": "按schema导出工作流记录为Parquet文件。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:data_export"
+      ]
+    },
+    {
+      "id": "sky.block.terminate",
+      "category": "工作流块",
+      "name": "Terminate",
+      "availability": "原生",
+      "detail": "以原因和可选结构化错误码停止运行。 该类型在当前BlockType及MCP block schema映射中存在；实际外部服务需另配凭据。",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ],
+      "interfaces": [
+        "block_type:terminate"
+      ]
+    },
+    {
+      "id": "sky.agent.loop",
+      "category": "Agent",
+      "name": "视觉/DOM多步任务引擎",
+      "availability": "原生",
+      "detail": "run_task与page.agent.run_task执行目标；模型结合页面结构和截图决定动作。",
+      "sources": [
+        "sky.sdk.runs"
+      ],
+      "interfaces": [
+        "Skyvern.run_task"
+      ]
+    },
+    {
+      "id": "sky.agent.result",
+      "category": "Agent",
+      "name": "业务条件与结构化结果",
+      "availability": "原生",
+      "detail": "支持prompt、data_extraction_schema、error_code_mapping、完成/终止条件及明确运行状态。",
+      "sources": [
+        "sky.sdk.runs"
+      ],
+      "interfaces": [
+        "Skyvern.run_task"
+      ]
+    },
+    {
+      "id": "sky.agent.models",
+      "category": "模型",
+      "name": "多提供方与本地模型",
+      "availability": "原生",
+      "detail": "OpenAI、Anthropic、Gemini/Vertex、Azure、Bedrock、OpenRouter、Groq、Ollama及OpenAI兼容endpoint；主/次模型可分设。",
+      "sources": [
+        "sky.config"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.sdk.local",
+      "category": "部署",
+      "name": "嵌入本地SDK模式",
+      "availability": "可选",
+      "detail": "Skyvern.local运行进程内引擎，内存SQLite或配置数据库；Python需[local]extra，TS需服务端。",
+      "sources": [
+        "sky.sdk.overview"
+      ],
+      "interfaces": [
+        "Skyvern.local"
+      ]
+    },
+    {
+      "id": "sky.sdk.remote",
+      "category": "接入",
+      "name": "Python/TypeScript远程SDK",
+      "availability": "原生",
+      "detail": "typed async客户端可连接Cloud或自托管base_url，支持请求级超时、重试与自定义httpx。",
+      "sources": [
+        "sky.sdk.overview"
+      ],
+      "interfaces": [
+        "Skyvern"
+      ]
+    },
+    {
+      "id": "sky.browser.cloud",
+      "category": "浏览器连接",
+      "name": "托管浏览器租用与复用",
+      "availability": "云端",
+      "detail": "launch_cloud_browser/use_cloud_browser、persistent sessions、CDP地址、配置档、下载和录屏。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.browser.local",
+      "category": "浏览器连接",
+      "name": "本地Chromium与现有CDP",
+      "availability": "原生",
+      "detail": "launch_local_browser与connect_to_browser_over_cdp；本地可配headless/user_data_dir/args。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.browser.pages",
+      "category": "浏览器交互",
+      "name": "多页与Playwright混合控制",
+      "availability": "原生",
+      "detail": "get_working_page/new_page/get_page_for，SkyvernPage包装Playwright并添加AI能力。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.page.ai",
+      "category": "页面交互",
+      "name": "AI原语与确定性选择器",
+      "availability": "原生",
+      "detail": "act/extract/validate/prompt及click/fill/select_option支持selector、意图或AI fallback。",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.page.precision",
+      "category": "页面交互",
+      "name": "指针、键盘、滚动与上传",
+      "availability": "原生",
+      "detail": "Python SDK公开hover/type/upload_file/keypress/scroll/drag/move；TS对应面更小。",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.forms",
+      "category": "业务交互",
+      "name": "整表和跨页表单",
+      "availability": "原生",
+      "detail": "fill_form/fill_multipage_form、extract_form_fields/dynamic_field_map、fill_from_mapping/validate_mapping与autocomplete。",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.frames",
+      "category": "业务交互",
+      "name": "iframe上下文",
+      "availability": "原生",
+      "detail": "frame_switch/frame_main/frame_list为Python正式SDK入口。",
+      "sources": [
+        "sky.sdk.browser-automation.frames"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.browser.profiles",
+      "category": "状态复用",
+      "name": "浏览器Profile资源",
+      "availability": "原生",
+      "detail": "创建/读取/修改/删除配置，可由运行或persistent session生成并在下次加载。",
+      "sources": [
+        "sky.sdk.browser-profiles"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.browser.sessions",
+      "category": "运行管理",
+      "name": "持久浏览器Session",
+      "availability": "原生",
+      "detail": "创建/查看/列举/更新/延长/关闭会话，跨多个run保持页面及cookie。",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.credentials",
+      "category": "凭据",
+      "name": "凭据资源与验证码传入",
+      "availability": "原生",
+      "detail": "CRUD凭据，send_totp_code，支持存储登录、支付卡和secret；外部密码库另配。",
+      "sources": [
+        "sky.sdk.credentials"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.passwordmanager",
+      "category": "集成",
+      "name": "1Password/Bitwarden集成",
+      "availability": "可选",
+      "detail": "MCP正式提供item列表和config get/set/clear；属于可选外部连接。",
+      "sources": [
+        "sky.mcp"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.crud",
+      "category": "工作流",
+      "name": "工作流版本与资源管理",
+      "availability": "原生",
+      "detail": "创建/修改/删除/获取/列举，查询版本、运行、按ID过滤和文件夹归类。",
+      "sources": [
+        "sky.sdk.agents"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.ui",
+      "category": "UI",
+      "name": "Studio可视/YAML编排",
+      "availability": "原生",
+      "detail": "Editor、Browser、Run和Copilot多面板；支持手工块、YAML、参数、版本、模板。",
+      "sources": [
+        "sky.studio"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.copilot",
+      "category": "云端",
+      "name": "Copilot生成/修改工作流",
+      "availability": "云端",
+      "detail": "聊天生成计划与块，提出变更卡并支持review/accept/reject；可附SOP并以示范生成步骤。",
+      "sources": [
+        "sky.studio"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.control",
+      "category": "工作流",
+      "name": "条件/循环/子工作流",
+      "availability": "原生",
+      "detail": "for_loop、while_loop、conditional和workflow_trigger是正式控制流块；未将任意Code等价并行块。",
+      "sources": [
+        "sky.blockmap"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.params",
+      "category": "工作流",
+      "name": "输入和输出参数连接",
+      "availability": "原生",
+      "detail": "Jinja模板将输入、前序块结果和loop reserved变量连接。",
+      "sources": [
+        "sky.blocksdoc"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.validation",
+      "category": "业务验证",
+      "name": "AI与schema结果检查",
+      "availability": "原生",
+      "detail": "Validation块的完成/终止条件与自定义错误码，以及page.validate返回布尔。",
+      "sources": [
+        "sky.blocksdoc"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.human",
+      "category": "人工介入",
+      "name": "暂停审批/拒绝与接管",
+      "availability": "原生",
+      "detail": "Human Interaction块含待人工状态、审批按钮、通知和超时。",
+      "sources": [
+        "sky.blocksdoc"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.cache",
+      "category": "运行优化",
+      "name": "代码缓存与AI回退",
+      "availability": "原生",
+      "detail": "run_with=code/agent、ai_fallback、cached script ID和代码版本；自愈部署可通过MCP scripts接口管理。",
+      "sources": [
+        "sky.production"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.retries",
+      "category": "运行管理",
+      "name": "重试策略与失败分类",
+      "availability": "原生",
+      "detail": "retry_policy按指定失败原因重跑；attempts保留尝试信息，Webhook可只在最终发送。",
+      "sources": [
+        "sky.production"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.workflow.liveness",
+      "category": "运行管理",
+      "name": "进程失联状态收敛",
+      "availability": "原生",
+      "detail": "RUN_HEARTBEAT_TIMEOUT_MINUTES在服务进程失联后将run判失败并发Webhook或按策略重试；并非自动续接未知浏览器动作。",
+      "sources": [
+        "sky.config"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.run.inspect",
+      "category": "运行管理",
+      "name": "任务状态与时间线",
+      "availability": "原生",
+      "detail": "get_run/get_runs_v2/get_run_timeline/cancel/bulk_cancel；结果含failure_reason/errors/step_count/下载/录屏。",
+      "sources": [
+        "sky.sdk.runs"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.run.schedule",
+      "category": "调度",
+      "name": "cron/间隔/单次计划",
+      "availability": "原生",
+      "detail": "schedule CRUD、时区、启停与取消单次计划，API返回next_runs。",
+      "sources": [
+        "sky.sdk.schedules"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.run.webhook",
+      "category": "集成",
+      "name": "完成Webhook及重发",
+      "availability": "原生",
+      "detail": "终态结果Webhook有HMAC校验及有限重试，retry_run_webhook可单次重投。",
+      "sources": [
+        "sky.production"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.run.triggers",
+      "category": "集成",
+      "name": "入站事件触发",
+      "availability": "原生",
+      "detail": "Studio创建签名HTTP trigger，JSON Pointer映射，事件ID去重、delivery历史和重放；尚无公开SDK管理方法。",
+      "sources": [
+        "sky.triggers"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.artifacts",
+      "category": "证据",
+      "name": "运行产物与下载",
+      "availability": "原生",
+      "detail": "get_run_artifacts及artifacts.get_artifact_content；类型包括截图、DOM、HAR、录屏、日志、PDF等。",
+      "sources": [
+        "sky.sdk.artifacts"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.artifacts.integrity",
+      "category": "证据",
+      "name": "产物校验和与大小",
+      "availability": "原生",
+      "detail": "Artifact公开checksum与file_size；下载实现有SHA256计算，不承诺每个历史产物都填充。",
+      "sources": [
+        "sky.sdk.artifacts",
+        "sky.blockimpl"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.files.upload",
+      "category": "文件",
+      "name": "运行输入文件",
+      "availability": "部分",
+      "detail": "REST POST /v1/upload_file支持multipart文件上传；当前Python/TS SDK upload_file官方文档明确会发文本字段并返回422，不能视为SDK已可用。",
+      "sources": [
+        "sky.sdk.files"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp",
+      "category": "接入",
+      "name": "118个官方MCP工具",
+      "availability": "可选",
+      "detail": "涵盖浏览器、会话、状态、检查、工作流、脚本、计划、凭据和组织配置；源码按注册逐项枚举。",
+      "sources": [
+        "sky.mcp"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.prompts",
+      "category": "接入",
+      "name": "四个MCP提示模板",
+      "availability": "可选",
+      "detail": "build_workflow/debug_automation/extract_data/qa_test为正式prompt。",
+      "sources": [
+        "sky.mcp"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.transport",
+      "category": "接入",
+      "name": "stdio与HTTP/OAuth接入",
+      "availability": "可选",
+      "detail": "本地stdio、streamable-http和官方托管OAuth/API key连接，安装extras依运行形态区分。",
+      "sources": [
+        "sky.mcpdoc"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.scope",
+      "category": "权限",
+      "name": "工具集scope裁剪",
+      "availability": "可选",
+      "detail": "all/operate/build/browser/lean按tags改变暴露工具；不是应用账户授权的替代。",
+      "sources": [
+        "sky.scopes"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.annotate",
+      "category": "权限",
+      "name": "工具安全注解",
+      "availability": "可选",
+      "detail": "所有tool有title及readOnly/openWorld/destructive hints；这些注解本身不强制授权。",
+      "sources": [
+        "sky.mcp"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.observe",
+      "category": "页面观察",
+      "name": "带refs的交互元素观察",
+      "availability": "可选",
+      "detail": "observe支持selector、interactive_only、max_elements与include_values；密码值不返回。",
+      "sources": [
+        "sky.mcp.browser"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.refs",
+      "category": "页面观察",
+      "name": "按transport区分引用有效期",
+      "availability": "可选",
+      "detail": "stdio引用在下一observe/导航/上下文变化前复用；hosted stateless HTTP只建议单batch内引用。",
+      "sources": [
+        "sky.mcp.browser"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.execute",
+      "category": "执行",
+      "name": "批量动作和部分完成回执",
+      "availability": "可选",
+      "detail": "skyvern_execute执行允许的确定性步骤、stop_on_error、返回results/steps_completed/error_step。",
+      "sources": [
+        "sky.mcp.browser"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.network",
+      "category": "网络诊断",
+      "name": "请求列表与单条正文",
+      "availability": "可选",
+      "detail": "network_requests按URL/status/method/resource过滤，detail返回已捕获头/body；当前hosted stateless HTTP明确不可用。",
+      "sources": [
+        "sky.mcp.inspection"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.route",
+      "category": "网络诊断",
+      "name": "浏览器route与mock",
+      "availability": "可选",
+      "detail": "network_route/unroute提供Playwright路由层修改/mock，不是独立MITM代理。",
+      "sources": [
+        "sky.mcp.inspection"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.console",
+      "category": "调试",
+      "name": "Console、JS异常与样式/HTML",
+      "availability": "可选",
+      "detail": "console_messages/get_errors/get_html/get_value/get_styles提供浏览器诊断。",
+      "sources": [
+        "sky.mcp.inspection"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.dialog",
+      "category": "浏览器交互",
+      "name": "对话框历史",
+      "availability": "可选",
+      "detail": "skyvern_handle_dialog目前读取自动dismiss后的alert/confirm/prompt历史；不是显式accept/文本输入决策。",
+      "sources": [
+        "sky.mcp.inspection"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.har",
+      "category": "网络诊断",
+      "name": "HAR录制和输出",
+      "availability": "可选",
+      "detail": "har_start/har_stop管理本次捕获并可保存产物；不据此推断HAR导入或SSE消息库。",
+      "sources": [
+        "sky.mcp.inspection"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.storage",
+      "category": "状态",
+      "name": "存储状态和storage操作",
+      "availability": "可选",
+      "detail": "state_save/load，sessionStorage get/set/clear和localStorage清理。",
+      "sources": [
+        "sky.mcp"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.trajectory",
+      "category": "证据",
+      "name": "有限动作轨迹采集",
+      "availability": "可选",
+      "detail": "trajectory_get返回entry_count/truncated/capture_status；仅捕获click/type/select/press，进程本地，关会话删除。",
+      "sources": [
+        "sky.mcp.trajectory"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.mcp.schema",
+      "category": "开发体验",
+      "name": "块发现、校验与代码合成",
+      "availability": "可选",
+      "detail": "workflow_knowledge/block_schema/block_validate/code_block_lint/synthesize协助构建正式工作流。",
+      "sources": [
+        "sky.blockmap"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.cli",
+      "category": "接入",
+      "name": "任务操作CLI与Skills",
+      "availability": "可选",
+      "detail": "CLI管理服务、browser、任务、workflow、credentials、MCP和skills，支持JSON输出。",
+      "sources": [
+        "sky.cli"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.selfhost",
+      "category": "部署",
+      "name": "SDK/local/server/Compose/K8s",
+      "availability": "原生",
+      "detail": "轻量SDK、[local]嵌入引擎、[server]API和完整Compose/Kubernetes UI安装分开；自托管负责模型、数据库和运维。",
+      "sources": [
+        "sky.selfhost"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.cloud.boundary",
+      "category": "云端",
+      "name": "托管引擎和基础设施边界",
+      "availability": "云端",
+      "detail": "Cloud供应受管理浏览器及网络基础设施；自托管不含Cloud代理网络等服务，Default引擎选择依部署能力。",
+      "sources": [
+        "sky.selfhost",
+        "sky.blocksdoc"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.cloud.team",
+      "category": "云端",
+      "name": "组织成员与运行设置",
+      "availability": "云端",
+      "detail": "Cloud组织设置含成员角色、API key轮换、limits、模型、计划及credits；具体套餐需另核。",
+      "sources": [
+        "sky.account"
+      ],
+      "interfaces": []
+    },
+    {
+      "id": "sky.engines",
+      "category": "模型与执行",
+      "name": "引擎选择与SDK版本差异",
+      "availability": "部分",
+      "detail": "SDK run_task默认skyvern_v1；REST/Python还接受skyvern_v3、旧v2及OpenAI/Anthropic CUA、UI-TARS、Yutori。当前TS类型尚未列skyvern_v3；Cloud Studio Default自2026-10-01新建Agent为3.0。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blocksdoc"
+      ],
+      "interfaces": [
+        "Skyvern.run_task"
+      ]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "Skyvern.run_workflow",
+      "category": "Python SDK：agents",
+      "purpose": "运行工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.retry_workflow_run",
+      "category": "Python SDK：agents",
+      "purpose": "重试工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.create_workflow",
+      "category": "Python SDK：agents",
+      "purpose": "创建工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.get_workflow",
+      "category": "Python SDK：agents",
+      "purpose": "读取工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.get_workflows",
+      "category": "Python SDK：agents",
+      "purpose": "读取工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.get_workflow_versions",
+      "category": "Python SDK：agents",
+      "purpose": "读取工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.update_workflow",
+      "category": "Python SDK：agents",
+      "purpose": "更新工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.delete_workflow",
+      "category": "Python SDK：agents",
+      "purpose": "删除工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.get_workflow_runs",
+      "category": "Python SDK：agents",
+      "purpose": "读取工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.get_workflow_runs_by_id",
+      "category": "Python SDK：agents",
+      "purpose": "读取工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.agents"
+      ]
+    },
+    {
+      "name": "Skyvern.run_task",
+      "category": "Python SDK：runs",
+      "purpose": "运行浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.runs"
+      ]
+    },
+    {
+      "name": "Skyvern.get_run",
+      "category": "Python SDK：runs",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.runs"
+      ]
+    },
+    {
+      "name": "Skyvern.get_runs_v2",
+      "category": "Python SDK：runs",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.runs"
+      ]
+    },
+    {
+      "name": "Skyvern.get_run_timeline",
+      "category": "Python SDK：runs",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.runs"
+      ]
+    },
+    {
+      "name": "Skyvern.cancel_run",
+      "category": "Python SDK：runs",
+      "purpose": "取消浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.runs"
+      ]
+    },
+    {
+      "name": "Skyvern.bulk_cancel_runs",
+      "category": "Python SDK：runs",
+      "purpose": "取消浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.runs"
+      ]
+    },
+    {
+      "name": "Skyvern.retry_run_webhook",
+      "category": "Python SDK：runs",
+      "purpose": "重试浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.runs"
+      ]
+    },
+    {
+      "name": "Skyvern.create_browser_session",
+      "category": "Python SDK：browser-sessions",
+      "purpose": "创建浏览器会话",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    {
+      "name": "Skyvern.get_browser_session",
+      "category": "Python SDK：browser-sessions",
+      "purpose": "读取浏览器会话",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    {
+      "name": "Skyvern.get_browser_sessions",
+      "category": "Python SDK：browser-sessions",
+      "purpose": "读取浏览器会话",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    {
+      "name": "Skyvern.update_browser_session",
+      "category": "Python SDK：browser-sessions",
+      "purpose": "更新浏览器会话",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    {
+      "name": "Skyvern.extend_browser_session",
+      "category": "Python SDK：browser-sessions",
+      "purpose": "操作浏览器会话",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    {
+      "name": "Skyvern.close_browser_session",
+      "category": "Python SDK：browser-sessions",
+      "purpose": "关闭浏览器会话",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    {
+      "name": "Skyvern.create_browser_profile",
+      "category": "Python SDK：browser-profiles",
+      "purpose": "创建持久浏览器配置",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-profiles"
+      ]
+    },
+    {
+      "name": "Skyvern.get_browser_profile",
+      "category": "Python SDK：browser-profiles",
+      "purpose": "读取持久浏览器配置",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-profiles"
+      ]
+    },
+    {
+      "name": "Skyvern.list_browser_profiles",
+      "category": "Python SDK：browser-profiles",
+      "purpose": "列出持久浏览器配置",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-profiles"
+      ]
+    },
+    {
+      "name": "Skyvern.update_browser_profile",
+      "category": "Python SDK：browser-profiles",
+      "purpose": "更新持久浏览器配置",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-profiles"
+      ]
+    },
+    {
+      "name": "Skyvern.delete_browser_profile",
+      "category": "Python SDK：browser-profiles",
+      "purpose": "删除持久浏览器配置",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.browser-profiles"
+      ]
+    },
+    {
+      "name": "Skyvern.create_credential",
+      "category": "Python SDK：credentials",
+      "purpose": "创建凭据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.credentials"
+      ]
+    },
+    {
+      "name": "Skyvern.get_credential",
+      "category": "Python SDK：credentials",
+      "purpose": "读取凭据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.credentials"
+      ]
+    },
+    {
+      "name": "Skyvern.get_credentials",
+      "category": "Python SDK：credentials",
+      "purpose": "读取凭据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.credentials"
+      ]
+    },
+    {
+      "name": "Skyvern.update_credential",
+      "category": "Python SDK：credentials",
+      "purpose": "更新凭据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.credentials"
+      ]
+    },
+    {
+      "name": "Skyvern.delete_credential",
+      "category": "Python SDK：credentials",
+      "purpose": "删除凭据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.credentials"
+      ]
+    },
+    {
+      "name": "Skyvern.send_totp_code",
+      "category": "Python SDK：credentials",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.credentials"
+      ]
+    },
+    {
+      "name": "Skyvern.upload_file",
+      "category": "Python SDK：files",
+      "purpose": "当前官方已知SDK缺陷：传文本字段导致422；文件内容上传应使用公开REST multipart端点",
+      "availability": "部分",
+      "sources": [
+        "sky.sdk.files"
+      ]
+    },
+    {
+      "name": "Skyvern.create_folder",
+      "category": "Python SDK：folders",
+      "purpose": "创建工作流文件夹",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.folders"
+      ]
+    },
+    {
+      "name": "Skyvern.get_folder",
+      "category": "Python SDK：folders",
+      "purpose": "读取工作流文件夹",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.folders"
+      ]
+    },
+    {
+      "name": "Skyvern.get_folders",
+      "category": "Python SDK：folders",
+      "purpose": "读取工作流文件夹",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.folders"
+      ]
+    },
+    {
+      "name": "Skyvern.update_folder",
+      "category": "Python SDK：folders",
+      "purpose": "更新工作流文件夹",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.folders"
+      ]
+    },
+    {
+      "name": "Skyvern.delete_folder",
+      "category": "Python SDK：folders",
+      "purpose": "删除工作流文件夹",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.folders"
+      ]
+    },
+    {
+      "name": "Skyvern.update_workflow_folder",
+      "category": "Python SDK：folders",
+      "purpose": "更新工作流",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.folders"
+      ]
+    },
+    {
+      "name": "Skyvern.get_run_artifacts",
+      "category": "Python SDK：artifacts",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.artifacts"
+      ]
+    },
+    {
+      "name": "Skyvern.artifacts.get_artifact_content",
+      "category": "Python SDK：artifacts",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.artifacts"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.list_all",
+      "category": "Python SDK：schedules",
+      "purpose": "列出任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.list",
+      "category": "Python SDK：schedules",
+      "purpose": "列出任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.create",
+      "category": "Python SDK：schedules",
+      "purpose": "创建任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.get",
+      "category": "Python SDK：schedules",
+      "purpose": "读取任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.update",
+      "category": "Python SDK：schedules",
+      "purpose": "更新任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.enable",
+      "category": "Python SDK：schedules",
+      "purpose": "启用任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.disable",
+      "category": "Python SDK：schedules",
+      "purpose": "停用任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.cancel",
+      "category": "Python SDK：schedules",
+      "purpose": "取消任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.schedules.delete",
+      "category": "Python SDK：schedules",
+      "purpose": "删除任务计划",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.schedules"
+      ]
+    },
+    {
+      "name": "Skyvern.login",
+      "category": "Python SDK：helpers",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.helpers"
+      ]
+    },
+    {
+      "name": "Skyvern.download_files",
+      "category": "Python SDK：helpers",
+      "purpose": "按目标定位下载文件；Python不支持wait_for_completion，需查询run或Webhook，TS支持等待",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.helpers"
+      ]
+    },
+    {
+      "name": "Skyvern.get_version",
+      "category": "Python SDK：helpers",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.helpers"
+      ]
+    },
+    {
+      "name": "page.agent.run_task",
+      "category": "Python SDK：browser-automation/agent",
+      "purpose": "运行浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.agent"
+      ]
+    },
+    {
+      "name": "page.agent.login",
+      "category": "Python SDK：browser-automation/agent",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.agent"
+      ]
+    },
+    {
+      "name": "page.agent.download_files",
+      "category": "Python SDK：browser-automation/agent",
+      "purpose": "按目标定位下载文件；Python不支持wait_for_completion，需查询run或Webhook，TS支持等待",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.agent"
+      ]
+    },
+    {
+      "name": "page.agent.run_workflow",
+      "category": "Python SDK：browser-automation/agent",
+      "purpose": "运行工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.agent"
+      ]
+    },
+    {
+      "name": "page.act",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.extract",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.validate",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "校验浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.prompt",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.locator",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.click",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.fill",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.select_option",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.type",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.hover",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.upload_file",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "载入浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.keypress",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.scroll",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.drag",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.move",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.wait",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.download_file",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "载入浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.reload_page",
+      "category": "Python SDK：browser-automation/page",
+      "purpose": "载入浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.page"
+      ]
+    },
+    {
+      "name": "page.fill_form",
+      "category": "Python SDK：browser-automation/forms",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ]
+    },
+    {
+      "name": "page.fill_multipage_form",
+      "category": "Python SDK：browser-automation/forms",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ]
+    },
+    {
+      "name": "page.extract_form_fields",
+      "category": "Python SDK：browser-automation/forms",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ]
+    },
+    {
+      "name": "page.dynamic_field_map",
+      "category": "Python SDK：browser-automation/forms",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ]
+    },
+    {
+      "name": "page.fill_from_mapping",
+      "category": "Python SDK：browser-automation/forms",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ]
+    },
+    {
+      "name": "page.validate_mapping",
+      "category": "Python SDK：browser-automation/forms",
+      "purpose": "校验浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ]
+    },
+    {
+      "name": "page.fill_autocomplete",
+      "category": "Python SDK：browser-automation/forms",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.forms"
+      ]
+    },
+    {
+      "name": "page.frame_switch",
+      "category": "Python SDK：browser-automation/frames",
+      "purpose": "操作iframe上下文",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.frames"
+      ]
+    },
+    {
+      "name": "page.frame_main",
+      "category": "Python SDK：browser-automation/frames",
+      "purpose": "操作iframe上下文",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.frames"
+      ]
+    },
+    {
+      "name": "page.frame_list",
+      "category": "Python SDK：browser-automation/frames",
+      "purpose": "列出iframe上下文",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.frames"
+      ]
+    },
+    {
+      "name": "skyvern.launch_cloud_browser",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "skyvern.use_cloud_browser",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "skyvern.connect_to_cloud_browser_session",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "连接浏览器会话",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "skyvern.connect_to_browser_over_cdp",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "连接浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "skyvern.launch_local_browser",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "skyvern.aclose",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "关闭浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "browser.get_working_page",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "browser.new_page",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "browser.get_page_for",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "browser.close",
+      "category": "Python SDK：browser-automation/browsers",
+      "purpose": "关闭浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    {
+      "name": "Skyvern.local",
+      "category": "SDK初始化",
+      "purpose": "初始化远程客户端、嵌入本地引擎或释放客户端",
+      "availability": "可选",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    {
+      "name": "Skyvern",
+      "category": "SDK初始化",
+      "purpose": "初始化远程客户端、嵌入本地引擎或释放客户端",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    {
+      "name": "Skyvern.aclose",
+      "category": "SDK初始化",
+      "purpose": "初始化远程客户端、嵌入本地引擎或释放客户端",
+      "availability": "原生",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    {
+      "name": "skyvern_browser_session_create",
+      "category": "MCP：session",
+      "purpose": "创建浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_session_close",
+      "category": "MCP：session",
+      "purpose": "关闭浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_session_list",
+      "category": "MCP：session",
+      "purpose": "列出浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_session_get",
+      "category": "MCP：session",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_session_connect",
+      "category": "MCP：session",
+      "purpose": "连接浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_profile_create",
+      "category": "MCP：browser_profile",
+      "purpose": "创建浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_profile_list",
+      "category": "MCP：browser_profile",
+      "purpose": "列出浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_profile_get",
+      "category": "MCP：browser_profile",
+      "purpose": "读取浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_profile_update",
+      "category": "MCP：browser_profile",
+      "purpose": "更新浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_browser_profile_delete",
+      "category": "MCP：browser_profile",
+      "purpose": "删除浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_act",
+      "category": "MCP：ai_powered",
+      "purpose": "按自然语言执行浏览器动作",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_extract",
+      "category": "MCP：ai_powered",
+      "purpose": "按要求提取页面数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_extract_and_screenshot",
+      "category": "MCP：ai_powered",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_validate",
+      "category": "MCP：ai_powered",
+      "purpose": "校验浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_run_task",
+      "category": "MCP：ai_powered",
+      "purpose": "运行浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_login",
+      "category": "MCP：ai_powered",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_navigate",
+      "category": "MCP：browser_primitive",
+      "purpose": "导航至URL",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_navigate_and_screenshot",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_navigate_extract_and_screenshot",
+      "category": "MCP：ai_powered",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_screenshot",
+      "category": "MCP：browser_primitive",
+      "purpose": "获取截图",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_evaluate",
+      "category": "MCP：browser_primitive",
+      "purpose": "执行页面JavaScript",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_evaluate_and_screenshot",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_clipboard_read",
+      "category": "MCP：browser_primitive",
+      "purpose": "读取剪贴板",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_clipboard_write",
+      "category": "MCP：browser_primitive",
+      "purpose": "写入剪贴板",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_observe",
+      "category": "MCP：browser_primitive",
+      "purpose": "观察页面并返回可用动作",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_execute",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_write_grid",
+      "category": "MCP：browser_primitive",
+      "purpose": "写入浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_click",
+      "category": "MCP：browser_primitive",
+      "purpose": "点击元素",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_drag",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_file_upload",
+      "category": "MCP：browser_primitive",
+      "purpose": "上传文件",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_hover",
+      "category": "MCP：browser_primitive",
+      "purpose": "悬停元素或坐标",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_type",
+      "category": "MCP：browser_primitive",
+      "purpose": "输入文本",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_scroll",
+      "category": "MCP：browser_primitive",
+      "purpose": "滚动页面或元素",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_select_option",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_press_key",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_wait",
+      "category": "MCP：browser_primitive",
+      "purpose": "等待指定时长或条件",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_wait_for_either_state",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_find",
+      "category": "MCP：browser_primitive",
+      "purpose": "查找页面目标",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_tab_list",
+      "category": "MCP：tab_management",
+      "purpose": "列出标签页",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_tab_new",
+      "category": "MCP：tab_management",
+      "purpose": "操作标签页",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_open_tabs",
+      "category": "MCP：tab_management",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_tab_switch",
+      "category": "MCP：tab_management",
+      "purpose": "操作标签页",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_tab_close",
+      "category": "MCP：tab_management",
+      "purpose": "关闭标签页",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_tab_wait_for_new",
+      "category": "MCP：tab_management",
+      "purpose": "操作标签页",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_frame_switch",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作iframe上下文",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_frame_main",
+      "category": "MCP：browser_primitive",
+      "purpose": "操作iframe上下文",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_frame_list",
+      "category": "MCP：browser_primitive",
+      "purpose": "列出iframe上下文",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_state_save",
+      "category": "MCP：state",
+      "purpose": "保存浏览器存储状态",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_state_load",
+      "category": "MCP：state",
+      "purpose": "载入浏览器存储状态",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_console_messages",
+      "category": "MCP：inspection",
+      "purpose": "操作控制台消息",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_network_requests",
+      "category": "MCP：inspection",
+      "purpose": "操作网络请求列表",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_network_request_detail",
+      "category": "MCP：inspection",
+      "purpose": "操作单条网络请求详情",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_network_route",
+      "category": "MCP：inspection",
+      "purpose": "操作浏览器路由与mock",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_network_unroute",
+      "category": "MCP：inspection",
+      "purpose": "操作浏览器网络路由",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_handle_dialog",
+      "category": "MCP：inspection",
+      "purpose": "操作原生对话框",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_get_errors",
+      "category": "MCP：inspection",
+      "purpose": "读取页面异常",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_har_start",
+      "category": "MCP：inspection",
+      "purpose": "操作HAR记录",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_har_stop",
+      "category": "MCP：inspection",
+      "purpose": "操作HAR记录",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_get_html",
+      "category": "MCP：inspection",
+      "purpose": "读取元素HTML",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_get_value",
+      "category": "MCP：inspection",
+      "purpose": "读取元素值",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_get_styles",
+      "category": "MCP：inspection",
+      "purpose": "读取元素样式",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_get_session_storage",
+      "category": "MCP：storage",
+      "purpose": "读取sessionStorage",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_set_session_storage",
+      "category": "MCP：storage",
+      "purpose": "设置sessionStorage",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_clear_session_storage",
+      "category": "MCP：storage",
+      "purpose": "清理sessionStorage",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_clear_local_storage",
+      "category": "MCP：storage",
+      "purpose": "清理localStorage",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_knowledge",
+      "category": "MCP：block_discovery",
+      "purpose": "操作工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_block_schema",
+      "category": "MCP：block_discovery",
+      "purpose": "操作工作流块定义",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_block_validate",
+      "category": "MCP：block_discovery",
+      "purpose": "校验工作流块定义",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_code_block_lint",
+      "category": "MCP：block_discovery",
+      "purpose": "静态校验工作流代码块",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_code_block_synthesize",
+      "category": "MCP：block_discovery",
+      "purpose": "生成工作流代码块",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_trajectory_get",
+      "category": "MCP：block_discovery",
+      "purpose": "读取浏览器动作轨迹",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_org_get",
+      "category": "MCP：settings",
+      "purpose": "读取组织设置",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_org_update",
+      "category": "MCP：settings",
+      "purpose": "更新组织设置",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_credential_list",
+      "category": "MCP：credential",
+      "purpose": "列出凭据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_credential_get",
+      "category": "MCP：credential",
+      "purpose": "读取凭据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_credential_delete",
+      "category": "MCP：credential",
+      "purpose": "删除凭据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_onepassword_items",
+      "category": "MCP：credential",
+      "purpose": "操作1Password集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_onepassword_config_get",
+      "category": "MCP：credential",
+      "purpose": "读取1Password集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_onepassword_config_set",
+      "category": "MCP：credential",
+      "purpose": "设置1Password集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_onepassword_config_clear",
+      "category": "MCP：credential",
+      "purpose": "清理1Password集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_bitwarden_items",
+      "category": "MCP：credential",
+      "purpose": "操作Bitwarden集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_bitwarden_config_get",
+      "category": "MCP：credential",
+      "purpose": "读取Bitwarden集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_bitwarden_config_set",
+      "category": "MCP：credential",
+      "purpose": "设置Bitwarden集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_bitwarden_config_clear",
+      "category": "MCP：credential",
+      "purpose": "清理Bitwarden集成",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_folder_list",
+      "category": "MCP：folder",
+      "purpose": "列出工作流文件夹",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_folder_create",
+      "category": "MCP：folder",
+      "purpose": "创建工作流文件夹",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_folder_get",
+      "category": "MCP：folder",
+      "purpose": "读取工作流文件夹",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_folder_update",
+      "category": "MCP：folder",
+      "purpose": "更新工作流文件夹",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_folder_delete",
+      "category": "MCP：folder",
+      "purpose": "删除工作流文件夹",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_list",
+      "category": "MCP：workflow",
+      "purpose": "列出工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_get",
+      "category": "MCP：workflow",
+      "purpose": "读取工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_run_list",
+      "category": "MCP：workflow",
+      "purpose": "列出工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_create",
+      "category": "MCP：workflow",
+      "purpose": "创建工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_update",
+      "category": "MCP：workflow",
+      "purpose": "更新工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_update_folder",
+      "category": "MCP：workflow",
+      "purpose": "更新工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_delete",
+      "category": "MCP：workflow",
+      "purpose": "删除工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_run",
+      "category": "MCP：workflow",
+      "purpose": "运行工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_status",
+      "category": "MCP：workflow",
+      "purpose": "操作工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_retry",
+      "category": "MCP：workflow",
+      "purpose": "重试工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_workflow_cancel",
+      "category": "MCP：workflow",
+      "purpose": "取消工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_list",
+      "category": "MCP：schedule",
+      "purpose": "列出任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_list_for_workflow",
+      "category": "MCP：schedule",
+      "purpose": "列出工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_get",
+      "category": "MCP：schedule",
+      "purpose": "读取任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_create",
+      "category": "MCP：schedule",
+      "purpose": "创建任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_update",
+      "category": "MCP：schedule",
+      "purpose": "更新任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_enable",
+      "category": "MCP：schedule",
+      "purpose": "启用任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_disable",
+      "category": "MCP：schedule",
+      "purpose": "停用任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_cancel",
+      "category": "MCP：schedule",
+      "purpose": "取消任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_schedule_delete",
+      "category": "MCP：schedule",
+      "purpose": "删除任务计划",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_script_list_for_workflow",
+      "category": "MCP：script",
+      "purpose": "列出工作流",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_script_get_code",
+      "category": "MCP：script",
+      "purpose": "读取生成脚本",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_script_versions",
+      "category": "MCP：script",
+      "purpose": "操作生成脚本",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_script_fallback_episodes",
+      "category": "MCP：script",
+      "purpose": "操作生成脚本",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_script_deploy",
+      "category": "MCP：script",
+      "purpose": "部署生成脚本",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_extract_structured",
+      "category": "MCP：lean",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_finish",
+      "category": "MCP：lean",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_page",
+      "category": "MCP：page_read",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "skyvern_feedback",
+      "category": "MCP：feedback",
+      "purpose": "操作浏览器或任务数据",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "MCP.prompt.build_workflow",
+      "category": "MCP提示模板",
+      "purpose": "工作流构建、诊断、数据提取或UI检查提示模板",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "MCP.prompt.debug_automation",
+      "category": "MCP提示模板",
+      "purpose": "工作流构建、诊断、数据提取或UI检查提示模板",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "MCP.prompt.extract_data",
+      "category": "MCP提示模板",
+      "purpose": "工作流构建、诊断、数据提取或UI检查提示模板",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "MCP.prompt.qa_test",
+      "category": "MCP提示模板",
+      "purpose": "工作流构建、诊断、数据提取或UI检查提示模板",
+      "availability": "可选",
+      "sources": [
+        "sky.mcp"
+      ]
+    },
+    {
+      "name": "block_type:task",
+      "category": "工作流块schema",
+      "purpose": "保留旧任务schema；新建任务优先使用navigation/当前引擎。",
+      "availability": "部分",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:task_v2",
+      "category": "工作流块schema",
+      "purpose": "保留旧2.0任务schema；UI仅对已有2.0块开放受限编辑。",
+      "availability": "部分",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:for_loop",
+      "category": "工作流块schema",
+      "purpose": "按已知列表逐项执行嵌套块。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:while_loop",
+      "category": "工作流块schema",
+      "purpose": "按Jinja表达式或自然语言条件反复执行嵌套块。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:conditional",
+      "category": "工作流块schema",
+      "purpose": "按表达式或模型判断选分支，支持else。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:code",
+      "category": "工作流块schema",
+      "purpose": "执行工作流Python代码，可访问受允许的输入和任务资源。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:text_prompt",
+      "category": "工作流块schema",
+      "purpose": "不操作浏览器，处理输入文本并生成文本或结构化结果。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:download_to_s3",
+      "category": "工作流块schema",
+      "purpose": "把文件URL保存到S3。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:upload_to_s3",
+      "category": "工作流块schema",
+      "purpose": "将本地产物上传S3；UI Cloud Storage配置还涵盖Azure。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:file_upload",
+      "category": "工作流块schema",
+      "purpose": "从受支持存储取得文件并上传到网页元素。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:send_email",
+      "category": "工作流块schema",
+      "purpose": "通过SMTP或已连接Gmail发送邮件，可附加运行文件。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:file_url_parser",
+      "category": "工作流块schema",
+      "purpose": "解析PDF、CSV、Excel、图片、DOCX；ZIP解开为文件列表。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:validation",
+      "category": "工作流块schema",
+      "purpose": "根据complete/terminate条件验证页面和输入。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:action",
+      "category": "工作流块schema",
+      "purpose": "执行一个聚焦的页面动作。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:navigation",
+      "category": "工作流块schema",
+      "purpose": "按目标自主导航和多步交互，可配置完成条件、下载完成条件及步骤上限。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:extraction",
+      "category": "工作流块schema",
+      "purpose": "从页面提取JSON Schema约束的数据。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:login",
+      "category": "工作流块schema",
+      "purpose": "使用所选凭据完成正常登录与所需验证码交互。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:wait",
+      "category": "工作流块schema",
+      "purpose": "按配置暂停工作流。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:file_download",
+      "category": "工作流块schema",
+      "purpose": "由浏览器按目标找到文件并等待保存。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:goto_url",
+      "category": "工作流块schema",
+      "purpose": "确定性导航至指定URL。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:pdf_parser",
+      "category": "工作流块schema",
+      "purpose": "从PDF提取结构化信息。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:http_request",
+      "category": "工作流块schema",
+      "purpose": "调用外部HTTP API，支持头、JSON、文件、超时及响应保存。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:web_search",
+      "category": "工作流块schema",
+      "purpose": "通过Google/Exa搜索并可选由模型处理，支持schema结果。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:human_interaction",
+      "category": "工作流块schema",
+      "purpose": "暂停等待人类批准/拒绝或接管，支持通知与超时。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:print_page",
+      "category": "工作流块schema",
+      "purpose": "将当前页面打印为PDF产物。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:workflow_trigger",
+      "category": "工作流块schema",
+      "purpose": "触发另一个工作流，支持传参和等待完成。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:google_sheets_read",
+      "category": "工作流块schema",
+      "purpose": "读取Google Sheet为结构化行。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:google_sheets_write",
+      "category": "工作流块schema",
+      "purpose": "追加行或更新单元格。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:pdf_fill",
+      "category": "工作流块schema",
+      "purpose": "按目标与数据填充AcroForm或扁平PDF。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:split_pdf",
+      "category": "工作流块schema",
+      "purpose": "按要求把PDF拆为多个文件并保存。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:email_inbox",
+      "category": "工作流块schema",
+      "purpose": "读取匹配的Gmail/Outlook邮件，可下载附件。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:data_export",
+      "category": "工作流块schema",
+      "purpose": "按schema导出工作流记录为Parquet文件。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "block_type:terminate",
+      "category": "工作流块schema",
+      "purpose": "以原因和可选结构化错误码停止运行。",
+      "availability": "原生",
+      "sources": [
+        "sky.blockschema",
+        "sky.blockmap"
+      ]
+    },
+    {
+      "name": "POST /v1/run/tasks",
+      "category": "REST：Agents",
+      "purpose": "发起或创建公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/run/agents",
+      "category": "REST：Runs",
+      "purpose": "发起或创建公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/runs/{run_id}",
+      "category": "REST：Runs",
+      "purpose": "读取公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/runs/{run_id}/cancel",
+      "category": "REST：Runs",
+      "purpose": "发起或创建公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/runs/cancel",
+      "category": "REST：Runs",
+      "purpose": "发起或创建公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents",
+      "category": "REST：Agents",
+      "purpose": "发起或创建公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents",
+      "category": "REST：Agents",
+      "purpose": "读取公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_id}",
+      "category": "REST：Agents",
+      "purpose": "发起或创建公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_id}/delete",
+      "category": "REST：Agents",
+      "purpose": "发起或创建公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/folders",
+      "category": "REST：Folders",
+      "purpose": "发起或创建公开Folders资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/folders",
+      "category": "REST：Folders",
+      "purpose": "读取公开Folders资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/folders/{folder_id}",
+      "category": "REST：Folders",
+      "purpose": "读取公开Folders资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PUT /v1/folders/{folder_id}",
+      "category": "REST：Folders",
+      "purpose": "替换公开Folders资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/folders/{folder_id}",
+      "category": "REST：Folders",
+      "purpose": "删除公开Folders资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/browser_types",
+      "category": "REST：Server",
+      "purpose": "读取公开Server资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/runs/{workflow_run_id}/tags",
+      "category": "REST：Tags",
+      "purpose": "发起或创建公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/runs/{workflow_run_id}/tags",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/runs/{workflow_run_id}/tags/{key}",
+      "category": "REST：Tags",
+      "purpose": "删除公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/runs/{workflow_run_id}/tags/history",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/tag-keys",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PATCH /v1/tag-keys/{key}",
+      "category": "REST：Tags",
+      "purpose": "更新公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/tag-keys/{key}",
+      "category": "REST：Tags",
+      "purpose": "删除公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/tag-values",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/tag-values",
+      "category": "REST：Tags",
+      "purpose": "发起或创建公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PATCH /v1/tag-values/{key}",
+      "category": "REST：Tags",
+      "purpose": "更新公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/tag-values/{key}",
+      "category": "REST：Tags",
+      "purpose": "删除公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PATCH /v1/tag-values/{key}/rename",
+      "category": "REST：Tags",
+      "purpose": "更新公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/workflow-tags",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/workflow-tags",
+      "category": "REST：Tags",
+      "purpose": "发起或创建公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/run-tags",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/run-tags",
+      "category": "REST：Tags",
+      "purpose": "发起或创建公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/run-tag-suggestions",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/artifacts/{artifact_id}/content",
+      "category": "REST：Artifacts",
+      "purpose": "读取公开Artifacts资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/runs/{run_id}/artifacts",
+      "category": "REST：Artifacts",
+      "purpose": "读取公开Artifacts资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/runs/{run_id}/retry_webhook",
+      "category": "REST：Runs",
+      "purpose": "发起或创建公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/runs/{run_id}/timeline",
+      "category": "REST：Runs",
+      "purpose": "读取公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/version",
+      "category": "REST：Server",
+      "purpose": "读取公开Server资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/runs",
+      "category": "REST：agent",
+      "purpose": "读取公开agent资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/upload_file",
+      "category": "REST：Files",
+      "purpose": "发起或创建公开Files资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/files/{file_id}",
+      "category": "REST：Files",
+      "purpose": "删除公开Files资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/browser_profiles",
+      "category": "REST：Browser Profiles",
+      "purpose": "发起或创建公开Browser Profiles资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/browser_profiles",
+      "category": "REST：Browser Profiles",
+      "purpose": "读取公开Browser Profiles资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/browser_profiles/{profile_id}",
+      "category": "REST：Browser Profiles",
+      "purpose": "读取公开Browser Profiles资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PATCH /v1/browser_profiles/{profile_id}",
+      "category": "REST：Browser Profiles",
+      "purpose": "更新公开Browser Profiles资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/browser_profiles/{profile_id}",
+      "category": "REST：Browser Profiles",
+      "purpose": "删除公开Browser Profiles资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/browser_profiles/{profile_id}/usage",
+      "category": "REST：Browser Profiles",
+      "purpose": "读取公开Browser Profiles资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/browser_sessions",
+      "category": "REST：Browser Sessions",
+      "purpose": "发起或创建公开Browser Sessions资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/browser_sessions",
+      "category": "REST：Browser Sessions",
+      "purpose": "读取公开Browser Sessions资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/browser_sessions/{browser_session_id}/close",
+      "category": "REST：Browser Sessions",
+      "purpose": "发起或创建公开Browser Sessions资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/browser_sessions/{browser_session_id}/extend",
+      "category": "REST：Browser Sessions",
+      "purpose": "发起或创建公开Browser Sessions资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PATCH /v1/browser_sessions/{browser_session_id}",
+      "category": "REST：Browser Sessions",
+      "purpose": "更新公开Browser Sessions资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/browser_sessions/{browser_session_id}",
+      "category": "REST：Browser Sessions",
+      "purpose": "读取公开Browser Sessions资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/credentials/totp",
+      "category": "REST：Credentials",
+      "purpose": "发起或创建公开Credentials资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/credentials",
+      "category": "REST：Credentials",
+      "purpose": "发起或创建公开Credentials资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/credentials",
+      "category": "REST：Credentials",
+      "purpose": "读取公开Credentials资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/credentials/{credential_id}/update",
+      "category": "REST：Credentials",
+      "purpose": "发起或创建公开Credentials资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/credentials/{credential_id}/delete",
+      "category": "REST：Credentials",
+      "purpose": "发起或创建公开Credentials资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/credentials/{credential_id}",
+      "category": "REST：Credentials",
+      "purpose": "读取公开Credentials资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/custom-llms",
+      "category": "REST：Custom LLMs",
+      "purpose": "读取公开Custom LLMs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/custom-llms",
+      "category": "REST：Custom LLMs",
+      "purpose": "发起或创建公开Custom LLMs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PUT /v1/custom-llms/{custom_llm_id}",
+      "category": "REST：Custom LLMs",
+      "purpose": "替换公开Custom LLMs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/custom-llms/{custom_llm_id}",
+      "category": "REST：Custom LLMs",
+      "purpose": "删除公开Custom LLMs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/run/tasks/login",
+      "category": "REST：Agents",
+      "purpose": "发起或创建公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/run/tasks/download_files",
+      "category": "REST：Agents",
+      "purpose": "发起或创建公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/scripts",
+      "category": "REST：Scripts",
+      "purpose": "发起或创建公开Scripts资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/scripts",
+      "category": "REST：Scripts",
+      "purpose": "读取公开Scripts资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/scripts/{script_id}",
+      "category": "REST：Scripts",
+      "purpose": "读取公开Scripts资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/scripts/{script_id}/deploy",
+      "category": "REST：Scripts",
+      "purpose": "发起或创建公开Scripts资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/scripts/{script_id}/run",
+      "category": "REST：Scripts",
+      "purpose": "发起或创建公开Scripts资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/sdk/run_action",
+      "category": "REST：SDK",
+      "purpose": "发起或创建公开SDK资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/schedules",
+      "category": "REST：Schedules",
+      "purpose": "读取公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PUT /v1/agents/{workflow_permanent_id}/folder",
+      "category": "REST：Folders",
+      "purpose": "替换公开Folders资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_permanent_id}/tags",
+      "category": "REST：Tags",
+      "purpose": "发起或创建公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/{workflow_permanent_id}/tags",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/agents/{workflow_permanent_id}/tags/{key}",
+      "category": "REST：Tags",
+      "purpose": "删除公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/{workflow_permanent_id}/tags/history",
+      "category": "REST：Tags",
+      "purpose": "读取公开Tags资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/runs/{workflow_run_id}/retry",
+      "category": "REST：Runs",
+      "purpose": "发起或创建公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/runs",
+      "category": "REST：Runs",
+      "purpose": "读取公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/{workflow_id}/runs",
+      "category": "REST：Runs",
+      "purpose": "读取公开Runs资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/{workflow_permanent_id}",
+      "category": "REST：Agents",
+      "purpose": "读取公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/{workflow_permanent_id}/versions",
+      "category": "REST：Agents",
+      "purpose": "读取公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_permanent_id}/browser_session/reset_profile",
+      "category": "REST：Agents",
+      "purpose": "发起或创建公开Agents资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_permanent_id}/schedules",
+      "category": "REST：Schedules",
+      "purpose": "发起或创建公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/{workflow_permanent_id}/schedules",
+      "category": "REST：Schedules",
+      "purpose": "读取公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/agents/{workflow_permanent_id}/schedules/{workflow_schedule_id}",
+      "category": "REST：Schedules",
+      "purpose": "读取公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "PUT /v1/agents/{workflow_permanent_id}/schedules/{workflow_schedule_id}",
+      "category": "REST：Schedules",
+      "purpose": "替换公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "DELETE /v1/agents/{workflow_permanent_id}/schedules/{workflow_schedule_id}",
+      "category": "REST：Schedules",
+      "purpose": "删除公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_permanent_id}/schedules/{workflow_schedule_id}/cancel",
+      "category": "REST：Schedules",
+      "purpose": "发起或创建公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_permanent_id}/schedules/{workflow_schedule_id}/enable",
+      "category": "REST：Schedules",
+      "purpose": "发起或创建公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/agents/{workflow_permanent_id}/schedules/{workflow_schedule_id}/disable",
+      "category": "REST：Schedules",
+      "purpose": "发起或创建公开Schedules资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/recipes/jobs/extract",
+      "category": "REST：Recipes",
+      "purpose": "发起或创建公开Recipes资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "POST /v1/recipes/jobs/apply",
+      "category": "REST：Recipes",
+      "purpose": "发起或创建公开Recipes资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/recipes/jobs/runs",
+      "category": "REST：Recipes",
+      "purpose": "读取公开Recipes资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/audit-events/export",
+      "category": "REST：Server",
+      "purpose": "读取公开Server资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "GET /v1/audit-events/runs/export",
+      "category": "REST：Server",
+      "purpose": "读取公开Server资源；精确请求合同见OpenAPI",
+      "availability": "原生",
+      "sources": [
+        "sky.openapi"
+      ]
+    },
+    {
+      "name": "skyvern block schema",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern block validate",
+      "category": "CLI公开命令",
+      "purpose": "命令行校验浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser act",
+      "category": "CLI公开命令",
+      "purpose": "命令行按自然语言执行浏览器动作；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser click",
+      "category": "CLI公开命令",
+      "purpose": "命令行点击元素；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser evaluate",
+      "category": "CLI公开命令",
+      "purpose": "命令行执行页面JavaScript；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser extract",
+      "category": "CLI公开命令",
+      "purpose": "命令行按要求提取页面数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser hover",
+      "category": "CLI公开命令",
+      "purpose": "命令行悬停元素或坐标；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser login",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser navigate",
+      "category": "CLI公开命令",
+      "purpose": "命令行导航至URL；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser press-key",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser run-task",
+      "category": "CLI公开命令",
+      "purpose": "命令行运行浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser screenshot",
+      "category": "CLI公开命令",
+      "purpose": "命令行获取截图；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser scroll",
+      "category": "CLI公开命令",
+      "purpose": "命令行滚动页面或元素；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser select",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser serve",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser session close",
+      "category": "CLI公开命令",
+      "purpose": "命令行关闭标签页；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser session connect",
+      "category": "CLI公开命令",
+      "purpose": "命令行连接浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser session create",
+      "category": "CLI公开命令",
+      "purpose": "命令行创建浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser session get",
+      "category": "CLI公开命令",
+      "purpose": "命令行读取浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser session list",
+      "category": "CLI公开命令",
+      "purpose": "命令行列出浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser type",
+      "category": "CLI公开命令",
+      "purpose": "命令行输入文本；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser validate",
+      "category": "CLI公开命令",
+      "purpose": "命令行校验浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern browser wait",
+      "category": "CLI公开命令",
+      "purpose": "命令行等待指定时长或条件；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern config get max_steps_per_run",
+      "category": "CLI公开命令",
+      "purpose": "命令行运行浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern config set max_steps_per_run 25",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern config show",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern credential delete",
+      "category": "CLI公开命令",
+      "purpose": "命令行删除浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern credential get",
+      "category": "CLI公开命令",
+      "purpose": "命令行读取浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern credential list",
+      "category": "CLI公开命令",
+      "purpose": "命令行列出浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern credentials",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作凭据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern credentials add",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern docs",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern doctor",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern doctor streaming",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern init",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern init browser",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern mcp profile list",
+      "category": "CLI公开命令",
+      "purpose": "命令行列出浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern mcp profile save work-prod",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern mcp switch",
+      "category": "CLI公开命令",
+      "purpose": "命令行切换标签页；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern quickstart",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern run mcp",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern run server",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern schedule create",
+      "category": "CLI公开命令",
+      "purpose": "命令行创建浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern schedule delete",
+      "category": "CLI公开命令",
+      "purpose": "命令行删除浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern schedule disable",
+      "category": "CLI公开命令",
+      "purpose": "命令行停用浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern schedule enable",
+      "category": "CLI公开命令",
+      "purpose": "命令行启用浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern schedule get",
+      "category": "CLI公开命令",
+      "purpose": "命令行读取浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern schedule list",
+      "category": "CLI公开命令",
+      "purpose": "命令行列出浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern schedule update",
+      "category": "CLI公开命令",
+      "purpose": "命令行更新浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern setup claude",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern setup claude-code",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern setup cursor",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern setup hermes",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern setup openclaw",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern setup opencode",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern setup windsurf",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern skill copy",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern skill copy skyvern",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern skill list",
+      "category": "CLI公开命令",
+      "purpose": "命令行列出浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern skill path",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern skill path skyvern",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern skill show skyvern",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern status",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern stop",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow cancel",
+      "category": "CLI公开命令",
+      "purpose": "命令行取消浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow create",
+      "category": "CLI公开命令",
+      "purpose": "命令行创建浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow delete",
+      "category": "CLI公开命令",
+      "purpose": "命令行删除浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow get",
+      "category": "CLI公开命令",
+      "purpose": "命令行读取浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow list",
+      "category": "CLI公开命令",
+      "purpose": "命令行列出浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow retry",
+      "category": "CLI公开命令",
+      "purpose": "命令行重试浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow run",
+      "category": "CLI公开命令",
+      "purpose": "命令行运行浏览器代码；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow runs",
+      "category": "CLI公开命令",
+      "purpose": "命令行运行浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow status",
+      "category": "CLI公开命令",
+      "purpose": "命令行操作浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    {
+      "name": "skyvern workflow update",
+      "category": "CLI公开命令",
+      "purpose": "命令行更新浏览器或任务数据；参数与运行依赖见CLI参考",
+      "availability": "可选",
+      "sources": [
+        "sky.cli"
+      ]
+    }
+  ],
+  "matrix": {
+    "D01": {
+      "availability": "可选",
+      "detail": "官方118个MCP tools及4个prompts；本地stdio需安装相应extra。",
+      "sources": [
+        "sky.mcp",
+        "sky.mcpdoc"
+      ]
+    },
+    "D02": {
+      "availability": "可选",
+      "detail": "官方118个MCP tools及4个prompts；本地stdio需安装相应extra。",
+      "sources": [
+        "sky.mcp",
+        "sky.mcpdoc"
+      ]
+    },
+    "D03": {
+      "availability": "可选",
+      "detail": "官方118个MCP tools及4个prompts；本地stdio需安装相应extra。",
+      "sources": [
+        "sky.mcp",
+        "sky.mcpdoc"
+      ]
+    },
+    "D04": {
+      "availability": "原生",
+      "detail": "公开REST/Python/TypeScript SDK，可连接自托管API；Python.local为可选extra。",
+      "sources": [
+        "sky.sdk.overview",
+        "sky.selfhost"
+      ]
+    },
+    "D05": {
+      "availability": "可选",
+      "detail": "CLI提供status/doctor、浏览器和工作流操作，而非只启动服务。",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    "D06": {
+      "availability": "原生",
+      "detail": "完整自托管Compose/K8s包含Web UI；pip API server单独安装不含UI。",
+      "sources": [
+        "sky.selfhost"
+      ]
+    },
+    "D07": {
+      "availability": "原生",
+      "detail": "公开REST/Python/TypeScript SDK，可连接自托管API；Python.local为可选extra。",
+      "sources": [
+        "sky.sdk.overview",
+        "sky.selfhost"
+      ]
+    },
+    "D08": {
+      "availability": "原生",
+      "detail": "公开REST/Python/TypeScript SDK，可连接自托管API；Python.local为可选extra。",
+      "sources": [
+        "sky.sdk.overview",
+        "sky.selfhost"
+      ]
+    },
+    "D09": {
+      "availability": "云端",
+      "detail": "Skyvern Cloud独立托管产品，有组织、credits、托管浏览器与运行面板。",
+      "sources": [
+        "sky.account",
+        "sky.cloudruns"
+      ]
+    },
+    "D10": {
+      "availability": "原生",
+      "detail": "官方Compose和Kubernetes部署路径，含浏览器/API/UI/数据库。",
+      "sources": [
+        "sky.selfhost"
+      ]
+    },
+    "D11": {
+      "availability": "可选",
+      "detail": "CLI提供status/doctor、浏览器和工作流操作，而非只启动服务。",
+      "sources": [
+        "sky.cli"
+      ]
+    },
+    "D12": {
+      "availability": "原生",
+      "detail": "MCP all/operate/build/browser/lean按tags收窄工具列表。",
+      "sources": [
+        "sky.scopes"
+      ]
+    },
+    "B01": {
+      "availability": "可选",
+      "detail": "Python浏览器SDK支持本地launch/CDP/独立会话与持久目录；[local]extra。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    "B02": {
+      "availability": "可选",
+      "detail": "Python浏览器SDK支持本地launch/CDP/独立会话与持久目录；[local]extra。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    "B03": {
+      "availability": "未提供",
+      "detail": "正式浏览器类型为Chrome/Edge/Chromium渠道，未支持独立Firefox/WebKit引擎。",
+      "sources": [
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    "B04": {
+      "availability": "可选",
+      "detail": "Python浏览器SDK支持本地launch/CDP/独立会话与持久目录；[local]extra。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    "B05": {
+      "availability": "可选",
+      "detail": "Python浏览器SDK支持本地launch/CDP/独立会话与持久目录；[local]extra。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    "B06": {
+      "availability": "可选",
+      "detail": "Python浏览器SDK支持本地launch/CDP/独立会话与持久目录；[local]extra。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    "B07": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B08": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B09": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B10": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B11": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B12": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B13": {
+      "availability": "部分",
+      "detail": "handle_dialog只读取默认自动dismiss后的历史，没有显式accept/reject/prompt输入合同。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "B14": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B15": {
+      "availability": "原生",
+      "detail": "File Download块及run.downloaded_files含下载等待和保存产物。",
+      "sources": [
+        "sky.blocksdoc",
+        "sky.sdk.runs"
+      ]
+    },
+    "B16": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B17": {
+      "availability": "原生",
+      "detail": "正式SDK及MCP有标签、frame、精确动作、上传、JS和等待；TS表面部分少于Python。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.sdk.browser-automation.frames",
+        "sky.mcp"
+      ]
+    },
+    "B18": {
+      "availability": "部分",
+      "detail": "state_save/load和profile保存cookie/storage；部分读写经包装Playwright提供。",
+      "sources": [
+        "sky.mcp",
+        "sky.sdk.browser-profiles"
+      ]
+    },
+    "B19": {
+      "availability": "部分",
+      "detail": "state_save/load和profile保存cookie/storage；部分读写经包装Playwright提供。",
+      "sources": [
+        "sky.mcp",
+        "sky.sdk.browser-profiles"
+      ]
+    },
+    "B20": {
+      "availability": "原生",
+      "detail": "浏览器环境/viewport/代理/权限等服务端配置；托管代理区域为Cloud专有。",
+      "sources": [
+        "sky.config",
+        "sky.sdk.browser-sessions"
+      ]
+    },
+    "B21": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "O01": {
+      "availability": "部分",
+      "detail": "observe为结构化交互元素表示，非同一ARIA树格式；Page仍提供底层Playwright。",
+      "sources": [
+        "sky.mcp.browser"
+      ]
+    },
+    "O02": {
+      "availability": "原生",
+      "detail": "observe refs可过滤/限量；明确stdio与stateless HTTP引用生命周期不同。",
+      "sources": [
+        "sky.mcp.browser"
+      ]
+    },
+    "O03": {
+      "availability": "未证实",
+      "detail": "完整observe参数未公开基线diff/incremental选项；内部observe-v2不直接等同对外增量快照。",
+      "sources": [
+        "sky.mcp.browser"
+      ]
+    },
+    "O04": {
+      "availability": "原生",
+      "detail": "observe refs可过滤/限量；明确stdio与stateless HTTP引用生命周期不同。",
+      "sources": [
+        "sky.mcp.browser"
+      ]
+    },
+    "O05": {
+      "availability": "原生",
+      "detail": "observe refs可过滤/限量；明确stdio与stateless HTTP引用生命周期不同。",
+      "sources": [
+        "sky.mcp.browser"
+      ]
+    },
+    "O06": {
+      "availability": "原生",
+      "detail": "截图、视觉定位、HTML、schema提取、AI fallback和Print Page块。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.blocksdoc",
+        "sky.mcp"
+      ]
+    },
+    "O07": {
+      "availability": "原生",
+      "detail": "截图、视觉定位、HTML、schema提取、AI fallback和Print Page块。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.blocksdoc",
+        "sky.mcp"
+      ]
+    },
+    "O08": {
+      "availability": "原生",
+      "detail": "截图、视觉定位、HTML、schema提取、AI fallback和Print Page块。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.blocksdoc",
+        "sky.mcp"
+      ]
+    },
+    "O09": {
+      "availability": "原生",
+      "detail": "截图、视觉定位、HTML、schema提取、AI fallback和Print Page块。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.blocksdoc",
+        "sky.mcp"
+      ]
+    },
+    "O10": {
+      "availability": "原生",
+      "detail": "截图、视觉定位、HTML、schema提取、AI fallback和Print Page块。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.blocksdoc",
+        "sky.mcp"
+      ]
+    },
+    "O11": {
+      "availability": "原生",
+      "detail": "截图、视觉定位、HTML、schema提取、AI fallback和Print Page块。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.blocksdoc",
+        "sky.mcp"
+      ]
+    },
+    "O12": {
+      "availability": "原生",
+      "detail": "截图、视觉定位、HTML、schema提取、AI fallback和Print Page块。",
+      "sources": [
+        "sky.sdk.browser-automation.page",
+        "sky.blocksdoc",
+        "sky.mcp"
+      ]
+    },
+    "N01": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N02": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N03": {
+      "availability": "部分",
+      "detail": "受控Chromium/Playwright继承HTTP/2；并非独立HTTP/2 MITM代理。",
+      "sources": [
+        "sky.browserguide"
+      ]
+    },
+    "N04": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N05": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N06": {
+      "availability": "不适用",
+      "detail": "定位浏览器自动化；公开面不包含独立MITM代理或该传输模式。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N07": {
+      "availability": "部分",
+      "detail": "MCP network列表/详情和过滤是有状态本地缓存；hosted stateless HTTP明确返回不可用。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "N08": {
+      "availability": "部分",
+      "detail": "MCP network列表/详情和过滤是有状态本地缓存；hosted stateless HTTP明确返回不可用。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "N09": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N10": {
+      "availability": "部分",
+      "detail": "读取浏览器已解码响应body与JSON化返回；未核实独立多编码原始流解码浏览能力。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "N11": {
+      "availability": "部分",
+      "detail": "network_route/unroute修改浏览器路由及mock；不捕获外部客户端。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "N12": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N13": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N14": {
+      "availability": "部分",
+      "detail": "network_route/unroute修改浏览器路由及mock；不捕获外部客户端。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "N15": {
+      "availability": "部分",
+      "detail": "HAR start/stop可录制导出；未核实正式HAR导入或回放。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "N16": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "N17": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M01": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M02": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M03": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M04": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M05": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M06": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M07": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "M08": {
+      "availability": "未证实",
+      "detail": "已查完整公开接口与所列官方参考，未找到该项明确产品合同。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "W01": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W02": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W03": {
+      "availability": "部分",
+      "detail": "Code块/SDK可加入自定义业务；未核实通用用户注册Agent action装饰器。",
+      "sources": [
+        "sky.blockmap",
+        "sky.sdk.overview"
+      ]
+    },
+    "W04": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W05": {
+      "availability": "部分",
+      "detail": "原生for/while/conditional和子工作流；未核实正式并行分支块。",
+      "sources": [
+        "sky.blockmap"
+      ]
+    },
+    "W06": {
+      "availability": "原生",
+      "detail": "Human Interaction块暂停并等待批准/拒绝、人工处理及超时。",
+      "sources": [
+        "sky.blocksdoc"
+      ]
+    },
+    "W07": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W08": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W09": {
+      "availability": "部分",
+      "detail": "服务端保存run/block状态；未核实每个底层浏览器动作前后均有可续检查点。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.sdk.agents"
+      ]
+    },
+    "W10": {
+      "availability": "部分",
+      "detail": "持久session/profile复用；失联run由heartbeat判失败或重试，不承诺原动作精确续接。",
+      "sources": [
+        "sky.sdk.browser-profiles",
+        "sky.config"
+      ]
+    },
+    "W11": {
+      "availability": "部分",
+      "detail": "execute返回部分完成；入站trigger按事件ID幂等；均不等于所有浏览器动作恰好一次。",
+      "sources": [
+        "sky.mcp.browser",
+        "sky.triggers"
+      ]
+    },
+    "W12": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W13": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W14": {
+      "availability": "原生",
+      "detail": "任务Agent、多模型、33种schema块、运行历史/验证、代码缓存回退、凭据和文件解析。",
+      "sources": [
+        "sky.sdk.runs",
+        "sky.blockmap",
+        "sky.config",
+        "sky.production"
+      ]
+    },
+    "W15": {
+      "availability": "原生",
+      "detail": "cron/固定间隔/单次调度、异步run、完成Webhook及入站事件触发。",
+      "sources": [
+        "sky.sdk.schedules",
+        "sky.production",
+        "sky.triggers"
+      ]
+    },
+    "T01": {
+      "availability": "可选",
+      "detail": "MCP Console/errors/HTML/styles检查；有状态捕获依transport运行形态。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "T02": {
+      "availability": "部分",
+      "detail": "运行Artifact含HAR、录屏、LLM traces和日志；非专门浏览器性能分析器。",
+      "sources": [
+        "sky.sdk.artifacts"
+      ]
+    },
+    "T03": {
+      "availability": "不适用",
+      "detail": "核心定位不包含该专门分析模块；未将任意JS或CDP可编程性算成成品功能。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "T04": {
+      "availability": "部分",
+      "detail": "运行Artifact含HAR、录屏、LLM traces和日志；非专门浏览器性能分析器。",
+      "sources": [
+        "sky.sdk.artifacts"
+      ]
+    },
+    "T05": {
+      "availability": "部分",
+      "detail": "Studio时间线与屏幕/运行产物并排；未核实动作到请求的严格因果关系。",
+      "sources": [
+        "sky.studio"
+      ]
+    },
+    "T06": {
+      "availability": "部分",
+      "detail": "已有浏览器JS异常/网络失败可读；未提供独立代理式被动安全检查模块。",
+      "sources": [
+        "sky.mcp.inspection"
+      ]
+    },
+    "T07": {
+      "availability": "不适用",
+      "detail": "核心定位不包含该专门分析模块；未将任意JS或CDP可编程性算成成品功能。",
+      "sources": [
+        "sky.sdk.overview"
+      ]
+    },
+    "T08": {
+      "availability": "部分",
+      "detail": "Copilot变更review和工作流版本；REST可导出运行活动，非请求差异分析器。",
+      "sources": [
+        "sky.studio",
+        "sky.openapi"
+      ]
+    },
+    "S01": {
+      "availability": "部分",
+      "detail": "任务及Artifact存数据库/对象存储；MCP网络缓冲是进程本地，不承诺重开完整流量查询。",
+      "sources": [
+        "sky.selfhost",
+        "sky.mcp.inspection"
+      ]
+    },
+    "S02": {
+      "availability": "原生",
+      "detail": "任务/工作流ID、版本、文件夹、tags/运行关系；不是每条请求的人工备注系统。",
+      "sources": [
+        "sky.sdk.agents",
+        "sky.sdk.folders"
+      ]
+    },
+    "S03": {
+      "availability": "原生",
+      "detail": "下载文件、上传文件、二进制artifact及对象存储出口。",
+      "sources": [
+        "sky.sdk.files",
+        "sky.sdk.artifacts"
+      ]
+    },
+    "S04": {
+      "availability": "部分",
+      "detail": "Artifact可读checksum/file_size，下载实现使用SHA256；字段可空。",
+      "sources": [
+        "sky.sdk.artifacts",
+        "sky.blockimpl"
+      ]
+    },
+    "S05": {
+      "availability": "部分",
+      "detail": "任务状态/heartbeat可查；MCP网络列表有buffer_size，但不等同统一写入队列丢弃状态。",
+      "sources": [
+        "sky.config",
+        "sky.mcp.inspection"
+      ]
+    },
+    "S06": {
+      "availability": "原生",
+      "detail": "网络clear、轨迹truncated/capture_status及max steps/elapsed time配置；清理范围各自独立。",
+      "sources": [
+        "sky.mcp.inspection",
+        "sky.mcp.trajectory",
+        "sky.config"
+      ]
+    },
+    "S07": {
+      "availability": "部分",
+      "detail": "Artifact导出、工作流YAML、运行活动导出；没有据此声明统一代理证据包。",
+      "sources": [
+        "sky.sdk.artifacts",
+        "sky.studio",
+        "sky.openapi"
+      ]
+    },
+    "X01": {
+      "availability": "原生",
+      "detail": "服务端.env配置、结构化日志、CLI运行状态和run状态。",
+      "sources": [
+        "sky.config",
+        "sky.cli"
+      ]
+    },
+    "X02": {
+      "availability": "部分",
+      "detail": "正式SDK/MCP/工作流块与外部服务集成；未证实通用插件市场。",
+      "sources": [
+        "sky.mcp",
+        "sky.blockmap",
+        "sky.cloudintegrations"
+      ]
+    },
+    "X03": {
+      "availability": "原生",
+      "detail": "MCP安全annotations及scope过滤；annotations是提示，scope不是账户权限替代。",
+      "sources": [
+        "sky.mcp",
+        "sky.scopes"
+      ]
+    },
+    "X04": {
+      "availability": "原生",
+      "detail": "REST API key；Cloud MCP支持OAuth，组织角色限制部分管理操作。",
+      "sources": [
+        "sky.mcpdoc",
+        "sky.account",
+        "sky.triggers"
+      ]
+    },
+    "X05": {
+      "availability": "原生",
+      "detail": "browser.close结束对应浏览器/云session，client.aclose释放客户端；本地附着与拥有资源需按SDK合同。",
+      "sources": [
+        "sky.sdk.browser-automation.browsers"
+      ]
+    },
+    "X06": {
+      "availability": "原生",
+      "detail": "服务端.env配置、结构化日志、CLI运行状态和run状态。",
+      "sources": [
+        "sky.config",
+        "sky.cli"
+      ]
+    }
+  },
+  "notes": [
+    "固定默认分支HEAD，读取官方llms索引、全部SDK分项参考、公开REST OpenAPI、MCP注册与scope源码、33类块schema及实现，未安装或运行竞品。",
+    "118是当前FastMCP注册数量，4个prompts另计；接口清单列精确名，未把helper函数误算tool。",
+    "33类BlockType含legacy task/task_v2；Cloud UI块参考只列常见22种，Google Sheets/PDF Fill/Split/子工作流/Data Export等需查正式schema。",
+    "Cloud的最新默认引擎和网络基础设施不等同AGPL自托管引擎；具体付费套餐未逐档核验，以云端/部分标注，未将营销效果当实测。",
+    "Python SDK浏览器面比TypeScript更完整，forms/frames及若干输入操作为Python-only；列表以Python公开精确名去重。",
+    "关键实际限制：MCP网络列表/详情等有状态检查在hosted stateless HTTP不可用；stdio refs可跨调用，stateless HTTP旧refs不可跨请求复用；handle_dialog仅读取自动dismiss历史。",
+    "轨迹捕获只有部分确定性动作，进程本地、有截断、关闭会话会删除，不能与持久run历史或AgentProxy消息数据库混为一谈。",
+    "官网文档当前重定向到https://www.skyvern.com/docs/；所有主要证据链接固定GitHub提交，附完整官方导航URL。",
+    "另有明确SDK缺口：当前upload_file在Python/TS都会422，REST multipart上传可用；Python download_files没有wait_for_completion；SDK默认run_task引擎与Cloud Studio Default引擎不同。",
+    "抽取计数：features为有意义的产品能力；interfaces为具名公开操作，SDK方法、HTTP方法+路径、MCP工具、CLI命令和工作流块分别保留类别；不展开每个参数、结果字段、语言别名或底层通用协议全集。接口分组计数：{\"CLI公开命令\": 74, \"MCP提示模板\": 4, \"MCP：ai_powered\": 7, \"MCP：block_discovery\": 6, \"MCP：browser_primitive\": 24, \"MCP：browser_profile\": 5, \"MCP：credential\": 11, \"MCP：feedback\": 1, \"MCP：folder\": 5, \"MCP：inspection\": 12, \"MCP：lean\": 2, \"MCP：page_read\": 1, \"MCP：schedule\": 9, \"MCP：script\": 5, \"MCP：session\": 5, \"MCP：settings\": 2, \"MCP：state\": 2, \"MCP：storage\": 4, \"MCP：tab_management\": 6, \"MCP：workflow\": 11, \"Python SDK：agents\": 10, \"Python SDK：artifacts\": 2, \"Python SDK：browser-automation/agent\": 4, \"Python SDK：browser-automation/browsers\": 10, \"Python SDK：browser-automation/forms\": 7, \"Python SDK：browser-automation/frames\": 3, \"Python SDK：browser-automation/page\": 18, \"Python SDK：browser-profiles\": 5, \"Python SDK：browser-sessions\": 6, \"Python SDK：credentials\": 6, \"Python SDK：files\": 1, \"Python SDK：folders\": 6, \"Python SDK：helpers\": 3, \"Python SDK：runs\": 7, \"Python SDK：schedules\": 9, \"REST：Agents\": 10, \"REST：Artifacts\": 2, \"REST：Browser Profiles\": 6, \"REST：Browser Sessions\": 6, \"REST：Credentials\": 6, \"REST：Custom LLMs\": 4, \"REST：Files\": 2, \"REST：Folders\": 6, \"REST：Recipes\": 3, \"REST：Runs\": 9, \"REST：SDK\": 1, \"REST：Schedules\": 9, \"REST：Scripts\": 5, \"REST：Server\": 4, \"REST：Tags\": 21, \"REST：agent\": 1, \"SDK初始化\": 3, \"工作流块schema\": 33}",
+    "106项横向维度全部有状态与证据；“未证实”表示查阅上述范围仍缺明确合同，“不适用”表示定位之外，均不按缺少README描述判断为没有。可选集成、官方托管云和内置能力已分开；没有实测性能结论。"
+  ]
+}
