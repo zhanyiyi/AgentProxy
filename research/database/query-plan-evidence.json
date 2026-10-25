@@ -1,0 +1,137 @@
+{
+  "baseline": "cfd617ee07e3759f2abde3dabde72e2b378c44a5",
+  "python": "3.12.10",
+  "sqlite": "3.49.1",
+  "method": "One run, synthetic 6000 flows and 6000 messages; current schema; ANALYZE; EXPLAIN QUERY PLAN only, no throughput benchmark.",
+  "plans": [
+    {
+      "name": "recent_list",
+      "variant": "current",
+      "sql": "SELECT id,url,method,status_code,size FROM flows ORDER BY timestamp DESC LIMIT ? OFFSET ?",
+      "parameters": [
+        20,
+        0
+      ],
+      "plan": [
+        "SCAN flows USING INDEX idx_timestamp"
+      ]
+    },
+    {
+      "name": "domain_filter",
+      "variant": "current",
+      "sql": "SELECT id,url,method,status_code,timestamp FROM flows WHERE hostname_matches(url,?)=1 ORDER BY timestamp DESC LIMIT ?",
+      "parameters": [
+        "site3.test",
+        50
+      ],
+      "plan": [
+        "SCAN flows USING INDEX idx_timestamp"
+      ]
+    },
+    {
+      "name": "method_filter",
+      "variant": "current",
+      "sql": "SELECT id,url,method,status_code,timestamp FROM flows WHERE method=? ORDER BY timestamp DESC LIMIT ?",
+      "parameters": [
+        "POST",
+        50
+      ],
+      "plan": [
+        "SEARCH flows USING INDEX idx_method (method=?)",
+        "USE TEMP B-TREE FOR ORDER BY"
+      ]
+    },
+    {
+      "name": "body_substring",
+      "variant": "current",
+      "sql": "SELECT id,url,method,status_code,timestamp FROM flows WHERE (url LIKE ? ESCAPE '\\' OR request_body LIKE ? ESCAPE '\\' OR response_body LIKE ? ESCAPE '\\') ORDER BY timestamp DESC LIMIT ?",
+      "parameters": [
+        "%synthetic%",
+        "%synthetic%",
+        "%synthetic%",
+        50
+      ],
+      "plan": [
+        "SCAN flows USING INDEX idx_timestamp"
+      ]
+    },
+    {
+      "name": "per_flow_messages",
+      "variant": "current",
+      "sql": "SELECT * FROM stream_messages WHERE id>? AND flow_id=? ORDER BY id LIMIT ?",
+      "parameters": [
+        100,
+        "f-000001",
+        50
+      ],
+      "plan": [
+        "SEARCH stream_messages USING INDEX idx_stream_flow (flow_id=? AND id>?)"
+      ]
+    },
+    {
+      "name": "protocol_messages",
+      "variant": "current",
+      "sql": "SELECT * FROM stream_messages WHERE id>? AND protocol=? ORDER BY id LIMIT ?",
+      "parameters": [
+        100,
+        "sse",
+        50
+      ],
+      "plan": [
+        "SEARCH stream_messages USING INTEGER PRIMARY KEY (rowid>?)"
+      ]
+    },
+    {
+      "name": "meta_current",
+      "variant": "current",
+      "sql": "SELECT * FROM flows WHERE id=?",
+      "parameters": [
+        "f-000001"
+      ],
+      "plan": [
+        "SEARCH flows USING INDEX sqlite_autoindex_flows_1 (id=?)"
+      ]
+    },
+    {
+      "name": "exact_origin_method",
+      "variant": "hypothetical_exact_origin_and_method",
+      "sql": "SELECT id,url,method,status_code,timestamp FROM flows WHERE origin=? AND method=? ORDER BY timestamp DESC,id DESC LIMIT ?",
+      "parameters": [
+        "https://site3.test",
+        "POST",
+        50
+      ],
+      "plan": [
+        "SEARCH flows USING INDEX proposed_origin_method_time_id (origin=? AND method=?)"
+      ]
+    }
+  ],
+  "tables": [
+    "actions",
+    "findings",
+    "flow_links",
+    "flow_notes",
+    "flow_tags",
+    "flows",
+    "stream_messages",
+    "workflow_checkpoints"
+  ],
+  "user_version": 0,
+  "foreign_keys": 0,
+  "explicit_indexes": [
+    "idx_actions_timestamp",
+    "idx_findings_flow",
+    "idx_findings_severity",
+    "idx_flow_links_dst",
+    "idx_flow_links_src",
+    "idx_flow_notes_updated",
+    "idx_flow_notes_verdict",
+    "idx_flow_tags_tag",
+    "idx_method",
+    "idx_profile_label",
+    "idx_replay_nonce",
+    "idx_stream_flow",
+    "idx_timestamp",
+    "idx_url"
+  ]
+}

@@ -1079,6 +1079,11 @@ code gaps, GitHub issue review, mobile capture boundaries, and proposed semantic
 traffic retrieval design. It prioritizes autonomous model operation and excludes
 features already achievable by composing existing tools.
 
+The [database and kernel review](DATABASE_KERNEL_REVIEW.md) examines schema
+migrations, transaction boundaries, body evidence, asynchronous action completion,
+query plans, and storage retention. It includes a synthetic query-plan record;
+the proposed fixes remain development tasks.
+
 Run a local import check:
 
 ```bash
