@@ -12,6 +12,7 @@ from urllib.parse import urlsplit
 from playwright.async_api import async_playwright, Browser, BrowserContext, Page
 
 from .browser_events import BrowserEvents
+from .browser_snapshot import SnapshotStore
 
 logger = logging.getLogger("agent_proxy.browser")
 
@@ -86,6 +87,8 @@ class BrowserController:
         self._action_tasks = set()
         self._driver_stop_task = None
         self._action_lock = asyncio.Lock()
+        self._snapshots = SnapshotStore()
+        self._snapshot_revisions = {}
         self.download_dir: Optional[str] = None
         self.cleanup_timeout = 5.0
         self.shutdown_timeout = 15.0
@@ -221,16 +224,26 @@ class BrowserController:
         tab_id = f"tab_{self._tab_counter}"
         self._page_ids[page] = tab_id
         self._tabs[tab_id] = {"page": page, "context": context, "owned": owned}
+        self._snapshot_revisions[tab_id] = 0
         if owned:
             self._owned_pages.add(page)
         self._attach_console(page)
         page.on("dialog", lambda dialog: self._events.on_dialog(dialog, tab_id))
         page.on("download", lambda download: self._events.on_download(download, tab_id))
+        def invalidate_snapshots(*_):
+            # A frame can reload at the same URL and reuse native ref numbers.
+            # Drop the whole tab baseline so old refs cannot address its new document.
+            self._snapshots.drop_tab(tab_id)
+            self._snapshot_revisions[tab_id] = self._snapshot_revisions.get(tab_id, 0) + 1
+        page.on("framenavigated", invalidate_snapshots)
+        page.on("framedetached", invalidate_snapshots)
         def on_close(*_):
             self._tabs.pop(tab_id, None)
             self._page_ids.pop(page, None)
             self._owned_pages.discard(page)
             self._events.drop_tab_dialogs(tab_id)
+            self._snapshots.drop_tab(tab_id)
+            self._snapshot_revisions.pop(tab_id, None)
             if self.pages.get(context) is page:
                 replacement = next((tab["page"] for tab in self._tabs.values()
                                     if tab["context"] == context), None)
@@ -475,6 +488,8 @@ class BrowserController:
         self._scoped_auth.clear()
         self._scoped_route_handlers.clear()
         self._action_tasks.clear()
+        self._snapshots.clear()
+        self._snapshot_revisions.clear()
         self._owns_browser = False
         self.active = "default"
         self._browser = None
@@ -659,7 +674,7 @@ class BrowserController:
 
     async def get_accessibility_tree(self) -> str:
         try:
-            return json.dumps(await self.snapshot(), indent=2, default=str)
+            return json.dumps(await self.snapshot(incremental=False), indent=2, default=str)
         except Exception as e:
             return f"Accessibility tree failed: {str(e)}"
 
@@ -693,15 +708,27 @@ class BrowserController:
         await self._tabs[tab_id]["page"].close()
         return {**info, "status": "closed"}
 
-    async def snapshot(self, frame: Optional[str] = None) -> Dict[str, Any]:
+    async def snapshot(self, frame: Optional[str] = None,
+                       incremental: bool = True) -> Dict[str, Any]:
+        """Observe native ARIA refs; deltas name the complete prior observation.
+
+        Only the latest delivered snapshot for this tab/frame can authorize ref
+        actions. Captures share the action lock because Playwright's ref lookup
+        follows its latest ARIA observation in each document.
+        """
+        async with self._action_lock:
+            return await self._snapshot(frame, incremental)
+
+    async def _snapshot(self, frame: Optional[str], incremental: bool) -> Dict[str, Any]:
         page = self._require_page()
         tab_id = self._page_ids[page]
         pending = self._events.pending_dialogs(tab_id)
         if pending:
             return {"status": "dialog_pending", "page": self._tab_info(tab_id), "dialogs": pending}
         scope = page.frame_locator(frame) if frame else page
+        revision = self._snapshot_revisions[tab_id]
         waiter = self._events.dialog_waiter(tab_id)
-        capture = asyncio.create_task(scope.locator("body").aria_snapshot(timeout=self.timeout))
+        capture = asyncio.create_task(scope.locator("body").aria_snapshot(mode="ai", timeout=self.timeout))
         try:
             await asyncio.wait({capture, waiter}, return_when=asyncio.FIRST_COMPLETED)
             pending = self._events.pending_dialogs(tab_id)
@@ -710,6 +737,8 @@ class BrowserController:
             if not capture.done():
                 raise RuntimeError("Browser snapshot interrupted before capture completed")
             aria = await capture
+            if self._snapshot_revisions.get(tab_id) != revision:
+                raise RuntimeError("Page navigated during capture; request a new snapshot")
         except Exception as exc:
             raise RuntimeError(f"Browser snapshot failed: {exc}") from exc
         finally:
@@ -718,8 +747,7 @@ class BrowserController:
                 capture.cancel()
             await asyncio.gather(capture, return_exceptions=True)
         return {"status": "ok", "page": self._tab_info(tab_id), "frame": frame,
-                "snapshot": self._truncate_content(aria, self.MAX_CONTENT_CHARS),
-                "truncated": len(aria) > self.MAX_CONTENT_CHARS}
+                **self._snapshots.render(tab_id, frame, aria, incremental, self.MAX_CONTENT_CHARS)}
 
     async def handle_dialog(self, accept: bool, prompt_text: Optional[str] = None) -> Dict[str, Any]:
         page = self._require_page()
@@ -738,7 +766,8 @@ class BrowserController:
 
     async def act(self, action: str, selector: Optional[str] = None,
                   value: Optional[str] = None, frame: Optional[str] = None,
-                  delay: int = 50) -> Dict[str, Any]:
+                  delay: int = 50, ref: Optional[str] = None,
+                  snapshot_id: Optional[str] = None) -> Dict[str, Any]:
         """Complete a browser primitive or return an explicit pending dialog.
 
         No wait-for-network heuristic claims that application work has completed.
@@ -749,15 +778,28 @@ class BrowserController:
         supported = {"click", "fill", "type", "select", "press", "hover", "scroll", "upload"}
         if action not in supported:
             raise ValueError(f"Unsupported browser action: {action}")
-        if action in {"click", "fill", "type", "select", "hover", "upload"} and not selector:
-            raise ValueError(f"selector is required for {action}")
+        if selector and ref:
+            raise ValueError("selector and ref are mutually exclusive")
+        if ref and not snapshot_id:
+            raise ValueError("snapshot_id is required with ref")
+        if snapshot_id and not ref:
+            raise ValueError("snapshot_id requires ref")
+        if action in {"click", "fill", "type", "select", "hover", "upload"} and not (selector or ref):
+            raise ValueError(f"selector or ref is required for {action}")
         if action in {"fill", "type", "select", "press", "upload"} and value is None:
             raise ValueError(f"value is required for {action}")
         async with self._action_lock:
             page = self._require_page()
             tab_id = self._page_ids[page]
             scope = page.frame_locator(frame) if frame else page
-            target = scope.locator(selector) if selector else None
+            if ref:
+                self._snapshots.validate_ref(tab_id, frame, snapshot_id, ref)
+                # Native fNeM refs route to their iframe from the page locator.
+                target = page.locator(f"aria-ref={ref}")
+            else:
+                target = scope.locator(selector) if selector else None
+            target_description = ref or selector
+            context_name = self.active
             action_id = "action_" + uuid.uuid4().hex[:12]
             timestamp = time.time()
             started = time.monotonic()
@@ -794,13 +836,14 @@ class BrowserController:
                     await page.mouse.wheel(0, delta)
 
             if not pending:
+                if ref and await target.count() != 1:
+                    raise ValueError("Element ref is detached; request a new snapshot")
                 self._events.action_id = action_id
                 self._events.record("action_started", action_id=action_id,
-                                    context=self.active, action=action, target=selector, frame=frame)
+                                    context=context_name, action=action, target=target_description, frame=frame)
                 waiter = self._events.dialog_waiter(tab_id)
                 task = asyncio.create_task(perform())
                 self._action_tasks.add(task)
-                context_name = self.active
                 def on_done(completed):
                     self._action_tasks.discard(completed)
                     if completed.cancelled():
@@ -810,7 +853,7 @@ class BrowserController:
                     # Do not include exception strings: Playwright call logs can
                     # echo values typed into a password or other private field.
                     self._events.record("action_finished", action_id=action_id,
-                                        context=context_name, action=action, target=selector,
+                                        context=context_name, action=action, target=target_description,
                                         status=completion)
                 task.add_done_callback(on_done)
                 try:
@@ -835,7 +878,8 @@ class BrowserController:
                     self._events.action_id = None
             observed = [dict(event) for event in self._events.events if event["sequence"] > sequence]
             return {"id": action_id, "action_id": action_id, "timestamp": timestamp,
-                    "context": self.active, "action": action, "target": selector,
+                    "context": context_name, "action": action, "target": target_description,
+                    "ref": ref, "snapshot_id": snapshot_id,
                     "status": status, "action_status": action_status,
                     "completion_scope": "browser_primitive", "elapsed_ms": int((time.monotonic() - started) * 1000),
                     "page": self._tab_info(tab_id) if tab_id in self._tabs else {"tab_id": tab_id, "closed": True},
