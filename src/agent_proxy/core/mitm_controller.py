@@ -6,6 +6,7 @@ import re
 import socket
 import time
 import uuid
+from email.message import Message
 from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse, urlencode, parse_qsl
 
@@ -19,6 +20,7 @@ from ..config import RuleConfig, load_rule_config
 from .traffic_db import TrafficDB
 from .passive_scan import PassiveScanner
 from .flow_writer import FlowWriter
+from .stream_capture import SSEParser, StreamCapture
 from .traffic_analysis import TrafficAnalyzer
 
 structlog.configure(
@@ -177,7 +179,64 @@ class TrafficRecorder:
         if self.scope.is_allowed(flow):
             self._record(flow, scan=True)
 
+    def responseheaders(self, flow: http.HTTPFlow):
+        """Persist open-stream headers and observe SSE without buffering bytes.
+
+        mitmproxy's stream callback receives transport chunks, including an
+        empty final chunk. Returning the same object preserves content encoding
+        and forwarding. SSE always uses UTF-8 regardless of a declared charset;
+        non-identity Content-Encoding remains an explicit capture omission.
+        """
+        if not self.scope.is_allowed(flow):
+            return
+        content_type = Message()
+        content_type["content-type"] = flow.response.headers.get("content-type", "")
+        if content_type.get_content_type() != "text/event-stream":
+            if flow.response.status_code == 101:
+                self._record(flow, scan=False)
+            return
+        flow.metadata["stream_protocol"] = "sse"
+        flow.metadata["stream_body_omitted"] = "stream_messages"
+        encoding = flow.response.headers.get("content-encoding", "identity").strip().lower()
+        capture = StreamCapture(flow.id, "sse", self._record_message, flow.metadata)
+        if encoding not in {"", "identity"}:
+            flow.metadata["stream_body_omitted"] = "stream_content_encoding_unsupported"
+            flow.metadata["stream_decode_note"] = "SSE parsing requires identity Content-Encoding"
+            capture.message("", {"kind": "unsupported", "omitted": "encoded_stream",
+                                 "content_encoding": encoding})
+            flow.response.stream = True
+        else:
+            parser = SSEParser(capture.message)
+
+            def observe(chunk: bytes) -> bytes:
+                parser.feed(chunk)
+                return chunk
+
+            flow.response.stream = observe
+        self._record(flow, scan=False)
+
+    def websocket_message(self, flow: http.HTTPFlow):
+        """Capture the latest reassembled message, retaining peer direction."""
+        if self.scope.is_allowed(flow):
+            capture = StreamCapture(flow.id, "websocket", self._record_message, flow.metadata)
+            capture.websocket_message(flow.websocket.messages[-1])
+
+    def _record_message(self, message: dict) -> None:
+        if self.writer is not None:
+            self.writer.submit_message(message)
+            return
+        try:
+            self.db.save_stream_message(message)
+        except Exception as e:
+            logger.error("stream_message_write_failed", flow_id=message["flow_id"], error=str(e))
+
     def error(self, flow: http.HTTPFlow):
+        # A protocol error bypasses mitmproxy's normal final stream callback.
+        # Flush the captured tail as incomplete before recording the failure;
+        # another empty EOF is harmless because dispatch clears pending data.
+        if (flow.response is not None and flow.metadata.get("stream_protocol") == "sse"
+                and callable(flow.response.stream)):
+            flow.response.stream(b"")
         if self.scope.is_allowed(flow):
             self._record(flow, scan=False)
 

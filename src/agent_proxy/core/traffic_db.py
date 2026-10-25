@@ -261,6 +261,22 @@ class TrafficDB:
             """)
             conn.execute("CREATE INDEX IF NOT EXISTS idx_actions_timestamp ON actions(timestamp)")
 
+            # Application messages outlive their open HTTP flow. The global
+            # cursor orders capture commits across SSE and both WS directions;
+            # it is deliberately not reset by traffic_clear.
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS stream_messages (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    flow_id TEXT NOT NULL,
+                    protocol TEXT NOT NULL,
+                    direction TEXT NOT NULL,
+                    timestamp REAL NOT NULL,
+                    payload TEXT NOT NULL,
+                    metadata TEXT NOT NULL
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_stream_flow ON stream_messages(flow_id, id)")
+
         # Enabling WAL above created the -wal/-shm sidecars; re-assert 0600 on
         # them now (they didn't exist during the first call). The -wal file
         # holds the freshest, not-yet-checkpointed captured secrets.
@@ -326,6 +342,14 @@ class TrafficDB:
                 decode_note = None
             if is_artifact(flow.response.headers):
                 artifact = self.artifact_store.save(flow.id, flow.response.content, flow.response.headers)
+            if flow.metadata.get("stream_protocol") == "sse":
+                # Streaming bodies are not buffered by mitmproxy. Keep this
+                # omission visible on both the headers snapshot and closure.
+                resp_body = None
+                resp_truncated = 0
+                resp_omitted = flow.metadata["stream_body_omitted"]
+                resp_charset = "utf-8" if resp_omitted == "stream_messages" else None
+                decode_note = flow.metadata.get("stream_decode_note")
         status_code = flow.response.status_code if flow.response else None
         size = len(flow.response.content) if flow.response and flow.response.content else 0
         replay_nonce = None
@@ -752,6 +776,44 @@ class TrafficDB:
             conn.execute("DELETE FROM flow_links")
             conn.execute("DELETE FROM flow_notes")
             conn.execute("DELETE FROM actions")
+            conn.execute("DELETE FROM stream_messages")
+
+    def save_stream_message(self, message: Dict[str, Any]) -> int:
+        """Persist one bounded SSE event or reassembled WebSocket message."""
+        with self._get_conn() as conn:
+            cursor = conn.execute(
+                "INSERT INTO stream_messages (flow_id, protocol, direction, timestamp, payload, metadata) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (message["flow_id"], message["protocol"], message["direction"],
+                 message["timestamp"], message["payload"],
+                 json.dumps(message["metadata"], ensure_ascii=False)),
+            )
+            return cursor.lastrowid
+
+    def list_stream_messages(self, flow_id: Optional[str] = None, after_id: int = 0,
+                             limit: int = 50, protocol: Optional[str] = None) -> List[Dict[str, Any]]:
+        """Read committed messages in cursor order, including open connections."""
+        if protocol is not None and protocol not in {"sse", "websocket"}:
+            raise ValueError("protocol must be 'sse' or 'websocket'")
+        sql = "SELECT * FROM stream_messages WHERE id > ?"
+        params: list = [max(0, int(after_id))]
+        if flow_id is not None:
+            sql += " AND flow_id = ?"
+            params.append(flow_id)
+        if protocol is not None:
+            sql += " AND protocol = ?"
+            params.append(protocol)
+        sql += " ORDER BY id LIMIT ?"
+        params.append(max(0, min(int(limit), 1000)))
+        with self._get_conn() as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute(sql, params).fetchall()
+        result = []
+        for row in rows:
+            entry = dict(row)
+            entry["metadata"] = json.loads(entry["metadata"])
+            result.append(entry)
+        return result
 
     def save_action(self, entry: Dict[str, Any]) -> Dict[str, Any]:
         """Persist a generic action receipt without inferring flow causation.

@@ -11,6 +11,10 @@ recorder hook stays synchronous but only:
   1. does the cheap, must-be-inline work (strip our internal header), then
   2. snapshots the flow into a detached `FlowSnapshot` and enqueues it.
 
+The same queue also accepts detached SSE/WebSocket message records, so live
+streams are committed before their HTTP flow closes without adding a second
+writer or writing synchronously for every transport chunk.
+
 The snapshot is necessary because mitmproxy reuses/mutates the live `HTTPFlow`
 object after the hook returns — we cannot hold a reference to it. The snapshot
 re-exposes exactly the read interface that `TrafficDB.save_flow` and
@@ -95,7 +99,7 @@ class FlowWriter:
     def __init__(self, db, scanner):
         self.db = db
         self.scanner = scanner
-        self._queue: "queue.Queue[Optional[tuple]]" = queue.Queue(maxsize=_MAX_QUEUE)
+        self._queue: "queue.Queue[tuple]" = queue.Queue(maxsize=_MAX_QUEUE)
         self._thread: Optional[threading.Thread] = None
         self._state_lock = threading.Lock()
         self._stop_requested = threading.Event()
@@ -104,6 +108,7 @@ class FlowWriter:
         self.write_errors = 0
         self.scan_errors = 0
         self.persisted = 0
+        self.persisted_messages = 0
         self.last_error: Optional[str] = None
 
     def start(self) -> None:
@@ -127,6 +132,7 @@ class FlowWriter:
                 "queued": self._queue.qsize(),
                 "pending": self._queue.unfinished_tasks,
                 "persisted": self.persisted,
+                "persisted_messages": self.persisted_messages,
                 "dropped": self.dropped,
                 "write_errors": self.write_errors,
                 "scan_errors": self.scan_errors,
@@ -142,7 +148,13 @@ class FlowWriter:
             self.last_error = str(e)
             logger.error("flow_snapshot_failed", error=str(e))
             return
-        label = snap.metadata.get("profile_label")
+        self._enqueue(("flow", snap, scan))
+
+    def submit_message(self, message: dict) -> None:
+        """Enqueue a detached application message; transport bytes stay live."""
+        self._enqueue(("message", dict(message, metadata=dict(message["metadata"])), False))
+
+    def _enqueue(self, item: tuple) -> None:
         # Serialize acceptance with stop(): no snapshot can appear after the
         # worker has decided that its final queue is empty.
         with self._state_lock:
@@ -150,7 +162,7 @@ class FlowWriter:
                 self.dropped += 1
                 return
             try:
-                self._queue.put_nowait((snap, label, scan))
+                self._queue.put_nowait(item)
             except queue.Full:
                 try:
                     self._queue.get_nowait()
@@ -159,32 +171,37 @@ class FlowWriter:
                 else:
                     self._queue.task_done()
                     self.dropped += 1
-                self._queue.put_nowait((snap, label, scan))
+                self._queue.put_nowait(item)
 
     def _run(self) -> None:
         try:
             while True:
                 try:
-                    snap, label, scan = self._queue.get(timeout=0.05)
+                    kind, item, scan = self._queue.get(timeout=0.05)
                 except queue.Empty:
                     if self._stop_requested.is_set():
                         return
                     continue
                 try:
-                    self.db.save_flow(snap, profile_label=label)
-                    self.persisted += 1
+                    if kind == "message":
+                        self.db.save_stream_message(item)
+                        self.persisted_messages += 1
+                    else:
+                        self.db.save_flow(item, profile_label=item.metadata.get("profile_label"))
+                        self.persisted += 1
                 except Exception as e:
                     self.write_errors += 1
                     self.last_error = str(e)
-                    logger.exception("flow_write_failed", flow_id=snap.id, error=str(e))
+                    flow_id = item["flow_id"] if kind == "message" else item.id
+                    logger.exception("capture_write_failed", flow_id=flow_id, kind=kind, error=str(e))
                 else:
-                    if scan and snap.response is not None:
+                    if scan and item.response is not None:
                         try:
-                            self.scanner.scan(snap, self.db)
+                            self.scanner.scan(item, self.db)
                         except Exception as e:
                             self.scan_errors += 1
                             self.last_error = str(e)
-                            logger.exception("flow_scan_failed", flow_id=snap.id, error=str(e))
+                            logger.exception("flow_scan_failed", flow_id=item.id, error=str(e))
                 finally:
                     self._queue.task_done()
         finally:
