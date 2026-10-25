@@ -5,11 +5,15 @@ import os
 import socket
 import time
 import uuid
+from functools import partial
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import anyio
+
 from .mitm_controller import MitmController
 from .browser_controller import BrowserController
+from .workflow_state import CheckpointStore
 from ..models import SessionConfig
 from ..config import RuleConfig, load_rule_config
 
@@ -52,6 +56,191 @@ class SessionManager:
         self._cleanup_error: Optional[str] = None
         self.browser.download_dir = str(Path(self.config.db_path).parent / "downloads")
         self.browser.shutdown_timeout = self.config.shutdown_timeout
+        self._workflow_lock = asyncio.Lock()
+        self._checkpoints: Optional[CheckpointStore] = None
+
+    @property
+    def checkpoints(self) -> CheckpointStore:
+        # Construct once per manager: opening a persisted cursor reconciles an
+        # old process's in-flight step, not the current process's running step.
+        if self._checkpoints is None:
+            self._checkpoints = CheckpointStore(self.mitm.db)
+        return self._checkpoints
+
+    async def _cursor(self, method: str, *args, **kwargs):
+        # These short transactions are part of the workflow lock's lifetime.
+        # AnyIO waits for its worker on cancellation instead of abandoning a
+        # write that could otherwise overwrite the next step after lock release.
+        return await anyio.to_thread.run_sync(partial(getattr(self.checkpoints, method), *args, **kwargs))
+
+    def _active_browser_page(self) -> Optional[Dict[str, Any]]:
+        return next((tab for tab in self.browser.list_tabs() if tab["active"]), None)
+
+    async def _remember_browser_page(self, *, status: Optional[str] = None) -> Optional[Dict[str, Any]]:
+        page = self._active_browser_page()
+        if page is None:
+            return None
+        return await self._cursor(
+            "observe", {**page, "instance_id": self.session_id},
+            context=self.browser.active, status=status,
+        )
+
+    async def remember_browser_page(self, *, status: Optional[str] = None):
+        async with self._workflow_lock:
+            return await self._remember_browser_page(status=status)
+
+    async def _restore_browser_position(self, context: str) -> Dict[str, Any]:
+        """Rebind a live page locally; never open URLs or replay a browser step."""
+        checkpoint = await self._cursor("latest", context)
+        tabs = [tab for tab in self.browser.list_tabs() if tab["context"] == context]
+        active = next((tab for tab in tabs if tab["active"]), None)
+        page = None
+        if checkpoint is None:
+            page = active
+        elif checkpoint.get("instance_id") == self.session_id:
+            # A tab can navigate after a primitive returns. Its local identity
+            # remains valid, but tab IDs are never trusted across processes.
+            page = next((tab for tab in tabs if tab["tab_id"] == checkpoint["tab_id"]), None)
+        if page is None and checkpoint and checkpoint.get("url"):
+            matches = [tab for tab in tabs if tab["url"] == checkpoint["url"]]
+            if len(matches) == 1:
+                page = matches[0]
+        if page is None:
+            return {"status": "resume_required", "checkpoint": checkpoint,
+                    "actions_replayed": 0,
+                    "next_step": "Open or select the saved page, then inspect it before acknowledging the checkpoint."}
+        rebound = (active is None or active["tab_id"] != page["tab_id"] or
+                   bool(checkpoint and (checkpoint.get("tab_id") != page["tab_id"] or
+                                        checkpoint.get("instance_id") != self.session_id)))
+        if rebound:
+            page = await self.browser.select_tab(page["tab_id"])
+        status = checkpoint.get("status") if checkpoint else "ready"
+        if status not in ("needs_review", "requires_dialog", "inflight"):
+            status = "restored" if rebound else "ready"
+        return {"status": status, "page": page, "checkpoint": checkpoint,
+                "actions_replayed": 0, "rebound": rebound}
+
+    async def observe_browser(self, frame: Optional[str] = None, incremental: bool = True) -> Dict[str, Any]:
+        async with self._workflow_lock:
+            recovery = await self._restore_browser_position(self.browser.active)
+            if recovery["status"] == "resume_required":
+                return recovery
+            snapshot = await self.browser.snapshot(frame=frame, incremental=incremental)
+            snapshot["checkpoint"] = await self._remember_browser_page()
+            snapshot["recovery"] = recovery
+            return snapshot
+
+    async def navigate_browser(self, url: str, wait_until: str = "domcontentloaded") -> str:
+        async with self._workflow_lock:
+            context = self.browser.active
+            cursor = await self._cursor("latest", context)
+            unresolved = bool(cursor and cursor["status"] in ("needs_review", "inflight"))
+            await self._remember_browser_page()
+            if not unresolved:
+                await self._cursor("begin", {"action": "navigate", "target": url}, context=context)
+            started = time.monotonic()
+            try:
+                result = await self.browser.navigate(url, wait_until=wait_until)
+                try:
+                    navigation = json.loads(result)
+                except json.JSONDecodeError:
+                    raise RuntimeError(result) from None
+            except BaseException as exc:
+                with anyio.CancelScope(shield=True):
+                    await self._cursor("interrupted", type(exc).__name__, context=context)
+                raise
+            page = {**(self._active_browser_page() or {}), "title": navigation.get("title")}
+            receipt = {"id": "action_" + uuid.uuid4().hex, "timestamp": time.time(),
+                       "context": context, "action": "navigate", "target": url,
+                       "elapsed_ms": round((time.monotonic() - started) * 1000),
+                       "status": "completed", "action_status": "completed",
+                       "completion_scope": "browser_primitive", "page": page, "result": navigation}
+            # Explicit navigation may be needed to inspect a restarted page.
+            # It must not resolve the preceding unknown business operation.
+            receipt["checkpoint"] = (await self._remember_browser_page() if unresolved
+                                     else await self._cursor("finish", receipt))
+            await asyncio.to_thread(self.mitm.db.save_action, receipt)
+            return json.dumps({**navigation, "checkpoint": receipt["checkpoint"]})
+
+    async def act_browser(self, action: str, *, selector: Optional[str] = None,
+                          value: Optional[str] = None, frame: Optional[str] = None,
+                          delay: int = 50, ref: Optional[str] = None,
+                          snapshot_id: Optional[str] = None) -> Dict[str, Any]:
+        async with self._workflow_lock:
+            context = self.browser.active
+            recovery = await self._restore_browser_position(context)
+            if recovery["status"] in ("resume_required", "needs_review", "inflight"):
+                return {**recovery, "action_status": "not_started"}
+            await self._remember_browser_page()
+            await self._cursor("begin", {"action": action, "selector": selector, "ref": ref, "frame": frame},
+                               context=context)
+            try:
+                receipt = await self.browser.act(action, selector=selector, value=value, frame=frame,
+                                                 delay=delay, ref=ref, snapshot_id=snapshot_id)
+            except ValueError:
+                # Parameter and ref validation happens before the primitive is
+                # started. Rejecting a stale observation is a known non-action,
+                # so refreshing the snapshot does not need recovery approval.
+                rejected = {"id": "action_" + uuid.uuid4().hex, "context": context,
+                            "action": action, "target": ref or selector,
+                            "status": "not_started", "action_status": "not_started"}
+                await self._cursor("finish", rejected)
+                await asyncio.to_thread(self.mitm.db.save_action, rejected)
+                raise
+            except BaseException as exc:
+                # The intent was committed before execution. Preserve unknown
+                # results and omit Playwright logs that can contain typed values.
+                with anyio.CancelScope(shield=True):
+                    await self._cursor("interrupted", type(exc).__name__, context=context)
+                raise
+            receipt["checkpoint"] = await self._cursor("finish", receipt)
+            await asyncio.to_thread(self.mitm.db.save_action, receipt)
+            return receipt
+
+    async def checkpoint_browser(self, operation: str = "inspect", context: Optional[str] = None) -> Dict[str, Any]:
+        if operation not in ("inspect", "save", "restore", "acknowledge"):
+            raise ValueError("operation must be inspect, save, restore, or acknowledge")
+        async with self._workflow_lock:
+            context = context or self.browser.active
+            if operation == "inspect":
+                return {"checkpoint": await self._cursor("latest", context)}
+            if operation == "save":
+                if context != self.browser.active or self._active_browser_page() is None:
+                    raise RuntimeError("Select an open page before saving its checkpoint")
+                return {"checkpoint": await self._remember_browser_page()}
+            recovery = await self._restore_browser_position(context)
+            if operation == "acknowledge" and recovery["status"] != "resume_required":
+                # Acknowledgement selects where a new step may begin. It does
+                # not change the previous action's unknown/pending outcome.
+                recovery["checkpoint"] = await self._remember_browser_page(status="ready")
+                recovery["status"] = "ready"
+            return recovery
+
+    async def clear_capture(self) -> None:
+        async with self._workflow_lock:
+            await self._cursor("reset")
+            await asyncio.to_thread(self.mitm.db.clear)
+
+    async def change_browser_tab(self, operation: str, tab_id: str) -> Dict[str, Any]:
+        async with self._workflow_lock:
+            if operation == "select":
+                result = await self.browser.select_tab(tab_id)
+            else:
+                result = await self.browser.close_tab(tab_id)
+            await self._remember_browser_page()
+            return result
+
+    async def change_browser_context(self, name: str) -> str:
+        async with self._workflow_lock:
+            result = self.browser.use_context(name)
+            await self._remember_browser_page()
+            return result
+
+    async def resolve_browser_dialog(self, accept: bool, prompt_text: Optional[str] = None) -> Dict[str, Any]:
+        async with self._workflow_lock:
+            result = await self.browser.handle_dialog(accept, prompt_text=prompt_text)
+            await self._remember_browser_page(status="ready")
+            return result
 
     async def _stop_resources(self, stop_proxy: bool) -> Dict[str, str]:
         # Both cleanup branches run even if one resource refuses to close.
@@ -362,24 +551,31 @@ class SessionManager:
         if not self._session_active:
             return "No active session. Use session_start first."
 
-        nav_result = await self.browser.navigate(url, wait_until=wait_until)
-
-        if actions:
-            for action in actions:
-                action_type = action.get("type")
-                if action_type == "click":
-                    await self.browser.click(action["selector"])
-                elif action_type == "fill":
-                    await self.browser.fill(action["selector"], action["value"])
-                elif action_type == "wait":
-                    import asyncio
-                    await asyncio.sleep(action.get("duration", 1))
-                elif action_type == "press":
-                    await self.browser.press_key(action.get("key", "Enter"))
+        nav_result = await self.navigate_browser(url, wait_until=wait_until)
+        receipts = []
+        for action in actions or []:
+            action_type = action.get("type")
+            if action_type == "wait":
+                await asyncio.sleep(action.get("duration", 1))
+                continue
+            if action_type not in ("click", "fill", "press"):
+                raise ValueError(f"Unsupported workflow action: {action_type}")
+            receipt = await self.act_browser(
+                action_type, selector=action.get("selector"),
+                value=action.get("key", "Enter") if action_type == "press" else action.get("value"),
+            )
+            receipts.append(receipt)
+            # An explicit batch uses the same checkpoints as individual tools.
+            # Stop at a pending decision; later steps must not run on an
+            # unconfirmed page state, and the batch is never replayed on resume.
+            if receipt["status"] != "completed":
+                break
 
         traffic = self.mitm.db.get_summary(limit=20)
 
         return json.dumps({
+            "status": receipts[-1]["status"] if receipts else "completed",
+            "actions": receipts,
             "navigation": nav_result if isinstance(nav_result, str) else json.loads(nav_result),
             "captured_requests": len(traffic),
             "recent_traffic": traffic[:10],
