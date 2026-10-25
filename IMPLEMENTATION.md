@@ -116,3 +116,28 @@
 
 - 最终检查修正了过期 ref 的状态：原语执行前的验证拒绝记录为 not_started/ready，刷新快照即可继续，不误报业务结果未知。只复验受影响检查点用例：9 passed，3.42 秒；没有重跑完整回归或本地集成。
 - 补齐既有 browse_and_capture 入口的同一检查点路径，并在 pending 决策处终止显式动作列表，避免后续步骤在未确认页面状态上继续。只验证这一个受影响场景：1 passed，1.99 秒；未重跑其它用例。
+
+## 第三轮：压缩 SSE 与竞品核对
+
+代码基线为 `fea67f0`。本地旧方案提出的实时消息盲区已由第二轮解决；本轮缺口是 Content-Encoding 解码，消息表、游标和后台 writer 已存在，不另建存储链路。
+
+| 项目 | 基线实现 | 本轮完成条件 |
+|---|---|---|
+| 压缩 SSE | identity 可解析，其余编码记 unsupported | 增量解析 gzip、deflate、br、zstd；按逆序处理编码链，复用 SSEParser 和消息预算 |
+| 转发合同 | observer 原样返回 transport chunk | 不改响应头和转发字节；解码无输出不触发 SSE EOF；未知编码仍明确省略 |
+| 消息存储 | stream_messages 已支持 metadata、游标、共用 writer | 保存原 content_encoding；损坏/截断压缩流保存诊断，保留已收到的尾事件；连接未关闭即可查询 |
+| 收尾 | 正常空块和 error hook 共用 EOF | 正常结束检查压缩完整性，异常断连标记 transport_interrupted；不重复收尾、不重试上游 |
+| 横向比较 | 尚无本轮官方来源对比 | 核对 10 个 GitHub 项目，区分直接竞品与上游/相邻工具；不把有 MCP、refs 或流式消息宣称为独有能力 |
+
+实现后执行一次流采集相关单元用例，并将既有本地多步场景改为 gzip SSE，验证浏览器与消息查询在连接开放时同时收到事件。仅在实际失败或代码修正后复验受影响部分，不重复完整测试集。Brotli 与 Zstandard 使用公开增量 API；存储保留预算不等于第三方解压库的严格峰值内存上限。
+
+### 第三轮交付与验证
+
+- 已完成上表各项。新增一个 content decoder 和一个 SSE observer，复用原 parser、StreamCapture、writer 与消息表，没有数据库迁移。直接声明 Brotli/Zstandard 依赖，不依赖上游偶然安装它们。
+- 支持 gzip/x-gzip、标准及 raw deflate、br、zstd 与编码链；gzip 连续成员和 zstd 连续帧在同块或跨块时均能解析。每条事件保留 content_encoding，原始 HTTP 头与转发字节不变。
+- 解码损坏记录 decode_error；正常结束但缺少压缩尾记录 incomplete_stream。传输异常结束仅给已解出的尾事件标记 transport_interrupted，保留 incomplete 语义。未知编码保持 unsupported；诊断与事件共用已有消息预算和 writer。
+- 一次定向执行：`AGENTPROXY_RUN_INTEGRATION=1 python -m pytest tests/test_stream_capture.py tests/test_stream_workflow_integration.py -q -p no:cacheprovider`，21 passed、1 failed，6.14 秒。失败是新增集成断言使用小写键读取保留原大小写的 Content-Encoding；当时浏览器与数据库均已收到压缩 SSE。
+- 修正该断言后只复验受影响集成文件：1 passed，4.15 秒。没有重复单元或完整回归。场景同时覆盖 gzip SSE 未关闭时可查询、原响应头、WebSocket 双向消息、增量 refs 与步骤状态恢复。
+- 10 项对比见 [COMPETITIVE_ANALYSIS.md](COMPETITIVE_ANALYSIS.md)。依据官方仓库及文档，不提供未经实测的性能、任务成功率或名次结论。
+
+实现核对了 [mitmproxy stream 合同](https://docs.mitmproxy.org/stable/api/mitmproxy/http.html)、[Brotli Python 增量 API](https://github.com/google/brotli/blob/master/python/_brotli.c) 与 [Zstandard 增量解码及结束状态](https://python-zstandard.readthedocs.io/en/latest/decompressor.html)，并由本地定向场景验证当前环境。

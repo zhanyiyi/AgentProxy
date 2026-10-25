@@ -3,6 +3,7 @@ import asyncio
 import json
 import os
 import re
+import zlib
 
 import pytest
 from tornado.httpserver import HTTPServer
@@ -40,9 +41,13 @@ class Events(RequestHandler):
     async def get(self):
         self.set_header("Content-Type", "text/event-stream")
         self.set_header("Cache-Control", "no-cache")
-        self.write("id: first\ndata: available while connected\n\n")
+        self.set_header("Content-Encoding", "gzip")
+        compressor = zlib.compressobj(wbits=16 + zlib.MAX_WBITS)
+        self.write(compressor.compress(b"id: first\ndata: available while connected\n\n")
+                   + compressor.flush(zlib.Z_SYNC_FLUSH))
         await self.flush()
         await self.settings["release_streams"].wait()
+        self.write(compressor.flush(zlib.Z_FINISH))
 
 
 class Socket(WebSocketHandler):
@@ -95,6 +100,9 @@ async def test_live_stream_refs_and_checkpoint_recovery(tmp_path):
             sse = await call(server, "traffic_messages", protocol="sse")
             assert sse["messages"][0]["payload"] == "available while connected"
             assert sse["messages"][0]["metadata"]["id"] == "first"
+            assert sse["messages"][0]["metadata"]["content_encoding"] == "gzip"
+            flow = session.mitm.db.get_detail(sse["messages"][0]["flow_id"])
+            assert flow["response"]["headers"]["Content-Encoding"] == "gzip"
             ws = await call(server, "traffic_messages", protocol="websocket")
             assert {message["direction"] for message in ws["messages"]} == {"client_to_server", "server_to_client"}
             assert not (await call(server, "traffic_messages", protocol="websocket", after_id=ws["next_after_id"]))["messages"]

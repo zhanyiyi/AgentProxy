@@ -10,7 +10,11 @@ import base64
 import codecs
 import re
 import time
-from typing import Callable
+import zlib
+from typing import Callable, Iterator
+
+import brotli
+import zstandard
 
 
 MAX_MESSAGE_BYTES = 64 * 1024
@@ -71,6 +75,132 @@ class StreamCapture:
         self.message(payload, metadata,
                      "client_to_server" if message.from_client else "server_to_client",
                      message.timestamp)
+
+
+class _ContentDecoder:
+    """Decode one HTTP content coding without waiting for the response body.
+
+    gzip members and zstd frames can be concatenated. Deflate's first two
+    bytes distinguish the standard zlib wrapper from common raw-deflate
+    responses, even when the network splits that header between callbacks.
+    """
+
+    def __init__(self, encoding: str):
+        self.encoding = encoding
+        self._prefix = b""
+        self._decoder = None if encoding == "deflate" else self._new_decoder()
+
+    def _new_decoder(self):
+        if self.encoding in {"gzip", "x-gzip"}:
+            return zlib.decompressobj(16 + zlib.MAX_WBITS)
+        if self.encoding == "br":
+            return brotli.Decompressor()
+        return zstandard.ZstdDecompressor().decompressobj()
+
+    def decode(self, data: bytes) -> Iterator[bytes]:
+        if not data:
+            return
+        if self.encoding == "deflate" and self._decoder is None:
+            self._prefix += data
+            if len(self._prefix) < 2:
+                return
+            data, self._prefix = self._prefix, b""
+            cmf, flg = data[:2]
+            wrapped = cmf & 15 == 8 and cmf >> 4 <= 7 and (cmf * 256 + flg) % 31 == 0
+            self._decoder = zlib.decompressobj(zlib.MAX_WBITS if wrapped else -zlib.MAX_WBITS)
+        if self.encoding == "br":
+            yield self._decoder.process(data)
+            return
+        while data:
+            if self._decoder.eof:
+                if self.encoding == "deflate":
+                    raise ValueError("Unexpected data after deflate stream")
+                self._decoder = self._new_decoder()
+            # Deliver each completed member before reading another. A corrupt
+            # later member must not discard events decoded from earlier ones.
+            yield self._decoder.decompress(data)
+            data = self._decoder.unused_data
+
+    @property
+    def complete(self) -> bool:
+        if self._decoder is None:
+            return False
+        if self.encoding == "br":
+            return self._decoder.is_finished()
+        return self._decoder.eof
+
+
+class SSEObserver:
+    """Pass through original bytes while decoding a separate observation.
+
+    Only transport EOF finalizes the SSE parser: a decoder returning no output
+    simply needs more input. A capture failure stops observation, never the
+    connection. All events and diagnostics use the existing message writer.
+    """
+
+    def __init__(self, capture: StreamCapture, content_encoding: str):
+        self.capture = capture
+        self.content_encoding = content_encoding.strip().lower() or "identity"
+        self._closed = False
+        self._interrupted = False
+        self._parser = SSEParser(self._message)
+        codings = [part.strip() for part in self.content_encoding.split(",")]
+        unsupported = set(codings) - {"identity", "gzip", "x-gzip", "deflate", "br", "zstd"}
+        self._decoders = []
+        if unsupported:
+            self._closed = True
+            capture.state["stream_body_omitted"] = "stream_content_encoding_unsupported"
+            capture.state["stream_decode_note"] = f"Unsupported SSE Content-Encoding: {self.content_encoding}"
+            self._message("", {"kind": "unsupported", "omitted": "encoded_stream"})
+        else:
+            self._decoders = [_ContentDecoder(coding) for coding in reversed(codings)
+                              if coding != "identity"]
+
+    def _message(self, payload: str, metadata: dict) -> None:
+        metadata = {**metadata, "content_encoding": self.content_encoding}
+        if self._interrupted:
+            metadata["transport_interrupted"] = True
+        self.capture.message(payload, metadata)
+
+    def __call__(self, chunk: bytes) -> bytes:
+        if not self._closed:
+            if not chunk:
+                self.finish()
+            else:
+                try:
+                    self._feed(chunk)
+                except (zlib.error, brotli.error, zstandard.ZstdError, ValueError) as error:
+                    self._decode_error("invalid_data", str(error))
+        return chunk
+
+    def _feed(self, data: bytes, index: int = 0) -> None:
+        if not data:
+            return
+        if index == len(self._decoders):
+            self._parser.feed(data)
+        else:
+            for decoded in self._decoders[index].decode(data):
+                self._feed(decoded, index + 1)
+
+    def _decode_error(self, reason: str, error: str) -> None:
+        self._closed = True
+        self.capture.state["stream_decode_note"] = f"SSE {reason}: {error}"
+        self._parser.feed(b"")
+        self._message("", {"kind": "decode_error", "reason": reason, "error": error})
+
+    def finish(self, *, aborted: bool = False) -> None:
+        if self._closed:
+            return
+        self._closed = True
+        self._interrupted = aborted
+        # A broken transport may intentionally lack the codec trailer. Keep
+        # that distinct from a normally ended but truncated compressed body.
+        if not aborted:
+            incomplete = [decoder.encoding for decoder in self._decoders if not decoder.complete]
+            if incomplete:
+                self._decode_error("incomplete_stream", ", ".join(incomplete))
+                return
+        self._parser.feed(b"")
 
 
 class SSEParser:

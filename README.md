@@ -885,19 +885,34 @@ the HTTP headers even before an SSE stream has closed.
 SSE data is decoded as UTF-8 across chunk boundaries. Multiple `data` lines,
 event names, event IDs, retry hints, CR/LF and incomplete disconnect tails retain
 their meaning. `metadata.incomplete=true` distinguishes a received tail from an
-event dispatched by a blank line. Compressed SSE is forwarded unchanged and
-reported as unsupported parsing; no compressed bytes are presented as text.
-The HTTP body is marked `stream_messages` or
-`stream_content_encoding_unsupported` so callers know to inspect stream metadata.
+event dispatched by a blank line. gzip (including concatenated members and
+x-gzip), deflate (zlib-wrapped or raw), Brotli (`br`) and Zstandard (`zstd`)
+are decoded incrementally for capture; encoding chains are decoded in reverse
+order. Events retain `metadata.content_encoding`. Original headers and forwarded
+bytes stay unchanged; capture does not wait for the full compressed response.
+
+Malformed compressed data or a normally ended stream with a missing trailer
+produces a `metadata.kind="decode_error"` record and a flow `body_decode_note`.
+Previously captured events remain available. An interrupted transport instead
+marks any decoded tail `transport_interrupted=true`; it does not imply the
+compressed content itself was malformed. Finishing capture twice adds no records.
+Compression integrity can fail after an event was stored, so receiving an event
+does not certify that the entire compressed response is intact. Unknown codings
+remain explicit `unsupported` records. The HTTP body is marked `stream_messages`
+or `stream_content_encoding_unsupported` so callers know to inspect messages.
 
 WebSocket text uses UTF-8 and binary data uses base64 with its opcode preserved.
 Capture retains up to 64 KiB per application message, 1000 messages per flow,
 and one additional limit record. Metadata distinguishes original size, captured
-size and truncation. SSE event/id fields are bounded to 1024 bytes. Existing
-capture scope and writer drop/error counters also apply to these records.
+size and truncation. These are retained-message limits, not a strict peak-memory
+limit for third-party decompressors. SSE event/id fields are bounded to 1024
+bytes. Existing capture scope and writer drop/error counters also apply to these records.
 SSE scope is decided when response headers arrive, so changing scope does not
 splice the middle of an existing event stream into a new capture. Reconnect
 that stream to apply a changed scope; WebSocket scope is checked per message.
+
+See [the comparison with 10 related GitHub projects](COMPETITIVE_ANALYSIS.md)
+for the current product scope, differences and remaining gaps.
 
 The observers leave forwarded message bytes unchanged. These tools store traffic
 already passing through the proxy; they do not initiate stream connections or

@@ -8,6 +8,8 @@ license = {text = "MIT"}
 dependencies = [
     "mcp[cli]>=1.27.0,<2",
     "mitmproxy>=10.0.0",
+    "Brotli>=1.0",
+    "zstandard>=0.18",
     "playwright>=1.60.0",
     "curl-cffi>=0.6.0",
     "pydantic>=2.0.0",
