@@ -1074,6 +1074,11 @@ Some sites may still fail with extra TLS pinning, bot checks, or browser-integri
 
 ## Development
 
+The [AI-native roadmap and task list](AI_NATIVE_ROADMAP.md) records the current
+code gaps, GitHub issue review, mobile capture boundaries, and proposed semantic
+traffic retrieval design. It prioritizes autonomous model operation and excludes
+features already achievable by composing existing tools.
+
 Run a local import check:
 
 ```bash
