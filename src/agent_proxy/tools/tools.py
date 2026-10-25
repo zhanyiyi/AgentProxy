@@ -1,7 +1,5 @@
 import asyncio
 import json
-import time
-import uuid
 from typing import Any, Dict, List, Optional
 
 from mcp.server.fastmcp import FastMCP, Image
@@ -204,7 +202,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         Args:
             name: One of the names returned by session_list_contexts.
         """
-        return session.browser.use_context(name)
+        return await session.change_browser_context(name)
 
     @mcp.tool(annotations=READ_ONLY)
     async def session_list_contexts() -> str:
@@ -326,21 +324,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             url: URL to navigate to
             wait_until: When to consider navigation complete ('domcontentloaded', 'load', 'networkidle')
         """
-        started = time.monotonic()
-        result = await session.browser.navigate(url, wait_until=wait_until)
-        try:
-            navigation = json.loads(result)
-        except json.JSONDecodeError:
-            raise ToolError(result) from None
-        entry = {
-            "id": "action_" + uuid.uuid4().hex,
-            "timestamp": time.time(), "context": session.browser.active,
-            "action": "navigate", "target": url,
-            "elapsed_ms": round((time.monotonic() - started) * 1000),
-            "status": navigation["status"], "result": navigation,
-        }
-        await asyncio.to_thread(session.mitm.db.save_action, entry)
-        return result
+        return await session.navigate_browser(url, wait_until=wait_until)
 
     @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_click(selector: str) -> str:
@@ -496,28 +480,43 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return await session.browser.get_accessibility_tree()
 
     @mcp.tool(annotations=READ_ONLY)
-    async def browser_snapshot(frame: str = None) -> dict:
-        """Observe the active page as an ARIA snapshot, including pending dialogs.
+    async def browser_snapshot(frame: str = None, incremental: bool = True) -> dict:
+        """Observe the active page with native element references and versioned ARIA deltas.
 
         frame: Optional iframe CSS selector. Omit it for the main frame.
+        incremental: Return a delta against the last delivered scope snapshot when possible.
+        Use incremental=False for a full view. Keep snapshot_id when acting by ref.
         """
-        return await session.browser.snapshot(frame=frame)
+        return await session.observe_browser(frame=frame, incremental=incremental)
 
     @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_act(action: str, selector: str = None,
-                          value: str = None, frame: str = None, delay: int = 50) -> dict:
+                          value: str = None, frame: str = None, delay: int = 50,
+                          ref: str = None, snapshot_id: str = None) -> dict:
         """Perform one browser action and return its observed completion state.
 
         action: click, fill, type, select, press, hover, or scroll.
-        selector: Element CSS selector; frame optionally selects its iframe.
+        selector: Element selector, or use ref with its snapshot_id instead.
+        ref: Native element reference from the last delivered scope snapshot.
+        snapshot_id: Required when using ref; stale references are rejected.
+        frame: Optional iframe selector, matching the snapshot that produced ref.
         value: Text, option value, key, or scroll amount for the action.
         delay: Milliseconds between typed characters (only for action='type').
         A pending dialog needs browser_dialog; downloads may still be pending.
         The receipt records observed events, without claiming network causality.
         """
-        receipt = await session.browser.act(action, selector=selector, value=value, frame=frame, delay=delay)
-        await asyncio.to_thread(session.mitm.db.save_action, receipt)
-        return receipt
+        return await session.act_browser(action, selector=selector, value=value, frame=frame,
+                                         delay=delay, ref=ref, snapshot_id=snapshot_id)
+
+    @mcp.tool(annotations=STATE_CHANGE)
+    async def browser_checkpoint(operation: str = "inspect", context: str = None) -> dict:
+        """Inspect/save a step checkpoint, restore a live page binding, or acknowledge where to continue.
+
+        operation: inspect, save, restore, or acknowledge. Restore never navigates
+        or replays an action. An unknown interrupted result needs acknowledgement
+        after observation; acknowledgement does not change that historical result.
+        """
+        return await session.checkpoint_browser(operation, context=context)
 
     @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_tabs(operation: str = "list", tab_id: str = None) -> dict:
@@ -526,10 +525,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
             return {"tabs": session.browser.list_tabs()}
         if operation not in ("select", "close") or not tab_id:
             raise ToolError("Use operation='list', or 'select'/'close' with tab_id.")
-        if operation == "select":
-            result = await session.browser.select_tab(tab_id)
-        else:
-            result = await session.browser.close_tab(tab_id)
+        result = await session.change_browser_tab(operation, tab_id)
         await asyncio.to_thread(session.mitm.db.save_action, {
             "action": "tab_" + operation, "target": tab_id,
             "context": session.browser.active, "result": result,
@@ -539,7 +535,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     @mcp.tool(annotations=DESTRUCTIVE)
     async def browser_dialog(accept: bool, prompt_text: str = None) -> dict:
         """Explicitly accept or dismiss the active tab's pending native dialog."""
-        result = await session.browser.handle_dialog(accept, prompt_text=prompt_text)
+        result = await session.resolve_browser_dialog(accept, prompt_text=prompt_text)
         await asyncio.to_thread(session.mitm.db.save_action, {
             "action": "dialog_accept" if accept else "dialog_dismiss",
             "context": session.browser.active, "result": result,
@@ -607,6 +603,23 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
         return json.dumps(flows, indent=2)
 
     @mcp.tool(annotations=READ_ONLY)
+    async def traffic_messages(flow_id: str = None, after_id: int = 0,
+                               limit: int = 50, protocol: str = None) -> dict:
+        """Read stored SSE events or WebSocket messages, including open connections.
+
+        after_id: Exclusive cursor from the last page's next_after_id.
+        protocol: Optional 'sse' or 'websocket'. Binary payloads use base64;
+        metadata states truncation, limits, encoding and incomplete events.
+        """
+        if after_id < 0 or not 1 <= limit <= 1000:
+            raise ToolError("after_id must be nonnegative and limit must be between 1 and 1000")
+        if protocol not in (None, "sse", "websocket"):
+            raise ToolError("protocol must be 'sse' or 'websocket'")
+        messages = await asyncio.to_thread(session.mitm.db.list_stream_messages,
+                                          flow_id=flow_id, after_id=after_id, limit=limit, protocol=protocol)
+        return {"messages": messages, "next_after_id": messages[-1]["id"] if messages else after_id}
+
+    @mcp.tool(annotations=READ_ONLY)
     async def traffic_inspect(flow_id: str, level: str = "preview", full_body: bool = False) -> str:
         """Inspect a captured flow at one of three detail levels.
         Args:
@@ -640,7 +653,7 @@ def register_all_tools(mcp: FastMCP, session: SessionManager):
     @mcp.tool(annotations=DESTRUCTIVE)
     async def traffic_clear() -> str:
         """Clear all captured traffic from the database."""
-        session.mitm.db.clear()
+        await session.clear_capture()
         return "Cleared all traffic history"
 
     @mcp.tool(annotations=DESTRUCTIVE)

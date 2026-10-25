@@ -27,6 +27,7 @@ MERGED = {
 BROWSER_WORKFLOW = {
     "browser_snapshot", "browser_act", "browser_tabs", "browser_dialog",
     "browser_downloads", "session_timeline",
+    "browser_checkpoint", "traffic_messages",
 }
 
 
@@ -49,7 +50,7 @@ async def test_consolidated_surface_has_no_removed_tools():
     assert REMOVED & names == set(), f"removed tools reappeared: {REMOVED & names}"
     assert MERGED <= names
     assert BROWSER_WORKFLOW <= names
-    # Preserve the legacy budget, allowing only the six explicit workflow tools.
+    # Preserve the legacy budget, allowing only the explicit workflow tools.
     assert len(names - BROWSER_WORKFLOW) <= 66, f"legacy tool surface grew to {len(names)}"
 
 

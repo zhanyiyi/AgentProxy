@@ -73,4 +73,46 @@
 
 附件保存的是已捕获响应消息字节，不下载远程链接、不自动解析 PDF/Office。`traffic_clear` 清数据库记录，保留本地附件文件；删除整个实例目录可清理该次采集。默认目录为 `.agentproxy/sessions/<instance-id>`，显式数据库路径表示用户主动复用。
 
-本轮没有实现 SSE/WebSocket 消息级存储、增量 ARIA ref、跨步骤自动恢复、强杀宿主进程树等额外能力；这些需要独立场景、资源预算和完成条件，不作为当前已解决问题。保留现有重放/模糊测试接口，未增强自动攻击能力。
+首轮没有实现 SSE/WebSocket 消息级存储、增量 ARIA ref 与跨步骤恢复。下面记录后续开发，不将首轮结论当作这些能力已经完成。保留现有重放/模糊测试接口，不增强自动攻击能力。
+
+## 第二轮：流式观察、引用与步骤恢复
+
+本轮代码基线为 `c55de24`，继续在 `codex/runtime-browser-polish` 提交。
+
+| 项目 | 当前实现 | 本轮接口与验收条件 | 状态 |
+|---|---|---|---|
+| SSE 消息 | response 等待结束，没有增量消息存储 | responseheaders 安装透传 observer；完整事件产生即入后台队列，连接关闭前可查询，原字节不变 | 已完成 |
+| WebSocket 消息 | 只保存 HTTP 握手 | 保存重组后的文本/二进制消息、方向、时间和 flow_id；查询使用递增游标 | 已完成 |
+| 流消息预算 | 无独立流消息预算 | 单消息保留至多 64 KiB，每连接至多 1000 条及一次限额记录；截断/编码不支持均有标记 | 已完成 |
+| 增量快照 | 每次完整 ARIA，无元素引用 | 复用 Playwright 1.60 原生 AI ARIA 快照及 refs；首次全量，随后明确基线的增量，tab/frame 分开管理 | 已完成 |
+| 引用操作 | 仅 selector | browser_act 支持 ref 与 snapshot_id；引用必须来自已交付快照，失效引用明确报错，不猜测替换目标 | 已完成 |
+| 步骤检查点 | 有历史回执，无待续游标 | 每步自动保存本地观察位置与执行状态；同一数据库重启能读取检查点，不保存表单输入 | 已完成 |
+| 恢复 | 无恢复判定 | 自动重绑仍存在的同 Context/URL 页面；否则返回待续计划。中断时执行结果未知的步骤标 needs_review，不自动重放 | 已完成 |
+
+### 完成语义
+
+- SSE 是事件而不是网络 chunk；WebSocket 是完整消息而不是底层 frame。采集只观察已经过代理的连接，不发包、不修改消息。
+- `traffic_messages(flow_id?, after_id=0, limit=50, protocol?)` 只读查询已保存消息，返回 messages 与 next_after_id。二进制以 base64 表达，消息头尾和截断状态不混为完整正文。
+- 快照返回 `snapshot_id`、`base_snapshot_id` 和 full/delta 模式。导航、文档变化、快照截断等使旧基线不可用时返回全量；refs 依赖其对应快照。
+- 检查点恢复只处理本地状态和待续位置。浏览器页面已关闭或进程已退出时，不自动导航、登录、提交、删除或重放原步骤；工具返回明确恢复计划，调用方再决定下一次新操作。
+- 自动保存与恢复本地步骤进度属于本轮范围；自动继续执行网站业务链不属于本轮范围。原语完成依旧不等于业务任务完成。
+
+### 本轮验证计划
+
+实现后统一执行一次离线回归，并用一个仅访问本地 fixture 的完整场景检查：SSE 连接未关闭时读取事件、WebSocket 双向消息、增量 snapshot/ref、页面绑定恢复及不重放未知步骤。只有实际失败或代码修正才重跑受影响用例。实现完成后把实际结果补入本文。
+
+
+### 第二轮实际验证与接口
+
+- 统一离线回归一次：`python -m pytest -m "not integration" -q -p no:cacheprovider`，123 passed、3 skipped、7 deselected，17.21 秒。
+- 两条本地集成场景一次执行：`AGENTPROXY_RUN_INTEGRATION=1 python -m pytest tests/test_browser_workflow_integration.py tests/test_stream_workflow_integration.py -q -p no:cacheprovider`，2 passed，10.25 秒。未重跑完整测试集。
+- 新场景覆盖 SSE 尚未关闭即读取事件、WebSocket 双向与查询游标、原生 iframe ref、增量基线与不变引用、活页位置恢复、同库重启未知结果保留；原场景继续覆盖确认框、下载、PDF 捕获与原生图片。
+- 新增 `traffic_messages` 与 `browser_checkpoint`；`browser_snapshot` 新增 incremental，`browser_act` 新增 ref/snapshot_id。旧 selector 参数继续可用，旧 accessibility 接口返回全量快照。
+- 检查点的 inspect/save/restore/acknowledge 共用现有 workflow 锁；标签页、Context 切换及 dialog 处理与步骤写入串行。存储只记录脱敏动作元数据，重启后未完成或待弹窗的步骤保留 unknown。
+- 显式导航允许调用方重新观察位置，但不会清掉上一次未知业务结果。恢复本身不导航、不执行网站操作；找不到唯一匹配活页时给出 resume_required。
+- SSE 始终按 UTF-8 解码，忽略 charset 标签；压缩流保留原样转发并明确记录解析不支持。消息和 Flow 继续共用一个后台 writer，未增加编排框架或自动重试。
+
+原生引用和流式消息语义分别依据 [Playwright AI ARIA snapshot](https://playwright.dev/python/docs/api/class-page#page-aria-snapshot)、[mitmproxy hooks](https://docs.mitmproxy.org/stable/api/events.html) 与 [SSE 标准](https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream)；实际兼容性已由本地安装版本与上述场景验证。
+
+- 最终检查修正了过期 ref 的状态：原语执行前的验证拒绝记录为 not_started/ready，刷新快照即可继续，不误报业务结果未知。只复验受影响检查点用例：9 passed，3.42 秒；没有重跑完整回归或本地集成。
+- 补齐既有 browse_and_capture 入口的同一检查点路径，并在 pending 决策处终止显式动作列表，避免后续步骤在未确认页面状态上继续。只验证这一个受影响场景：1 passed，1.99 秒；未重跑其它用例。

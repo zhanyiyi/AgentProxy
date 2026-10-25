@@ -16,6 +16,12 @@ AgentProxy can either launch its own Playwright Chromium browser or connect to a
 
 - **Observable browser workflows** — ARIA snapshots, explicit iframe selection,
   tracked tabs, pending native dialogs, saved downloads, and action receipts.
+- **Live stream capture** — query persisted SSE events and WebSocket messages
+  while connections remain open, with direction, cursors and explicit byte limits.
+- **Incremental observations** — native element references and versioned ARIA
+  deltas, with stale-reference rejection after navigation.
+- **Recoverable step state** — automatically checkpoint local progress and rebind
+  matching live pages; interrupted outcomes remain explicit until acknowledged.
 - **Owned resource cleanup** — startup cancellation releases acquired resources;
   disconnecting from CDP preserves the user's browser contexts and tabs.
 - **Isolated captures** — each MCP instance gets its own database by default.
@@ -689,12 +695,13 @@ browser_set_cookies(cookies_json)
 browser_set_headers(headers_json)
 browser_set_offline(offline)
 browser_accessibility_tree()
-browser_snapshot(frame?)
-browser_act(action, selector?, value?, frame?, delay=50)
+browser_snapshot(frame?, incremental=true)
+browser_act(action, selector?, value?, frame?, delay=50, ref?, snapshot_id?)
 browser_tabs(operation="list", tab_id?)   # list | select | close
 browser_dialog(accept, prompt_text?)
 browser_downloads()
 session_timeline(limit=50)
+browser_checkpoint(operation="inspect", context?)   # inspect | save | restore | acknowledge
 browser_hydrate_from_traffic(host, context="default", limit=200)
 ```
 
@@ -702,6 +709,7 @@ Traffic:
 
 ```text
 traffic_list(limit=20, with_findings=false)
+traffic_messages(flow_id?, after_id=0, limit=50, protocol?)   # sse | websocket
 traffic_inspect(flow_id, level="preview")    # meta | preview | full
 traffic_search(query?, domain?, method?, limit)
 traffic_clear()
@@ -807,6 +815,52 @@ query downloads for their current completion state. Typed form values and prompt
 answers are omitted from action history. Legacy click/fill/type/select/key tools
 also return action receipts. Screenshots use native MCP image content.
 
+`browser_snapshot` now uses Playwright's native AI ARIA format, including
+`[ref=e2]` and iframe references such as `[ref=f1e2]`. The first snapshot of a
+tab/frame is `kind="full"`. Later observations may be `kind="delta"`, containing
+a unified diff against `base_snapshot_id`; apply that diff to the previous tree.
+An unchanged tree returns an empty delta with a new `snapshot_id`.
+Use `incremental=false` to request the full tree again. Large replacements,
+navigation and unavailable baselines also produce full snapshots.
+
+Pass a rendered `ref` and the latest scope's `snapshot_id` to `browser_act`
+instead of a selector. Unchanged refs remain usable with the new snapshot ID
+after a delta; old snapshot IDs are rejected. Root snapshots include iframe
+refs that route automatically. A snapshot requested with `frame` needs the same
+frame when using its refs. Truncation only authorizes refs on delivered complete
+lines and does not seed a later delta. Baselines are limited to 32 tab/frame
+scopes and are invalidated by navigation, including reloads at the same URL.
+
+Every navigation and `browser_act` persists a checkpoint for its browser context.
+It records location, step and execution state, omitting typed values. Reopen the
+same `--db-path` to inspect the checkpoint after a server restart:
+
+```text
+browser_checkpoint(operation="inspect")
+browser_checkpoint(operation="restore")
+browser_snapshot(incremental=false)
+browser_checkpoint(operation="acknowledge")
+```
+
+Observation and action tools automatically rebind a uniquely matching live page
+in the same context when their saved tab has disappeared. No URLs are opened and
+no operations are repeated during this recovery. If no matching live page exists,
+the result is `resume_required` with a saved location and a next-step description.
+Open/select the intended page explicitly, observe it, and acknowledge the place
+to continue. Tabs with the same URL are not treated as interchangeable across
+browser contexts or ambiguous matches.
+
+A restarted `inflight` or pending-dialog checkpoint becomes
+`needs_review`/`unknown`. Snapshot reads and explicit navigation preserve that
+uncertainty. Further actions remain `not_started` until acknowledgement; this
+permits a new step without declaring the old one successful. Handling a live
+dialog is an explicit continuation decision. `traffic_clear` also forgets the
+saved checkpoints.
+
+`browse_and_capture` uses the same per-step checkpoints for its explicit action
+list. It returns the receipts accumulated so far and stops at a pending dialog
+or recovery decision; restoring a checkpoint does not rerun that action list.
+
 CDP tabs are borrowed and cannot be closed through `browser_tabs`. Session cleanup
 only closes resources AgentProxy owns. The server uses one active tab per named
 context; explicitly select the page you intend to operate.
@@ -818,6 +872,36 @@ may be `stdio` (default), `sse`, or `streamable-http` (localhost port 8000).
 The server cleans up its resources when the MCP transport closes. On Windows,
 Microsoft's `certutil.exe` is not the NSS utility; certificate tools report this
 distinction instead of passing NSS arguments to it.
+
+## SSE and WebSocket Messages
+
+`traffic_messages(protocol="sse")` reads complete SSE events as they arrive;
+`protocol="websocket"` reads reassembled WebSocket messages in both directions.
+Each entry includes `id`, `flow_id`, `protocol`, `direction`, `timestamp`, `payload`
+and `metadata`. Use the returned `next_after_id` as the next `after_id` to page
+forward; clearing history does not reuse old message IDs. Flow detail includes
+the HTTP headers even before an SSE stream has closed.
+
+SSE data is decoded as UTF-8 across chunk boundaries. Multiple `data` lines,
+event names, event IDs, retry hints, CR/LF and incomplete disconnect tails retain
+their meaning. `metadata.incomplete=true` distinguishes a received tail from an
+event dispatched by a blank line. Compressed SSE is forwarded unchanged and
+reported as unsupported parsing; no compressed bytes are presented as text.
+The HTTP body is marked `stream_messages` or
+`stream_content_encoding_unsupported` so callers know to inspect stream metadata.
+
+WebSocket text uses UTF-8 and binary data uses base64 with its opcode preserved.
+Capture retains up to 64 KiB per application message, 1000 messages per flow,
+and one additional limit record. Metadata distinguishes original size, captured
+size and truncation. SSE event/id fields are bounded to 1024 bytes. Existing
+capture scope and writer drop/error counters also apply to these records.
+SSE scope is decided when response headers arrive, so changing scope does not
+splice the middle of an existing event stream into a new capture. Reconnect
+that stream to apply a changed scope; WebSocket scope is checked per message.
+
+The observers leave forwarded message bytes unchanged. These tools store traffic
+already passing through the proxy; they do not initiate stream connections or
+replay messages.
 
 ## Troubleshooting
 
